@@ -28,6 +28,16 @@
  * @return string
  *
  */
+ 
+ /* Used in Department dropdown (add.php), Theme type (type_edit.php) */
+ /** 
+ *
+ * @param $name: The field name of the element
+ * @param $options: A list of options, taken from a database query
+ * @param $selected: the default selected option. Defaults to null
+ *
+ * @return: The HTML text for the drop down menu
+ */
 function dropdown( $name, $options, $selected=null )
 {
     /*** begin the select ***/
@@ -56,6 +66,15 @@ function dropdown( $name, $options, $selected=null )
     return $dropdown;
 }
 
+/** Used in states (add.php), theme type status (type_edit.php)*/
+ /** 
+ *
+ * @param $name: The field name of the element
+ * @param $options: An array in the form of 'key = >value' pairs, for example: 'array(0=>"Inactive", 1=>"Active")'
+ * @param $selected: the default selected option. Defaults to null
+ *
+ * @return: The HTML text for the drop down menu
+ */
 function simple_drop( $name, $options, $selected=null )
 {
     /*** begin the select ***/
@@ -81,7 +100,15 @@ function simple_drop( $name, $options, $selected=null )
     return $dropdown;
 }
 
-
+/** Used in grad_drop, year_drop (add.php) */
+ /** 
+ *
+ * @param $name: The field name of the element
+ * @param $options: An array of single, unkeyed options, for example: 'array("FALL", "SPRING", "SUMMER");'
+ * @param $selected: the default selected option. Defaults to null
+ *
+ * @return: The HTML text for the drop down menu
+ */
 function drop( $name, $options, $selected=null )
 {
     /*** begin the select ***/
