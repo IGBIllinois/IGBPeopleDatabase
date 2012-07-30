@@ -74,12 +74,23 @@ $key_deposit = $_POST['key_deposit'];
 $key_room = $_POST['key_room']; 
 $safety_training = $_POST['safety_training']; 
 $prox_card = $_POST['prox_card']; 
+$admin = $_POST['admin'];
 $grad_drop = $_POST['grad_drop']; 
 $year_drop = $_POST['year_drop']; 
 
 
-
-
+$fields = array("First Name" => &$first_name,
+				"Last Name" => &$last_name,
+				"Net ID" => &$netid,
+				"Email" => &$email,
+				"UIN" => &$uin,
+				"IGB Room" => &$igb_room,
+				"IGB Phone" => &$igb_phone,
+				"Start Date" => &$start_date,
+				"Theme" => &$theme_drop,
+				"Type" => &$type_drop,
+				"Gender" => &$gender,
+				"Supervisor" => &$supervisor);
 
 	
 
@@ -91,6 +102,32 @@ if (empty($first_name) || empty($last_name) || empty($netid) || empty($email) ||
 	)
 {
 	$error.="* Please enter missing values<br>";
+	
+	foreach($fields as $field => $value) {
+	    if(empty($value)) {
+			$error .= $field . "<BR>";
+		}
+	}
+
+
+/*
+	$error.="
+	First name = " . $first_name . "<br>
+	Last name = " . $last_name . "<br>
+	NetID = ". $netid . "<br>
+	Email = ". $email . "<br>
+	UIN = " . $uin . "<br>
+	Room = ". $igb_room . "<br>
+	Phone = ".$igb_phone . "<br>
+	Start Date = ".$start_date ."<br>
+	Theme = " . $theme_drop . "<br>
+	Type = " . $type_drop . "<br>
+	Gender = " . $gender . "<br>
+	Supervisor = ". $supervisor . "<br>";
+	*/
+	
+	
+	
 	$empty_form=TRUE;
 }
 
@@ -135,7 +172,7 @@ if (!$empty_form){
 									  $email, $theme_drop, $other_theme_drop, 
 									  $type_drop, $dept_drop, $default_address, 
 									  $start_date, $key_deposit, $prox_card, 
-									  $safety_training, $gender, $supervisor_id);
+									  $safety_training, $gender, $supervisor_id, $admin);
 		if ($user_id != 0){
 			
 			$result = $user->add_igb_address($user_id, $igb_room);	
@@ -590,7 +627,7 @@ $add_form_html .="' >
 			}
 			
 $add_form_html .="' > 
-			<a class='example8' href='#'>search</a>
+			<a class='search' id='search' href='#'>search</a>
 			  </td>   
 			</tr>
 		
@@ -633,6 +670,9 @@ $add_form_html .="<div class = 'right forty'>
 		<br />
 			<input type='checkbox' name='safety_training' value='checked' ".  $safety_training .">
 			<label class='required'>Safety Training </label>
+		<br />
+			<input type='checkbox' name='admin' value='checked' ".$admin .">
+			<label class='required'>Admin</label>
 		
 		<br />
 		<br /><br />
@@ -649,16 +689,37 @@ $add_form_html .="<div class = 'right forty'>
 
 
 
+$search = '
+SEARCH<BR>
+<form method="post" action="search.php" name="search">
 
+
+
+<div class="section">
+
+    	<input type="address" name="search_value" maxlength="50"
+    	value="" >
+
+    <input type="submit" name="search" value="Search" class="btn"> 
+	<input type="reset" name="clear" value="Clear" class="btn">
+
+<br>
+
+<br>
+</form>
+'
 ?> 
+
+
 <script>
 $(document).ready(function(){
 
 	$("input.search").click(function(){
-	/*$("div.search").show();*/
+	//$("div.search").show();
 	});
 
-	$(".example8").colorbox({width:"60%", inline:true, href:"#inline_example1"});
+	//$(".example8").colorbox({width:"60%", inline:true, href:"#inline_example1"});
+	$('a#search').colorbox({width:"80%", inline:true, height:"90%", href:"#display_search"});
 
 
 
@@ -687,7 +748,6 @@ include ("includes/footer.inc.php");
 echo "<body onLoad=\"document.search.search_value.focus()\">"; 
 
 
-
 $table_html = "";
 
 $filters = NULL;
@@ -695,7 +755,7 @@ $filters = NULL;
 $user = new user($db);
 $html = "";
 $htmltest = "";
-
+/*
 	for($i=0; $i<26; $i++){
 		
 		$letter = $alphabet[$i];
@@ -706,30 +766,39 @@ $htmltest = "";
 					class='alphabutton disabled' > ";
 			$htmltest .=  "<a href='javascript:TINY.box.fill(\"ajax.html\",1,0,1)'> ".$letter." </a>";
 	  	}
+		
 		else {
 			$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
 					class='alphabutton' > ";
 					
 			$htmltest .=  "<a href='javascript:TINY.box.load(boxid:".$letter.",1,0,1)'> ".$letter." </a>";
 	
-			$letter_html .= "<div class='box' id='".$letter."' style='display:none;'>";
-			$letter_html .= result_list($search_results);
-			$letter_html .= "</div>";
+			//$letter_html .= "<div class='box' id='".$letter."' style='display:none;'>";
+			//$letter_html .= result_list($search_results);
+			//$letter_html .= "</div>";
+			
 		
 		}
 		
 
 
 	}
-
+*/
 
 
 ?> 
 	<div style='display:none'>
 		<div id='inline_example1' >
         <?php
-		echo $html; 
-echo $letter_html;
-?>
+			echo $html; 
+			echo $letter_html;
+		?>
 		</div>
+        
+        <div id="display_search">
+        <?php
+		   echo $search;
+		   //echo "SEARCH GOES HERE";
+		?>
+        </div>
 	</div>
