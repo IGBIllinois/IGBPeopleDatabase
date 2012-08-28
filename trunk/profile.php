@@ -12,7 +12,8 @@ header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF
 exit(); 
 }
 
-echo "<body onLoad=\"document.add.first_name.focus()\">"; 
+//echo "<body onLoad=\"document.add.first_name.focus()\">"; 
+
 
 
 $igb_edit = FALSE;
@@ -20,6 +21,7 @@ $personal_edit = FALSE;
 $dept_edit = FALSE;
 $home_edit = FALSE;
 $remove = 0;
+$reactivate = 0;
 
 if(isset($_GET['user_id'])){$user_id = $_GET['user_id'];}
 if(isset($_GET['igb_edit'])){$igb_edit = $_GET['igb_edit']; }
@@ -27,6 +29,7 @@ if(isset($_GET['personal_edit'])){$personal_edit = $_GET['personal_edit']; }
 if(isset($_GET['dept_edit'])){$dept_edit = $_GET['dept_edit']; }
 if(isset($_GET['home_edit'])){$home_edit = $_GET['home_edit']; }
 if(isset( $_GET['remove'])){$remove = $_GET['remove']; }
+if(isset($_GET['reactivate'])){$reactivate = $_GET['reactivate'];}
 
 
 			
@@ -71,7 +74,11 @@ $home_city = $user->get_home_city();
 $home_state = $user->get_home_state();
 $home_zip = $user->get_home_zip();
 $theme_name = $user->get_theme();
-$other_theme_name = $user->get_other_theme();
+$theme_1_name = $user->get_theme_1();
+$theme_2_name = $user->get_theme_2();
+$type_1_name = $user->get_type_1();
+$type_2_name = $user->get_type_2();
+//$other_theme_name = $user->get_other_theme();
 $default_address = $user->get_default_address();
 
 //booleans
@@ -79,6 +86,7 @@ $status = $user->get_status();
 $safety_training = $user->get_training();
 $key_deposit = $user->get_key_deposit();
 $prox_card = $user->get_prox_card();
+$admin = $user->get_admin();
 $bool = array(0=>"No", 1=>"Yes");
 $checked_bool = array(0=>"", 1=>"checked");
 
@@ -93,8 +101,15 @@ $html = "";
 $html .= "<div class='alignright'>";
 $html .= "<input type='button' class='wide' name='additional_info' id='additional_info' 
 			value='View Additional Info' onClick='window.location=\"moreinfo.php?user_id=" . $user_id . "\" ' > ";
+if($user->get_status()) {			
 $html .= "<input type='button' name='remove' id='remove' 
 			value='Remove'  > ";
+} else {
+$html .= "<form method='post' action='profile.php?user_id=".$user_id."' name='remove_member'>
+			<input type='submit' name='reactivate' id='reactivate'
+			value='Reactivate'>
+			</form>";
+}
 $html .= "</div >";
 
 //if successfully removed
@@ -277,8 +292,12 @@ UPDATE IGB
 if (isset($_POST['update_igb'])){
 	$igb_room = $_POST['igb_room'];
 	$theme_drop = $_POST['theme_drop'];
-	$other_theme_drop = $_POST['other_theme_drop'];
+	$theme_1_drop = $_POST['theme_1_drop'];
+	$theme_2_drop = $_POST['theme_2_drop'];
+	//$other_theme_drop = $_POST['other_theme_drop'];
 	$type_drop = $_POST['type_drop'];	
+	$type_1_drop = $_POST['type_1_drop'];
+	$type_2_drop = $_POST['type_2_drop'];
 	$igb_phone = $_POST['igb_phone'];
 	$fax = $_POST['fax'];
 	$start_date = $_POST['start_date']; 
@@ -286,6 +305,7 @@ if (isset($_POST['update_igb'])){
 			$safety_training = $user->is_checked($_POST['safety_training']);
 			$key_deposit = $user->is_checked($_POST['key_deposit']);
 			$prox_card = $user->is_checked($_POST['prox_card']);
+			$admin = $user->is_checked($_POST['admin']);
 			
 	
 	$error_count = 0;
@@ -303,14 +323,19 @@ if (isset($_POST['update_igb'])){
 		$result = $user->update($user_id, 'address', 'type', 'IGB', "AND type = 'IGB'");
 		$result = $user->update($user_id, 'address', 'address2', $igb_room, "AND type = 'IGB'");
 		$result = $user->update($user_id, 'users', 'theme_id', $theme_drop);
-		$result = $user->update($user_id, 'users', 'other_theme_id', $other_theme_drop);
+		$result = $user->update($user_id, 'users', 'theme_1_id', $theme_1_drop);
+		$result = $user->update($user_id, 'users', 'theme_2_id', $theme_2_drop);
 		$result = $user->update($user_id, 'users', 'type_id', $type_drop);	
+		$result = $user->update($user_id, 'users', 'type_1_id', $type_1_drop);
+		$result = $user->update($user_id, 'users', 'type_2_id', $type_2_drop);
 		$result = $user->update($user_id, 'phone', 'igb', $igb_phone);
 		$result = $user->update($user_id, 'phone', 'fax', $fax);
 		$result = $user->update($user_id, 'users', 'start_date', $start_date);
 		$result = $user->update($user_id, 'users', 'supervisor_id', $supervisor_id);
 		$theme_name = $user->get_theme();
-		$other_theme_name = $user->get_other_theme();
+		$theme_1_name = $user->get_theme_1();
+		$theme_2_name = $user->get_theme_2();
+		//$other_theme_name = $user->get_other_theme();
 		if(isset($_POST['default_address'])){
 			$default_address = $_POST['default_address'];
 			$result = $user->update($user_id, 'users', 'default_address', $default_address);
@@ -318,6 +343,7 @@ if (isset($_POST['update_igb'])){
 			$result = $user->update($user_id, 'users', 'safety_training', $safety_training);
 			$result = $user->update($user_id, 'users', 'key_deposit', $key_deposit);
 			$result = $user->update($user_id, 'users', 'prox_card', $prox_card);
+			$result = $user->update($user_id, 'users', 'admin', $admin);
 		
 	}
 }
@@ -361,10 +387,11 @@ $igb_info .= "</p>
     		<tr >
 			  <td class='xs'><label>themes </label></td>
 			  <td class='noborder'>". $theme_name;
-if ($other_theme_name != NULL){
-	$igb_info .= ", ". $other_theme_name;
-	
-	
+if ($theme_1_name != NULL){
+	$igb_info .= ", ". $theme_1_name;
+}
+if ($theme_2_name != NULL){
+	$igb_info .= ", ". $theme_2_name;
 }
 	/*
 			<tr >
@@ -377,7 +404,16 @@ $igb_info .= "</td>
    			  </tr>
 			  <tr >
 			  <td class='xs'><label>type </label></td>
-			  <td class='noborder'>". $user->get_type()."</td>
+			  <td class='noborder'>". $user->get_type();
+if($type_1_name != NULL) {
+	$igb_info .= ", " . $type_1_name;
+}
+if($type_2_name != NULL) {
+	$igb_info .= ", ". $type_2_name;
+}
+			  
+			  
+$igb_info .= "</td>
    			</tr>
 			<tr >
 			  <td class='xs'><label>supervisor </label></td>
@@ -394,6 +430,10 @@ $igb_info .= "</td>
 			<tr >
 			  <td class='xs'><label>safety training </label></td>
 			  <td class='noborder'>". $bool[$safety_training]."</td>
+   			</tr>
+			<tr >
+			  <td class='xs'><label>admin </label></td>
+			  <td class='noborder'>". $bool[$admin]."</td>
    			</tr>
 			</table>
 			<br>
@@ -435,12 +475,14 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			<tr>
 			  <td class='xs'><label>themes </label></td>
 			  <td class='xs'>". dropdown( 'theme_drop', $theme_list, $user->get_theme_id() ). "</td>
-			  <td class='noborder'>". dropdown( 'other_theme_drop', $theme_list, $user->get_other_theme_id() ). "</td>
-
+			  <td class='noborder'>". dropdown( 'theme_1_drop', $theme_list, $user->get_theme_1_id() ). "</td>
+			  <td class='noborder'>". dropdown( 'theme_2_drop', $theme_list, $user->get_theme_2_id() ). "</td>
 			</tr>
 			<tr >
 			  <td class='xs'><label>type </label></td>
 			  <td class='noborder'>". dropdown( 'type_drop', $type_list, $user->get_type_id() )."</td>
+			  <td class='noborder'>". dropdown( 'type_1_drop', $type_list, $user->get_type_1_id() )."</td>
+			  <td class='noborder'>". dropdown( 'type_2_drop', $type_list, $user->get_type_2_id() )."</td>
    			</tr>
 			<tr >
 			  <td class='xs'><label>supervisor </label></td>
@@ -464,6 +506,12 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			  <td class='xs'><label>safety training </label></td>
 			  <td class='noborder'>
 			  	<input type='checkbox' name='safety_training' value='checked' ".  $checked_bool[$safety_training] .">
+			  </td>
+   			</tr>
+			<tr >
+			  <td class='xs'><label>admin </label></td>
+			  <td class='noborder'>
+			  	<input type='checkbox' name='admin' value='checked' ".  $checked_bool[$admin] .">
 			  </td>
    			</tr>
 			<tr >
@@ -750,7 +798,7 @@ $home_info_edit = " <div class='profile_header' id='home'>
 
 
 /*
-REMOVIE MEMBER
+REMOVE MEMBER
 */
 
 if (isset($_POST['remove_member'])){
@@ -802,7 +850,15 @@ if (isset($_POST['remove_member'])){
 	
 }
 
-
+/* REACTIVATE MEMBER
+*/
+if(isset($_POST['reactivate'])) {
+	unset($_POST['reactivate']);
+	$redirectpage= "/profile.php?user_id=".$user_id;
+	$result = $user->update($user_id, 'users', 'user_enabled', '1');	
+	header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+	exit(); 
+}
 
 /*
 EXIT HTML
@@ -924,6 +980,8 @@ $(document).ready(function(){
 	if (!$status){
 		$phpdate = strtotime( $user->get_end_date() );
 		echo "[ left IGB ".date('F j Y',$phpdate)." ]";
+		echo "<BR>";
+		echo "[ Reason: ". $user->get_reason_leaving(). " ]";
 	}
 	else{
 		$phpdate = strtotime( $user->get_start_date() );
@@ -932,7 +990,7 @@ $(document).ready(function(){
 	 ?> </h3>
 <br>
 <?php 
-if($status=='1'){
+//if($status=='1'){
 
 	if ($personal_edit){ echo $personal_info_edit;	}
 		else {echo $personal_info;	}
@@ -943,6 +1001,10 @@ if($status=='1'){
 	if ($home_edit){echo $home_info_edit;	}
 		else { echo $home_info;}
 	echo $html;
+//}
+
+if($status=='0') {
+	//echo("Reason for leaving: ". );
 }
 	
 ?>
