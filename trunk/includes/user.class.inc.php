@@ -196,18 +196,19 @@ takes in a string and edits to a format suitable to enter into database
 //returns the id number of the new record, 0 if it fails
 	public function add_user($first_name, $last_name, $netid, $uin, $email, 
 							 $theme_drop, $other_theme_drop, $type_drop, $dept_drop, $default_address,
-							 $start_date, $key_deposit, $prox_card, $safety_training) {
+							 $start_date, $key_deposit, $prox_card, $safety_training, $admin) {
 		$key = $this->is_checked($key_deposit);
 		$prox = $this->is_checked($prox_card);
 		$safety = $this->is_checked($safety_training);
+		$isAdmin = $this->is_checked($admin);
 		
 		$add_user_query = "INSERT INTO users (first_name, last_name, netid, uin, email,
 											  theme_id, other_theme_id, type_id, dept_id, default_address, start_date, 
-											  key_deposit, prox_card, safety_training)
+											  key_deposit, prox_card, safety_training, admin)
 							VALUES ('".$first_name."','". $last_name."','". $netid."','". $uin."','". $email."',
 									'". $theme_drop."','". $other_theme_drop."','". $type_drop."','". $dept_drop."',
 									'".$default_address."',	'".$start_date."',	'".$key."',	
-									'".$prox."','".$safety."'
+									'".$prox."','".$safety."','".$isAdmin."'
 									)";
 		$result = $this->db->insert_query($add_user_query);
 		return $result;
