@@ -5,6 +5,7 @@ $page_title = "IGB People Database Search";
 include 'includes/header.inc.php'; 
 include 'includes/functions.inc.php'; 
 include_once 'includes/main.inc.php';
+include "libs/ExcelWriter.php";
 
 if (!$_SESSION['admin']){
 header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
@@ -54,6 +55,9 @@ $status_drop = "<select name='user_enabled' id='user_enabled'>
 				<option value='1' ";
 				if ($user_enabled == '1'){ $status_drop .= $selected; }
 				$status_drop .= ">Active</option>
+				<option value='2' ";
+				if($user_enabled == '2') { $status_drop .= $selected; }
+				$status_drop .= ">All</option
 				</select>";
 /*
 if (isset($_GET['page'])){
@@ -64,7 +68,7 @@ if (isset($_GET['page'])){
 echo "<body onLoad=\"document.search.search_value.focus()\">"; 
 
 
-if (isset($_POST['search'])){//or isset($_GET['page'])
+if (isset($_POST['search']) or isset($_POST['excel'])){//or isset($_GET['page'])
 	
 	$user_id = "";		
 	$igb_room = $_POST['igb_room']; 
@@ -75,6 +79,8 @@ if (isset($_POST['search'])){//or isset($_GET['page'])
 	$supervisor = $_POST['supervisor'];
 	$user_enabled = $_POST['user_enabled'];
 	$search_value = $_POST['search_value'];
+	$start_date = $_POST['start_date'];
+	$end_date = $_POST['end_date'];
 	
 
 	
@@ -93,12 +99,16 @@ $supervisor_id = $user->user_exists("netid",$supervisor);
 	
 $filters = array();
 $filters["users.theme_id"] = array($theme_drop, "AND");
-$filters["users.other_theme_id"] = array($theme_drop, "OR");
+$filters["users.theme_1_id"] = array($theme_drop, "OR");
+$filters["users.theme_2_id"] = array($theme_drop, "OR");
 $filters["users.type_id"] = array($type_drop, "AND");
+$filters["users.type_1_id"] = array($type_drop, "OR");
+$filters["users.type_2_id"] = array($type_drop, "OR");
 $filters["users.dept_id"] = array($dept_drop, "AND");
 $filters["address.address2"] = array($igb_room, "AND");
 $filters["phone.igb"] = array($igb_phone, "AND");
 $filters["users.supervisor_id"] = array($supervisor_id, "AND");
+
 
 	
 /*	
@@ -133,12 +143,17 @@ $filters["users.supervisor_id"] = array($supervisor_id, "AND");
 			$page_list .= "<a href='search.php?page=".$x."'> next >> </a></h3>";
 		}
 		*/
-	$search_results = $user->adv_search($user_enabled, $search_value, $filters);//$page, 
+	$search_results = $user->adv_search($user_enabled, $search_value, $filters, $start_date, $end_date);//$page, 
 
+if(isset($_POST['excel'] )) {
+	$filename = "igb_people.xls";
+	writeExcel($search_results, $filename);
+	while(!file_exists($filename)) {}
+	
+	//unlink($filename);
+}
 	$table_html = result_table( "search_results", $search_results );
 
-
-	
 
 }
 
@@ -189,9 +204,9 @@ $filters["users.supervisor_id"] = array($supervisor_id, "AND");
   </tr>
   <tr>
         <td  class="noborder"><input type="small" name="igb_room" class="space" maxlength="12"  
-            value="<?php //if (isset($igb_room)){echo "$igb_room";}else{echo "";} ?>" >
+            value="<?php if (isset($igb_room)){echo "$igb_room";}else{echo "";} ?>" >
         </td>
-        <td class="noborder" colspan='3'><?php echo dropdown( "dept_drop", $dept_list/* , $dept_drop*/ );  ?>
+        <td class="noborder" colspan='3'><?php echo dropdown( "dept_drop", $dept_list , $dept_drop );  ?>
         </td>
   </tr>
   <tr>
@@ -207,28 +222,39 @@ $filters["users.supervisor_id"] = array($supervisor_id, "AND");
   <tr>
         <td  class="noborder">
             <input type="small" name="igb_phone" class="PHONE" maxlength="12"  
-            value="<?php //if (isset($igb_phone)){echo "$igb_phone";}else{echo "";} ?>" >
+            value="<?php if (isset($igb_phone)){echo "$igb_phone";}else{echo "";} ?>" >
         </td>
     	<td class="noborder">
-	  		<?php echo dropdown( "theme_drop", $theme_list /*, $theme_drop */ ); ?> 
+	  		<?php echo dropdown( "theme_drop", $theme_list , $theme_drop  ); ?> 
       	</td>            
       	<td class="noborder">
-      		<?php echo dropdown( "type_drop", $type_list /*, $type_drop */ );?>
+      		<?php echo dropdown( "type_drop", $type_list , $type_drop  );?>
       	</td>
-        <td class="noborder"><input type="small" name="supervisor" class="space" maxlength="8" >
+        <td class="noborder"><input type="small" name="supervisor" class="space" maxlength="8" 
+        value="<?php if (isset($supervisor)){echo "$supervisor";}else{echo "";} ?>" >
         </td>
   </tr>
   <tr>
     	
     	<td class="noborder"><label class="optional">Status </label>
       	</td> 
-        <td class="noborder">
+        <td class="noborder"><label class="optional">Start Date: Begin</label>
       	</td> 
-  </tr>
+        <td class="noborder"><label class="optional">Start Date: End</label>
+      	</td> 
+          </tr>
   <tr>         
       	<td class="noborder">
       		<?php echo $status_drop;?>
       	</td>
+        <td class='noborder'><input type='date' name='start_date'   
+					value="<?php if (isset($start_date)){echo "$start_date";}else{echo "";} ?>" >     
+		</td>
+        <td class='noborder'><input type='date' name='end_date'   
+					value="<?php if (isset($end_date)){echo "$end_date";}else{echo "";} ?>" >     
+		</td>  
+              
+              
         <td class="noborder">
         </td>  
   </tr>
@@ -254,7 +280,9 @@ $filters["users.supervisor_id"] = array($supervisor_id, "AND");
 <?php  
 
 echo $table_html; 
-
+if($table_html != null) {
+echo"<BR><input type='submit' name='excel' value='Create Excel' class='btn' />";
+}
 
 ?> 
 
@@ -265,3 +293,31 @@ echo $table_html;
 include ("includes/footer.inc.php"); 
 
 ?> 
+
+<?php
+
+/* Writes and opens an Excel file
+*
+* @param search_results: An array from an sql query
+*
+*/
+
+function writeExcel($search_results, $filename="igb_people.xls") {
+	//$filename = "./igb_people.xls";
+	$excel= new ExcelWriter($filename);
+	$myArr=array("<b>Name</b>","<b>Email</b>","<b>Theme</b>","<b>Type</b>","<b>Room Number</b>");
+	$excel->writeLine($myArr);
+	for ($i = 0; $i < count($search_results); $i++) {
+		$line = array($search_results[$i]['first_name'] . " " . $search_results[$i]['last_name'],
+					  $search_results[$i]['email'],
+					  $search_results[$i]['theme_name'],
+					  $search_results[$i]['type_name'],
+					  $search_results[$i]['igb_room']);
+		$excel->writeLine($line);
+	}
+	$excel->close();
+	header("Location: $filename");
+	
+}
+	
+?>
