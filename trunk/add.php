@@ -63,8 +63,11 @@ $home_array = array ();
 $default_address = $_POST['default_address']; 
 
 $theme_drop = $_POST['theme_drop'];
-$other_theme_drop = $_POST['other_theme_drop'];
+$theme_1_drop = $_POST['theme_1_drop'];
+$theme_2_drop = $_POST['theme_2_drop'];
 $type_drop = $_POST['type_drop'];
+$type_1_drop = $_POST['type_1_drop'];
+$type_2_drop = $_POST['type_2_drop'];
 $dept_drop = $_POST['dept_drop'];
 $supervisor = $_POST['supervisor'];
 
@@ -169,8 +172,8 @@ if (!$empty_form){
 			
 			
 			$user_id = $user->add_user($first_name, $last_name, $netid, $uin, 
-									  $email, $theme_drop, $other_theme_drop, 
-									  $type_drop, $dept_drop, $default_address, 
+									  $email, $theme_drop, $theme_1_drop, $theme_2_drop,
+									  $type_drop, $type_1_drop, $type_2_drop, $dept_drop, $default_address, 
 									  $start_date, $key_deposit, $prox_card, 
 									  $safety_training, $gender, $supervisor_id, $admin);
 		if ($user_id != 0){
@@ -580,23 +583,40 @@ $add_form_html .="<div class = 'left sixty'>
 		<table>
 		
 			<tr>
-			  <td class='xs'><label class='required'>Themes </label>
+			  <td class='xs'><label class='required'>Main Theme </label>
 				<label class='error'>". $aster[empty($theme_drop)]." </label>
 			  </td>          
-			  <td class='xs'></td>          
-			  <td class='noborder'><label class='required'>Type </label>
-				<label class='error'>". $aster[empty($type_drop)]." </label>
-			  </td>  
+			  <td class='xs'><label class='optional'>Theme 1</label></td>          
+			  <td class='noborder'><label class='optional'>Theme 2</label></td>
 			</tr>
 			<tr>
 			  <td class='xs'>
 					". dropdown( 'theme_drop', $theme_list, $theme_drop )." 
 			  </td>
 			  <td class='xs'>
-					". dropdown( 'other_theme_drop', $theme_list, $other_theme_drop )."
+					". dropdown( 'theme_1_drop', $theme_list, $theme_1_drop )."
 			  </td>    
 			  <td class='noborder'>
-					". dropdown( "type_drop", $type_list, $type_drop )."
+					". dropdown( "theme_2_drop", $theme_list, $theme_2_drop )."
+			  </td>  
+			</tr>
+			<tr>
+			  <td class='noborder'><label class='required'>Main Type </label>
+				<label class='error'>". $aster[empty($type_drop)]." </label>
+			  </td>  
+			  <td class='noborder'><label class='optional'>Type 1</label>
+			  </td>  
+			  <td class='noborder'><label class='optional'>Type 2</label>
+			  </td>  
+			<tr>
+			  <td class='xs'>
+					". dropdown( 'type_drop', $type_list, $type_drop )." 
+			  </td>
+			  <td class='xs'>
+					". dropdown( 'type_1_drop', $type_list, $type_1_drop )."
+			  </td>    
+			  <td class='noborder'>
+					". dropdown( "type_2_drop", $type_list, $type_2_drop )."
 			  </td>  
 			</tr>
 		</table>
