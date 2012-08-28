@@ -48,8 +48,13 @@ class user{
 	private $start_date;
 	private $end_date;
 	private $theme;
-	private $other_theme;
+	private $theme_1;
+	private $theme_2;
 	private $type;
+	private $type_1;
+	private $type_2;
+	private $admin;
+	private $reason_leaving;
 	
 	//////////////// Variables//////////
 
@@ -89,10 +94,22 @@ load user values
 						 LEFT JOIN department ON users.dept_id=department.dept_id)
 						 WHERE user_id = '".$user_id."'";
 		$result = $this->db->query($profile_query);	
-		$other_theme_query = "SELECT themes.short_name as theme_name FROM users 
-						LEFT JOIN themes ON users.other_theme_id=themes.theme_id
+		$theme_1_query = "SELECT themes.short_name as theme_1_name FROM users 
+						LEFT JOIN themes ON users.theme_1_id=themes.theme_id
 						WHERE user_id = '".$user_id."'";
-		$other_theme = $this->db->query($other_theme_query);
+		$theme_1_result = $this->db->query($theme_1_query);
+		$theme_2_query = "SELECT themes.short_name as theme_2_name FROM users 
+						LEFT JOIN themes ON users.theme_2_id=themes.theme_id
+						WHERE user_id = '".$user_id."'";
+		$theme_2_result = $this->db->query($theme_2_query);
+		$type_1_query = "SELECT type.name as type_1_name FROM users 
+						LEFT JOIN type ON users.type_1_id=type.type_id
+						WHERE user_id = '".$user_id."'";
+		$type_1_result = $this->db->query($type_1_query);
+		$type_2_query = "SELECT type.name as type_2_name FROM users 
+						LEFT JOIN type ON users.type_2_id=type.type_id
+						WHERE user_id = '".$user_id."'";
+		$type_2_result = $this->db->query($type_2_query);
 		$address_query = "SELECT * FROM address 
 						WHERE user_id = '".$user_id."'";
 		$address_list = $this->db->query($address_query);
@@ -117,11 +134,18 @@ load user values
 		$this->supervisor_netid = $supervisor_result[0]['netid'];
 		$this->supervisor_name = $supervisor_result[0]['first_name']." ".$supervisor_result[0]['last_name'];	
 		$this->theme = $result[0]['theme_name'];
+		$this->theme_1 = $theme_1_result[0]['theme_1_name'];
+		$this->theme_2 = $theme_2_result[0]['theme_2_name'];
 		$this->theme_id = $result[0]['theme_id'];
-		$this->other_theme_id = $result[0]['other_theme_id'];
+		$this->theme_1_id = $result[0]['theme_1_id'];
+		$this->theme_2_id = $result[0]['theme_2_id'];
 		$this->type_id = $result[0]['type_id'];
-		$this->other_theme = $other_theme[0]['theme_name'];
+		$this->type_1_id = $result[0]['type_1_id'];
+		$this->type_2_id = $result[0]['type_2_id'];
+		//$this->other_theme = $other_theme[0]['theme_name'];
 		$this->type = $result[0]['type_name'];
+		$this->type_1 = $type_1_result[0]['type_1_name'];
+		$this->type_2 = $type_2_result[0]['type_2_name'];		
 		$this->department = $result[0]['dept_name'];
 		$this->dept_id = $result[0]['dept_id'];
 		$this->igb_phone = $phone_list[0]['igb'];
@@ -134,6 +158,11 @@ load user values
 		$this->key_deposit = $result[0]['key_deposit'];
 		$this->prox_card = $result[0]['prox_card']; 
 		$this->training = $result[0]['safety_training']; 
+		$this->admin = $result[0]['admin'];
+		
+		if($this->status == 0) {
+			$this->reason_leaving = $result[0]['reason_leaving'];
+		}
 		
 		$i=0;
 		while( $i < count($address_list))
@@ -180,6 +209,11 @@ returns values of specific user
 	public function get_gender() { return $this->gender; }
 	public function get_start_date() { return $this->start_date; }
 	public function get_end_date() { return $this->end_date; }
+	public function get_reason_leaving() {
+		if(!$this->get_status()) {
+			return $this->reason_leaving;
+		}
+	}
 	
 	//address
 	public function get_igb_address() { return $this->igb_address; }
@@ -206,11 +240,17 @@ returns values of specific user
 	
 	//theme & type
 	public function get_theme() { return $this->theme; }
-	public function get_other_theme() { return $this->other_theme; }
+	public function get_theme_1() { return $this->theme_1; }
+	public function get_theme_2() { return $this->theme_2; }
 	public function get_type() { return $this->type; }
+	public function get_type_1() { return $this->type_1; }
+	public function get_type_2() { return $this->type_2; }
 	public function get_theme_id() { return $this->theme_id; }
-	public function get_other_theme_id() { return $this->other_theme_id; }
+	public function get_theme_1_id() { return $this->theme_1_id; }
+	public function get_theme_2_id() { return $this->theme_2_id; }
 	public function get_type_id() { return $this->type_id; }
+	public function get_type_1_id() { return $this->type_1_id; }
+	public function get_type_2_id() { return $this->type_2_id; }
 	
 	//supervisor
 	public function get_supervisor() { return $this->supervisor; }
@@ -228,6 +268,7 @@ returns values of specific user
 	public function get_key_deposit() { return $this->key_deposit; }
 	public function get_prox_card() { return $this->prox_card; }
 	public function get_training() { return $this->training; }
+	public function get_admin() { return $this->admin; }
 	
 	
 /*
@@ -374,7 +415,7 @@ email
 param $filters = array with theme_id, type_id, dept_id, igb_room, igb_phone
 
 */	
-	public function adv_search($active, $value, $filters = 0) { //$page, 
+	public function adv_search($active, $value, $filters = 0, $start_date=0, $end_date=0) { //$page, 
 		//$skip = ($page - 1) * 20;
 		$search_arr = explode(" ",$value);
 		$search_query = "SELECT users.user_id as user_id, first_name, last_name, netid, uin, email, default_address, 
@@ -411,9 +452,19 @@ param $filters = array with theme_id, type_id, dept_id, igb_room, igb_phone
 			$i ++;
 			
 		}
-		$search_query.=  " AND user_enabled = '".$active."'";
+		if($active < 2) { // 0 = disabled, 1 = abled, 2 = all
+			$search_query.=  " AND user_enabled = '".$active."'";
+		}
+		if($start_date != 0 && $end_date != 0) {
+			$search_query .= " AND users.start_date BETWEEN '$start_date' AND '$end_date' ";
+		} else if($start_date != 0) {
+			$search_query .= " AND users.start_date >= '$start_date' ";
+		} else if($end_date != 0) {
+			$search_query .= " AND users.start_date <= '$end_date' ";
+		}
 		$search_query.=  " ORDER BY users.last_name ";
 		//$search_query.=  " LIMIT " .$skip.", 20";
+		//echo("search query = $search_query<BR>");
 		$result = $this->db->query($search_query);
 		return $result;
     }
@@ -446,6 +497,7 @@ searches values inputed into generic text input and checks to see if those value
 		
 		$search_query.=  " ORDER BY users.last_name ";				
 		
+		//echo("search query = $search_query<BR>");
 		$result = $this->db->query($search_query);
 		return $result;
     }
@@ -527,22 +579,27 @@ $user_info - array with user info to insert
 returns the id number of the new record, 0 if it fails
 */
 	public function add_user($first_name, $last_name, $netid, $uin, $email, 
-							 $theme_drop, $other_theme_drop, $type_drop, $dept_drop, $default_address,
-							 $start_date, $key_deposit, $prox_card, $safety_training, $gender, $supervisor_id) {
+							 $theme_drop, $theme_1_drop, $theme_2_drop, $type_drop, $type_1_drop, $type_2_drop,
+							 $dept_drop, $default_address,
+							 $start_date, $key_deposit, $prox_card, $safety_training, $gender, $supervisor_id, $admin) {
 		$key = $this->is_checked($key_deposit);
 		$prox = $this->is_checked($prox_card);
 		$safety = $this->is_checked($safety_training);
+		$isAdmin = $this->is_checked($admin);
 		
 		$add_user_query = "INSERT INTO users (first_name, last_name, netid, uin, email,
-											  theme_id, other_theme_id, type_id, dept_id, default_address, start_date, 
-											  key_deposit, prox_card, safety_training, gender, supervisor_id)
+											  theme_id, theme_1_id, theme_2_id, type_id, type_1_id, type_2_id, dept_id, default_address, start_date, 
+											  key_deposit, prox_card, safety_training, gender, supervisor_id, admin)
 							VALUES ('".$this->edit($first_name)."','". $this->edit($last_name)."','". $this->edit($netid)."',
 									'". $this->edit($uin)."','". $this->edit($email)."',
-									'". $this->edit($theme_drop)."','". $this->edit($other_theme_drop)."',
-									'". $this->edit($type_drop)."','". $this->edit($dept_drop)."',
+									'". $this->edit($theme_drop)."','". $this->edit($theme_1_drop)."','".
+									$this->edit($theme_2_drop)."',
+									'". $this->edit($type_drop)."','". $this->edit($type_1_drop)."','".
+									$this->edit($type_2_drop)."','". $this->edit($dept_drop)."',
 									'".$this->edit($default_address)."','".$this->edit($start_date)."',	
-									'".$key."',	'".$prox."','".$safety."','".$gender."','".$this->edit($supervisor_id)."'
+									'".$key."',	'".$prox."','".$safety."','".$gender."','".$this->edit($supervisor_id)."','".$isAdmin."'
 									)";
+		//echo("add_user_query = $add_user_query<BR>");
 		$result = $this->db->insert_query($add_user_query);
 		return $result;
 
