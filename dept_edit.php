@@ -134,8 +134,8 @@ $dept_add_table = "<form method='post' action='dept_edit.php' name='add_dept'>
 <script>
 $(document).ready(function(){
 
-
-
+ $("ul#admin").show();
+ $("ul#directory").hide();
 
 	$('#dept_list_table').dataTable( {
 		"bPaginate": true,

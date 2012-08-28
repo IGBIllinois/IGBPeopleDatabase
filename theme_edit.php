@@ -1,4 +1,6 @@
-<?php 
+
+ 
+ <?php 
 
 $page_title = "IGB People Database"; 
 
@@ -18,6 +20,7 @@ $theme_leader_list  = $db->query($select_theme_leaders);
 $theme_list = $db->query($select_theme);
 $all_themes = $theme->get_all_themes();
 $error_msg = "";
+
 
 echo "<script>";
 
@@ -255,6 +258,8 @@ $theme_edit = "	<form method='post' action='theme_edit.php' name='select_edit' i
 
 <script>
 $(document).ready(function(){
+ $("ul#admin").show();
+ $("ul#directory").hide();
 	var r;
 	function confirm_remove()
 	{

@@ -179,7 +179,8 @@ $type_edit_table = "
 
 <script>
 $(document).ready(function(){
-
+ $("ul#admin").show();
+ $("ul#directory").hide();
 	$('#type_list_table').dataTable( {
 		"bPaginate": false,
 		"bLengthChange": false,
