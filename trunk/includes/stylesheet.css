@@ -224,15 +224,18 @@ input[type="button"]{
 
 input[type="button"].alphabutton {
 	width: 20px;
+	cursor: pointer;
 }
 
 input[type="button"].themebutton {
 	width: 82px;
+	cursor: pointer;
 }
 
 input[type="button"].disabled {
 	color:#fff;
 	background-color:#C0CFD3;
+	cursor: default;
 }
 input[type="button"].wide {
 	width: 150px;
