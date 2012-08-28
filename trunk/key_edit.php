@@ -266,7 +266,8 @@ $edit_key_html = "";
 
 <script>
 $(document).ready(function(){
-
+ $("ul#admin").show();
+ $("ul#directory").hide();
 	$('#key_list_table').dataTable( {
 		"bPaginate": true,
 		"bLengthChange": true,
