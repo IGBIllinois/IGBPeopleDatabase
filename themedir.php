@@ -86,7 +86,8 @@ $html = "";
 		
 		$filters = array();
 		$filters["users.theme_id"] = array($option['theme_id'], "WHERE");
-		$filters["users.other_theme_id"] = array($option['theme_id'], "OR");
+		$filters["users.theme_1_id"] = array($option['theme_id'], "OR");
+		$filters["users.theme_2_id"] = array($option['theme_id'], "OR");
 		
 		$search_results = $user->search($filters);
 		
