@@ -280,7 +280,7 @@ function key_list_table( $id, $search_results)
 {
 	
 	$status_arr = array(0=>"Inactive", 1=>"Active");
-	$table_html = "<table name='".$id."' id='".$id."' >
+	$table_html = "<div><table name='".$id."' id='".$id."' >
 			<thead>
 			<tr>
 					<th >Key Name</th>	
@@ -306,7 +306,7 @@ function key_list_table( $id, $search_results)
 			
 			}
 	}
-	$table_html .= "</table>"; 
+	$table_html .= "</table></div>"; 
 	return $table_html;
 }
 
@@ -380,7 +380,7 @@ data table of departments
 function dept_list_table( $id, $search_results)
 {
 	$status_arr = array(0=>"Inactive", 1=>"Active");
-	$table_html = "<table name='".$id."' id='".$id."' >
+	$table_html = "<div><table name='".$id."' id='".$id."' >
 			<thead>
 			<tr>
 					<th >Department Name</th>
@@ -402,7 +402,7 @@ function dept_list_table( $id, $search_results)
 			
 			}
 	}
-	$table_html .= "</table>"; 
+	$table_html .= "</table></div>"; 
 	return $table_html;
 }
 
