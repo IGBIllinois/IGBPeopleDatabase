@@ -1,0 +1,32 @@
+[01-Nov-2017 14:30:35 America/Chicago] PHP Warning:  mysqli_connect(): (HY000/1045): Access denied for user 'test'@'localhost' (using password: YES) in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\db.class.inc.php on line 46
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined index: theme in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\themedir.php on line 74
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined offset: 0 in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\theme.class.inc.php on line 75
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined offset: 0 in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\theme.class.inc.php on line 76
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined offset: 0 in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\theme.class.inc.php on line 77
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined offset: 0 in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\theme.class.inc.php on line 78
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined offset: 0 in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\theme.class.inc.php on line 79
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined offset: 0 in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\libs\theme.class.inc.php on line 80
+[01-Nov-2017 14:38:44 America/Chicago] PHP Notice:  Undefined variable: theme_html in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\themedir.php on line 180
+[01-Nov-2017 14:57:36 America/Chicago] PHP Warning:  include(includes/Writer.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 9
+[01-Nov-2017 14:57:36 America/Chicago] PHP Warning:  include(): Failed opening 'includes/Writer.php' for inclusion (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach;') in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 9
+[01-Nov-2017 14:58:21 America/Chicago] PHP Warning:  require_once(PEAR.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\includes\Writer.php on line 34
+[01-Nov-2017 14:58:21 America/Chicago] PHP Warning:  require_once(PEAR.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\includes\Writer.php on line 34
+[01-Nov-2017 15:01:37 America/Chicago] PHP Warning:  require_once(PEAR.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\includes\Writer.php on line 34
+[01-Nov-2017 15:02:15 America/Chicago] PHP Warning:  include_once(PEAR5.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\PEAR.php on line 730
+[01-Nov-2017 15:02:15 America/Chicago] PHP Warning:  include_once(): Failed opening 'PEAR5.php' for inclusion (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach;') in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\PEAR.php on line 730
+[01-Nov-2017 15:02:15 America/Chicago] PHP Warning:  require_once(Spreadsheet/Excel/Writer/Workbook.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\includes\Writer.php on line 35
+[01-Nov-2017 15:03:04 America/Chicago] PHP Warning:  include_once(PEAR5.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\PEAR.php on line 730
+[01-Nov-2017 15:03:04 America/Chicago] PHP Warning:  include_once(): Failed opening 'PEAR5.php' for inclusion (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach;') in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\PEAR.php on line 730
+[01-Nov-2017 15:03:04 America/Chicago] PHP Warning:  require_once(OLE.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\OLE\PPS.php on line 24
+[01-Nov-2017 15:03:47 America/Chicago] PHP Warning:  include_once(PEAR5.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\PEAR.php on line 730
+[01-Nov-2017 15:03:47 America/Chicago] PHP Warning:  include_once(): Failed opening 'PEAR5.php' for inclusion (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach;') in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\PEAR.php on line 730
+[01-Nov-2017 15:03:47 America/Chicago] PHP Warning:  require_once(System.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\OLE\PPS\Root.php on line 24
+[01-Nov-2017 15:06:11 America/Chicago] PHP Warning:  require_once(System.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\OLE\PPS\Root.php on line 24
+[01-Nov-2017 15:06:20 America/Chicago] PHP Warning:  require_once(Console/Getopt.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\System.php on line 21
+[01-Nov-2017 15:08:55 America/Chicago] PHP Warning:  unlink(excel/igb_people.xls): No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 62
+[01-Nov-2017 15:08:57 America/Chicago] PHP Warning:  unlink(excel/igb_people.xls): No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 62
+[01-Nov-2017 15:11:17 America/Chicago] PHP Warning:  unlink(excel/igb_people.xls): No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 62
+[01-Nov-2017 15:55:00 America/Chicago] PHP Warning:  require_once(OLE/PPS/Root.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\Spreadsheet\Excel\Writer\Workbook.php on line 39
+[01-Nov-2017 15:56:17 America/Chicago] PHP Warning:  unlink(excel/igb_people.xls): No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 62
+[01-Nov-2017 16:01:24 America/Chicago] PHP Fatal error:  Maximum execution time of 300 seconds exceeded in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 189
+[01-Nov-2017 16:01:24 America/Chicago] PHP Warning:  unlink(excel/igb_people.xls): No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase-svn\trunk\search.php on line 62

@@ -1,7 +1,7 @@
 <?php
 
-include_once 'ldap.class.inc.php';
-include_once 'user.class.inc.php';
+//include_once 'ldap.class.inc.php';
+//include_once 'user.class.inc.php';
 
 class session {
 
@@ -20,12 +20,12 @@ class session {
                 $this->ldap = $ldap;
                 $this->password = $password;
                 $this->username = $username;
-                //$this->user = new user($this->db,0,$username);
+                $this->user = new user($this->db,0,$username);
                 
         }
         public function __destruct() {}
         
-       // public function get_user() { return $this->user; }
+       public function get_user() { return $this->user; }
 
 
         public function authenticate($ldap_people_ou) {

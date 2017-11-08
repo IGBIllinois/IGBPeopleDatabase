@@ -29,9 +29,9 @@ $success_html = "<br><h4>
 
 
 ?>
-
 <h1> Welcome 
 <?php
+
 echo $_SESSION['username'];
 
 ?>

@@ -15,7 +15,7 @@ define("enable",TRUE);
 
 define("mysql_host","localhost");
 define("mysql_user","peopledb");
-define("mysql_password", "7sKLMnsfuaBM4ZDy");
+define("mysql_password", "****************");
 define("mysql_database","peopleDev");
 
 

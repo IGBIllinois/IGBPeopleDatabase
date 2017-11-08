@@ -3,6 +3,7 @@
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type='text/javascript' language='javascript' src='libs/jquery-1.6.1.min.js'></script>
 <script type='text/javascript' language='javascript' src='libs/jquery.dataTables.min.js'></script>
 <script type='text/javascript' language='javascript' src='libs/jquery.maskedinput-1.3.min.js'></script>
@@ -53,8 +54,18 @@ $(document).ready(function(){
 
 <?php
 /*
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""){
+    $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    header("HTTP/1.1 301 Moved Permanently");
+    header("Location: $redirect");
+}
+*/
+include_once 'includes/main.inc.php';
+date_default_timezone_set('America/Chicago');
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
+//error_reporting(E_ALL);
+/*ini_set('display_errors', '1');
 
 <li><a id='account' href='' onclick='return false;'>Account</a>
 					
@@ -86,7 +97,7 @@ ini_set('display_errors', '1');
 
 $header_html = "<div id='container'>
 				<div id='header'>
-				<br><center>IGB People Database</center>
+				<br><center>IGB People Database - Testing</center>
 				</div>
 				<div id='content' class='left'>
 				<ul>
@@ -103,8 +114,9 @@ $header_html = "<div id='container'>
 							</li>
 		
 						</ul>
-					</li>
-					<li><a id='admin' href='' onclick='return false;'>Admin</a>
+					</li>".
+                                        (($_SESSION['admin_id'] != 0) ? 
+					("<li><a id='admin' href='' onclick='return false;'>Admin</a>
 						<ul id='admin'>
 							<li id='admin'>
 								<a href='theme_edit.php' >Manage Themes</a>
@@ -120,8 +132,9 @@ $header_html = "<div id='container'>
 							</li>
 		
 						</ul>
-					</li>
-					<li><a href='logout.php'>Log Out</a></li>  
+					</li>")
+                                        : "") .
+					"<li><a href='logout.php'>Log Out</a></li>  
 				</ul>
 				</div>
 				<div id='content'>";

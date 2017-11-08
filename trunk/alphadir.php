@@ -22,11 +22,11 @@ $(document).ready(function(){
 
 
 
- $("ul#directory").show();
- 
- 	$('.dir').css("z-index","-1");
- 	$('.alphatable').hide();
-	$('#A.alphatable').dataTable( {
+ //$("ul#directory").show();
+ //var letter = "A";
+ 	//$('.dir').css("z-index","-1");
+ 	//$('.alphatable').hide();
+	$('.alphatable').dataTable( {
 					"bPaginate": true,
 					"sPaginationType": "full_numbers",
 					"bLengthChange": false,
@@ -35,35 +35,10 @@ $(document).ready(function(){
 					"bInfo": false,
 					"bRetrieve": true,
 					"bAutoWidth": true } );
-	$('#A.alphatable').show();
-	$('#A_wrapper').show(); 
-	$('#A.dir').css("z-index","1");
+	//$('#'+letter+'.alphatable').show();
+	//$('#'+letter+'_wrapper').show(); 
+	//$('#'+letter+'.dir').css("z-index","1");
 		
- 
- 	 $(".alphabutton").click(function(){
-									  
-									 		  
-          var letter = $(this).attr("id");
-		 
-		  	$('#'+letter+'.alphatable').dataTable( {
-							"bPaginate": true,
-							"sPaginationType": "full_numbers",
-							"bLengthChange": false,
-							"bFilter": false,
-							"bSort": false,
-							"bInfo": false,
-							"bRetrieve": true,
-							"bAutoWidth": true } );
-		  
-		  
-		/*$('#'+letter+'_wrapper').toggle();*/
-		$('.alphatable').hide();
-		$('.dataTables_wrapper').hide();
-		$('.dir').css("z-index","-1");
-		$('#'+letter+'.dir').css("z-index","1");
-		$('#'+letter+'.alphatable').show();
-         $('#'+letter+'_wrapper').show();      
-        }); 
  
 });
 
@@ -80,6 +55,7 @@ $(document).ready(function(){
 
 <?php
 
+$curr_letter = $_GET['letter'];
 
 //variables
 $user_enabled = 1;
@@ -92,24 +68,32 @@ $table_html = "";
 $filters = NULL;
 	
 $user = new user($db);
+$user_tmp = new user($db);
+$user_id = $user->user_exists("netid", $_SESSION['username']);
+
+
 $html = "";
 
 	for($i=0; $i<26; $i++){
 		
 		$letter = $alphabet[$i];
-		$search_results = $user->alpha_search($letter);
-		
+		//$search_results = $user->alpha_search($letter, $user_id);
+		$query = "SELECT users.user_id as user_id  FROM  users where last_name like '$letter%'";
+                $search_results = $db->query($query);
 		if (count($search_results) == 0) { 
 		  	$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
 					class='alphabutton disabled' > ";
 	  	}
 		else {
-			$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
-					class='alphabutton' > ";
+                    
+                    $html .= "<a href='alphadir.php?letter=".$letter."' class='alphalink' >".$letter."</a> ";
+                    
+			//$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
+			//		class='alphabutton' > ";
 	
-			$letter_html .= "<div class='dir' id='".$letter."'>";
-			$letter_html .= result_table( $letter, $search_results, "alphatable" );
-			$letter_html .= "</div>";
+			//$letter_html .= "<div class='dir' id='".$letter."'>";
+			//$letter_html .= result_table( $letter, $search_results, "alphatable" );
+			//$letter_html .= "</div>";
 		
 		}
 		
@@ -118,7 +102,10 @@ $html = "";
 	}
 	
 
-
+if($curr_letter != null && $curr_letter != "") {
+    $search_results = $user->alpha_search($curr_letter, $user_id);
+    $letter_html .= "<div class='dir' id='".$curr_letter."'>". result_table( $curr_letter, $search_results, "alphatable" ) . "</div>";
+}
 
 ?> 
 
