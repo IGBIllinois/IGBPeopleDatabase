@@ -7,10 +7,12 @@ include 'includes/functions.inc.php';
 include_once 'includes/main.inc.php';
 
 
+error_reporting(E_ERROR | E_PARSE);
+
 if (!$_SESSION['admin']){
 header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
+exit(); }
+
 
 //echo "<body onLoad=\"document.add.first_name.focus()\">"; 
 
@@ -54,9 +56,14 @@ $other_phone = $user->get_other_phone();
 $gender = $user->get_gender();
 
 //igb
+$igb_address = $user->get_igb_address();
+$igb_city = $user->get_igb_city();
+$igb_state = $user->get_igb_state();
+$igb_zip = $user->get_igb_zip();
 $igb_room = $user->get_igb_room();
 $igb_phone = $user->get_igb_phone();
 $fax = $user->get_fax();
+$image = $user->get_image_location();
 
 //dept
 $dept_drop = $user->get_dept_id();
@@ -73,13 +80,14 @@ $home_address2 = $user->get_home_address2();
 $home_city = $user->get_home_city();
 $home_state = $user->get_home_state();
 $home_zip = $user->get_home_zip();
-$theme_name = $user->get_theme();
-$theme_1_name = $user->get_theme_1();
-$theme_2_name = $user->get_theme_2();
-$type_1_name = $user->get_type_1();
-$type_2_name = $user->get_type_2();
+//$theme_name = $user->get_theme();
+//$theme_1_name = $user->get_theme_1();
+//$theme_2_name = $user->get_theme_2();
+//$type_1_name = $user->get_type_1();
+//$type_2_name = $user->get_type_2();
 //$other_theme_name = $user->get_other_theme();
 $default_address = $user->get_default_address();
+
 
 //booleans
 $status = $user->get_status();
@@ -113,19 +121,28 @@ $html .= "<form method='post' action='profile.php?user_id=".$user_id."' name='re
 $html .= "</div >";
 
 //if successfully removed
-$success_html = "<br><br><h4> User successfully removed from the database</h4>
+/*
+$removed = $_GET['removed'];
+if($removed == '1') {
+$html .= "<br><br><h4> User successfully removed from the database</h4>
 					
 					<br>
 					<a href='profile.php?user_id=" . $user_id . "'>View Profile >></a>
 					<br>
 					<a href='search.php'>Search another IGB member >></a>"	;
-
+}
+*/
 
 
 /*
 UPDATE PERSONAL
 */
-
+if(isset($_GET['from_theme'])) {
+    $theme_id = $_GET['from_theme'];
+    $theme = new theme($db);
+    $theme->get_theme($theme_id);
+    $theme_link = "<A href=themedir.php?theme=". $theme_id . ">Back to " . $theme->get_short_name() . "</A><BR>";
+}
 if (isset($_POST['update_personal'])){
 	$first_name = $_POST['first_name'];
 	$last_name = $_POST['last_name'];
@@ -146,11 +163,13 @@ if (isset($_POST['update_personal'])){
 		$error_count++;
 		$personal_edit=TRUE;
 	}
+        if($uin != '') {
 	if (!empty($uin_exists)){ 
 		$uin_error=$tab ."* UIN already exists in database";
 		$error_count++;
 		$personal_edit=TRUE;
 	}
+        }
 	if (!($user->is_valid_email($email))){ 
 		$email_error= "* Invalid email address";
 		$error_count++;
@@ -290,22 +309,35 @@ UPDATE IGB
 */
 
 if (isset($_POST['update_igb'])){
+        $igb_address = $_POST['igb_address'];
+        
+        $igb_state = $_POST['igb_state'];
+        $igb_city = $_POST['igb_city'];
+        $igb_zip = $_POST['igb_zip'];
 	$igb_room = $_POST['igb_room'];
-	$theme_drop = $_POST['theme_drop'];
-	$theme_1_drop = $_POST['theme_1_drop'];
-	$theme_2_drop = $_POST['theme_2_drop'];
+	//$theme_drop = $_POST['theme_drop'];
+	//$theme_1_drop = $_POST['theme_1_drop'];
+	//$theme_2_drop = $_POST['theme_2_drop'];
 	//$other_theme_drop = $_POST['other_theme_drop'];
-	$type_drop = $_POST['type_drop'];	
-	$type_1_drop = $_POST['type_1_drop'];
-	$type_2_drop = $_POST['type_2_drop'];
+	//$type_drop = $_POST['type_drop'];	
+	//$type_1_drop = $_POST['type_1_drop'];
+	//$type_2_drop = $_POST['type_2_drop'];
+        $add_theme = $_POST['add_theme'];
+        $add_type = $_POST['add_type'];
+        $remove_theme = $_POST['remove_theme'];
 	$igb_phone = $_POST['igb_phone'];
 	$fax = $_POST['fax'];
 	$start_date = $_POST['start_date']; 
+        $end_date = $_POST['end_date'];
+        $reason_leaving = $_POST['reason_leaving'];
 	$supervisor = $_POST['supervisor'];
 			$safety_training = $user->is_checked($_POST['safety_training']);
 			$key_deposit = $user->is_checked($_POST['key_deposit']);
 			$prox_card = $user->is_checked($_POST['prox_card']);
 			$admin = $user->is_checked($_POST['admin']);
+                        
+        $add_permission = $_POST['add_permission'];
+        $remove_permission = $_POST['remove_permission'];
 			
 	
 	$error_count = 0;
@@ -318,23 +350,143 @@ if (isset($_POST['update_igb'])){
 		$error_count++;
 		$igb_edit=TRUE;
 	}
+                
+        //echo("current image = $image <BR>");
+        $imageDir =  $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) ."/images/users/";
+        //echo("imageDir = $imageDir");
+        $basename = "";
+        //echo("delete_image = ".$user->is_checked($_POST['delete_image']) . "<BR>");
+        if($user->is_checked($_POST['delete_image'])) {
+            delete_current_image($user);
+        }
+
+        if($_FILES['imageFile'] != null && $_FILES['imageFile']['name'] != null) {
+            $mimetypes = array("image/jpeg", "image/gif", "image/png", "image/pjpeg");
+            //echo("file type = ".$_FILES["imageFile"]["type"]);
+            if (!(in_array($_FILES["imageFile"]["type"], $mimetypes))) {
+                echo("ERROR: File must be an image file.");
+                return;
+            }
+            try {
+                //print_r($_FILES);
+            $uploadfile = $imageDir . basename($_FILES['imageFile']['name']);
+            //echo("uploadFile = $uploadfile <BR>");
+            $basename = basename($_FILES['imageFile']['name']);
+           
+            $basebasename = strstr($basename, ".", TRUE);
+            $basesuffix = strstr($basename, ".");
+            $i=1;
+            while(file_exists($imageDir.$basename)) {
+                $basename = $basebasename . $i . $basesuffix;
+                $i++;
+            }
+            $uploadfile = $imageDir . $basename;
+            $fileresult = 0;
+            try{ 
+                $fileresult = (move_uploaded_file($_FILES['imageFile']['tmp_name'], $uploadfile)) ;
+                //echo("fileresult = $fileresult <BR>");
+                //print_r($_FILES);
+            } catch (Exception $ex) {
+                    echo($ex);
+                    echo($ex->getTraceAsString());
+            }
+            if($fileresult == "" || $fileresult) {
+                try {
+                    resizeImage($uploadfile, $_FILES["imageFile"]["type"]);
+                } catch(Exception $e) {
+                    echo("Error in uploading image.<BR>");
+                }
+                //echo("Current image directory = ". getcwd() . "/images/users/". $user->get_image()."<BR>");
+                //delete old image
+                delete_current_image($user);
+                
+                $result = $user->update($user_id, 'users', 'image_location', $basename);
+                
+                // set new image
+                $image = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" . $basename;
+                
+                /* ImageMagick version
+                 * 
+                 * try {
+                
+                
+                 * $image = new Imagick($uploadfile);
+                 
+
+                // If 0 is provided as a width or height parameter,
+                // aspect ratio is maintained
+                if($image->thumbnailImage(100, 0)) {
+                    $image->writeImage($uploadfile);
+                    //echo("Image scaled ok!<BR>");
+                } else {
+                    echo("ERROR scaling image");
+                }
+                
+                } catch(Exception $e) {
+                    echo("Error in uploading image.<BR>");
+                }
+                
+                $result = $user->update($user_id, 'users', 'image_location', $basename);
+                
+                // set new image
+                $image = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" . $basename;
+                */
+            } else {
+                //echo "Possible file upload attack!\n";
+                echo("FILE ERROR: #".$FILES['imageFile']['error']."<BR>");
+                $error_count++;
+                //print_r($_FILES);
+            }
+            } catch(Exception $e) {
+                echo($e->getTrace());
+            }
+
+        }
 	
 	if ($error_count == 0){
+            //echo("theme_id = ". $user->get_theme_id(). "<BR>");
+            //echo("new theme_id = ". $theme_drop. "<BR>");
+            //update_theme_date($user->get_user_id(), $user->get_theme_id(), $theme_drop);
+            //update_theme_date($user->get_user_id(), $user->get_theme_1_id(), $theme_1_drop);
+            //update_theme_date($user->get_user_id(), $user->get_theme_2_id(), $theme_2_drop);
 		$result = $user->update($user_id, 'address', 'type', 'IGB', "AND type = 'IGB'");
-		$result = $user->update($user_id, 'address', 'address2', $igb_room, "AND type = 'IGB'");
-		$result = $user->update($user_id, 'users', 'theme_id', $theme_drop);
-		$result = $user->update($user_id, 'users', 'theme_1_id', $theme_1_drop);
-		$result = $user->update($user_id, 'users', 'theme_2_id', $theme_2_drop);
-		$result = $user->update($user_id, 'users', 'type_id', $type_drop);	
-		$result = $user->update($user_id, 'users', 'type_1_id', $type_1_drop);
-		$result = $user->update($user_id, 'users', 'type_2_id', $type_2_drop);
+                $result = $user->update($user_id, 'address', 'address1', $igb_address, " AND type = 'IGB'");
+                $result = $user->update($user_id, 'address', 'city', $igb_city, " AND type = 'IGB'");
+                $result = $user->update($user_id, 'address', 'state', $igb_state, " AND type = 'IGB'");
+                $result = $user->update($user_id, 'address', 'zip', $igb_zip, " AND type = 'IGB'");
+		$result = $user->update($user_id, 'address', 'address2', $igb_room, " AND type = 'IGB'");
+		//$result = $user->update($user_id, 'users', 'theme_id', $theme_drop);
+		//$result = $user->update($user_id, 'users', 'theme_1_id', $theme_1_drop);
+		//$result = $user->update($user_id, 'users', 'theme_2_id', $theme_2_drop);
+		//$result = $user->update($user_id, 'users', 'type_id', $type_drop);	
+		//$result = $user->update($user_id, 'users', 'type_1_id', $type_1_drop);
+		//$result = $user->update($user_id, 'users', 'type_2_id', $type_2_drop);
+                if(isset($_POST['add_theme'])&& $_POST['add_theme'] != 0) {
+                    //echo("ADD THEME =". $_POST['add_theme']);
+                    $user->add_theme($user_id, $_POST['add_theme'], $_POST['add_type']);
+                    
+                }
+                if(isset($_POST['remove_theme']) && $_POST['remove_theme'] != 0) {
+                    //echo("REMOVE THEME = ". $_POST['remove_theme']);
+                    $user->remove_theme($user_id, $_POST['remove_theme']);  
+                }
+                
+                if(isset($_POST['change_type']) && $_POST['change_type'] != 0) {
+                    $user->change_type($user_id, $_POST['change_type_theme'], $_POST['change_type']);
+                }
 		$result = $user->update($user_id, 'phone', 'igb', $igb_phone);
 		$result = $user->update($user_id, 'phone', 'fax', $fax);
 		$result = $user->update($user_id, 'users', 'start_date', $start_date);
+                $result = $user->update($user_id, 'users', 'end_date', $end_date);
+                $result = $user->update($user_id, 'users', 'reason_leaving', $reason_leaving);
 		$result = $user->update($user_id, 'users', 'supervisor_id', $supervisor_id);
-		$theme_name = $user->get_theme();
-		$theme_1_name = $user->get_theme_1();
-		$theme_2_name = $user->get_theme_2();
+                $user->add_permission($user_id, $add_permission);
+                $user->remove_permission($user_id, $remove_permission);
+                //$result = $user->update($user_id, 'users', 'image_location', $basename);
+		//$theme_name = $user->get_theme();
+		//$theme_1_name = $user->get_theme_1();
+		//$theme_2_name = $user->get_theme_2();
+                $image = $user->get_image_location();
 		//$other_theme_name = $user->get_other_theme();
 		if(isset($_POST['default_address'])){
 			$default_address = $_POST['default_address'];
@@ -345,7 +497,11 @@ if (isset($_POST['update_igb'])){
 			$result = $user->update($user_id, 'users', 'prox_card', $prox_card);
 			$result = $user->update($user_id, 'users', 'admin', $admin);
 		
-	}
+	} else {
+            echo("ERROR");
+        }
+        // Reload with new info
+        
 }
 
 
@@ -363,6 +519,20 @@ $igb_info = "<div class='profile_header'>
 if ( $default_address == 'IGB'){
 	$igb_info .= " * ";
 }
+$igb_address1 = $user->get_igb_address();
+$igb_address = $user->get_igb_address();
+$igb_room = $user->get_igb_room();
+$igb_city = $user->get_igb_city();
+$igb_state = $user->get_igb_state();
+$igb_zip = $user->get_igb_zip();
+$theme_info = $user->get_themes($user_id);
+// If the IGB address is null, use default IGB Address instead
+if($igb_address1 == null || $igb_address1 == "") {
+        $igb_address = "1206 W. Gregory Dr.";
+        $igb_city = "Urbana";
+        $igb_state = "IL";
+        $igb_zip = "61801";
+    }
 $igb_info .= "</p>
 			<p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&igb_edit=TRUE #igb'> edit </a></p>
 			
@@ -371,8 +541,8 @@ $igb_info .= "</p>
 			<table class = 'profile'>
     		<tr >
 			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'>1206 W. Gregory Dr. ". $igb_room."
-			  	<br>Urbana, IL 61801
+			  <td class='noborder'>". $igb_address . ", Room #". $igb_room ."
+			  	<br>". $igb_city . ", ". $igb_state . " " . $igb_zip . "
 			  </td>
    			</tr>
     		<tr >
@@ -384,15 +554,28 @@ $igb_info .= "</p>
 			  <td class='xs'><label>fax </label></td>
 			  <td class='noborder'>". $fax."</td>
    			</tr>
-    		<tr >
-			  <td class='xs'><label>themes </label></td>
-			  <td class='noborder'>". $theme_name;
+    		<tr >";
+
+                    
+			  $igb_info .= "<td class='xs'><label>themes </label></td>";
+                          $igb_info .= "<td class='noborder'>";
+                          foreach($theme_info as $theme) {
+                              $igb_info .= $theme['theme_name'];
+                              $igb_info .= ", ";
+                          }
+                          $igb_info = rtrim($igb_info);
+                          $igb_info = rtrim($igb_info, ",");
+                          
+			  
+/*
 if ($theme_1_name != NULL){
 	$igb_info .= ", ". $theme_1_name;
 }
 if ($theme_2_name != NULL){
 	$igb_info .= ", ". $theme_2_name;
 }
+
+ */
 	/*
 			<tr >
 			  <td class='xs'><label>start date </label></td>
@@ -403,20 +586,29 @@ if ($theme_2_name != NULL){
 $igb_info .= "</td>
    			  </tr>
 			  <tr >
-			  <td class='xs'><label>type </label></td>
-			  <td class='noborder'>". $user->get_type();
+			  <td class='xs'><label>types </label></td>
+			  <td class='noborder'>";
+
+                          foreach($theme_info as $theme) {
+                              $igb_info .= $theme['type_name'];
+                              $igb_info .= ", ";
+                          }
+                          $igb_info = rtrim($igb_info);
+                          $igb_info = rtrim($igb_info, ",");
+                          
+/*        
 if($type_1_name != NULL) {
 	$igb_info .= ", " . $type_1_name;
 }
 if($type_2_name != NULL) {
 	$igb_info .= ", ". $type_2_name;
 }
-			  
+*/		  
 			  
 $igb_info .= "</td>
    			</tr>
 			<tr >
-			  <td class='xs'><label>supervisor </label></td>
+			  <td class='xs'><label>supervisor</label></td>
 			  <td class='noborder'>". $user->get_supervisor_name()."</td>
    			</tr>
 			<tr >
@@ -435,19 +627,29 @@ $igb_info .= "</td>
 			  <td class='xs'><label>admin </label></td>
 			  <td class='noborder'>". $bool[$admin]."</td>
    			</tr>
-			</table>
+                        <tr>
+                            <td class='xs'><label>permissions</label></td>
+                            <td class='noborder'>". (($admin == 1) ? "ALL" : list_permissions($user_id)) . "</td>".
+                        "</tr>
+                          <td class='xs'><label>image </label></td>
+			  <td class='noborder'>". "<img src='".$image."'>"." <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
+                        </tr>
+                        	
+		</table>
 			<br>
 			</div>
 			<br>
 			";
 
+$user_theme_query = "SELECT themes.theme_id, themes.short_name from themes  LEFT JOIN user_theme on (user_theme.theme_id=themes.theme_id) where user_theme.active = 1 and user_theme.user_id=$user_id ORDER BY short_name ASC ";
+$user_theme_list = $db->query($user_theme_query);
 /*
 IGB INFO EDIT TABLE HTML
 <input type='submit' class='profile' name='update' value='update'>
 				<input type='button' name='cancel' value='Cancel'>
 */			
 $igb_info_edit = "<div class='profile_header' id='igb'>
-			<form method='post' action='profile.php?user_id=".$user_id."' name='update_igb'>
+			<form method='post' enctype='multipart/form-data' action='profile.php?user_id=".$user_id."' name='update_igb'>
 			<p class='alignleft'>[ IGB ]</p>
 			<p class='alignright'></p>
 			
@@ -455,12 +657,25 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			
 			<div class='profile'>
 			<table class = 'profile'>
+                        
     		<tr >
 			  <td class='xs'><label>address </label><br> </td>
-			  <td class='xs'>". $user->get_igb_acsz()."</td>
+			  <td class='noborder'><input type='large' name='igb_address' maxlength='50'  
+        		value=\"". $user->get_igb_address()."\"></td>
+                            
+                        <td class='noborder'>Room #<input type='small' name='igb_room' maxlength='13'  
+                            value='". $igb_room."'></td>
+   			</tr>
+    		<tr >
+			  
+			  
+			  <td class='xs'><label>city</label></td><td class='noborder'>	<input type='text' name='igb_city' maxlength='30'  value='". $user->get_igb_city()."'>"."</td></tr>".
+			 "<tr><td class='xs'><label>state</label></td><td class='noborder'>".	simple_drop( "igb_state", $states_arr, $user->get_igb_state() )."</td></tr>".
+			  	"<tr><td class='xs'><label>zip</label></td><td class='noborder'><input type='small' name='igb_zip' maxlength='10'  value='".$user->get_igb_zip()."'>
+			  </td>
+   			
 
-			  <td class='noborder'><input type='small' name='igb_room' maxlength='13'  
-        		value='". $igb_room."'></td>
+			  
    			</tr>
     		<tr >
 			  <td class='xs'><label>phone </label></td>
@@ -472,20 +687,28 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			  <td class='noborder'><input type='text' class='phone' name='fax' maxlength='14'  
         		value='". $fax."'></td>
    			</tr>
+                        
 			<tr>
-			  <td class='xs'><label>themes </label></td>
-			  <td class='xs'>". dropdown( 'theme_drop', $theme_list, $user->get_theme_id() ). "</td>
-			  <td class='noborder'>". dropdown( 'theme_1_drop', $theme_list, $user->get_theme_1_id() ). "</td>
-			  <td class='noborder'>". dropdown( 'theme_2_drop', $theme_list, $user->get_theme_2_id() ). "</td>
+			  <td class='xs'><label>Add Theme </label></td>
+			  <td class='xs'>". dropdown( 'add_theme', $theme_list, 0 ). "</td>
+			</tr>
+                        <tr >
+                        <td colspan=3 class='noborder'><A HREF=theme_history.php?user_id=".$user->get_user_id(). ">(View theme history)</a></td>
+                            </tr>
+			<tr >
+			  <td class='xs'><label>Add Type </label></td>
+			  <td class='noborder'>". dropdown( 'add_type', $type_list, 0 )."</td>
+   			</tr>
+                        <tr>
+			  <td class='xs'><label>Remove Theme </label></td>
+			  <td class='xs'>". dropdown( 'remove_theme', $user_theme_list, 0 ). "</td>
+			</tr>
+                        <tr>
+			  <td class='xs'><label>Change Type</label></td>
+			  <td class='xs'>". dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". dropdown( 'change_type', $type_list, 0 ) ."</td>
 			</tr>
 			<tr >
-			  <td class='xs'><label>type </label></td>
-			  <td class='noborder'>". dropdown( 'type_drop', $type_list, $user->get_type_id() )."</td>
-			  <td class='noborder'>". dropdown( 'type_1_drop', $type_list, $user->get_type_1_id() )."</td>
-			  <td class='noborder'>". dropdown( 'type_2_drop', $type_list, $user->get_type_2_id() )."</td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>supervisor </label></td>
+			  <td class='xs'><label>supervisor (NetID)</label></td>
 			  <td class='noborder'><input type='text' name='supervisor' maxlength='30'  
         		value=". $user->get_supervisor_netid()."></td>
 				<td class='noborder'><label class='errormsg'>".$supervisor_error."</label></td>
@@ -518,6 +741,44 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			  <td class='xs'><label>start date </label></td>
 			  <td class='noborder'><input type='date' name='start_date' maxlength='12'  
         		value=". $user->get_start_date()."></td>
+   			</tr>
+                        <tr >
+			  <td class='xs'><label>departure date </label></td>
+			  <td class='noborder'><input type='date' name='end_date' maxlength='12'  
+        		value=". $user->get_end_date()."></td>
+   			</tr>
+                        <tr >
+			  <td class='xs'><label>reason leaving </label></td>
+			  <td class='noborder'><input type='date' name='reason_leaving'  
+        		value='". $user->get_reason_leaving()."'></td>
+   			</tr>
+                        <tr>
+                            <td class='xs'><label>add permissions</label></td>
+                            <td class='noborder'>".dropdown( 'add_permission', $theme_list )."</td>
+                        </tr>
+                        <tr>
+                            <td class='xs'><label>remove permissions</label></td>
+                            <td class='noborder'>".dropdown( 'remove_permission', $theme_list )."</td>
+                        </tr>
+                        <tr>
+                            <td class='xs'><label>thumbnail image</label></td>
+                            <td colspan=3 class='noborder'><img src='".$user->get_image_location()."'> <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
+                        <tr>
+                        <tr>
+                            <td class='xs'><label>Image</label></td>
+                            <td colspan=3 class='noborder'><!-- The data encoding type, enctype, MUST be specified as below -->
+                               
+                                    <!-- MAX_FILE_SIZE must precede the file input field -->
+                                    <!-- <input type='hidden' name='MAX_FILE_SIZE' value='30000' /> -->
+                                    <!-- Name of input element determines name in \$_FILES array -->
+                                    <input name='imageFile' value='".$user->get_image()."' type='file' style='width:500px;height:25px' accept='image/jpeg, image/gif, image/png, image/pjpeg, image/tiff' />                             
+                            </td>
+                         </tr>
+                         <tr >
+			  <td class='xs'><label>Delete current image </label></td>
+			  <td class='noborder'>
+			  	<input type='checkbox' name='delete_image' value='checked'>
+			  </td>
    			</tr>
 			</table>
 			
@@ -816,6 +1077,7 @@ if (isset($_POST['remove_member'])){
 	$fwd_country = $_POST['fwd_country'];
 	$fwd_phone = $_POST['fwd_phone'];
 	$fwd_phone_type = $_POST['fwd_phone_type'];	
+        $fwd_email = $_POST['fwd_email'];
 	
 	
 	$fwd_array = array ();
@@ -830,6 +1092,9 @@ if (isset($_POST['remove_member'])){
 	$date_result = $user->update($user_id, 'users', 'end_date', $end_date);
 	$phone_result = $user->update($user_id, 'phone', 'fwd', $fwd_phone);
 	$phone_type_result = $user->update($user_id, 'phone', 'fwd_type', $fwd_phone_type);
+        if($fwd_email != null) {
+            $email_result = $user->update($user_id, 'users', 'email', $fwd_email);
+        }
 	
 	if($reason_leaving == "Other"){		
 		$reason_result = $user->update($user_id, 'users', 'reason_leaving', $other_reason_leaving);
@@ -838,13 +1103,15 @@ if (isset($_POST['remove_member'])){
 		$reason_result = $user->update($user_id, 'users', 'reason_leaving', $reason_leaving);		
 	}
 	
-	
-	$result = $user->update($user_id, 'users', 'user_enabled', '0');	
 
+	$result = $user->update($user_id, 'users', 'user_enabled', '0');	
+        $alum_result = $db->query("select type_id from type where name='Alumnus'");
+        $alum_id = $alum_result[0]['type_id'];
+        $result = $user->update($user_id, 'users', 'type_id', $alum_id);
 	$result = $user->update($user_id, 'users', 'default_address', 'FWD');
 	unset($_POST['remove_member']);
-	$redirectpage= "/profile.php?user_id=".$user_id;
-	//$redirectpage= "/search.php";
+	//$redirectpage= "/profile.php?user_id=".$user_id;
+	$redirectpage= "/search.php";
 	header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
 	exit(); 
 	
@@ -931,8 +1198,12 @@ $remove_html = " <div id='remove_member'>
 						
 					  </td>
 					</tr>
-					
-					
+                                        <tr>
+                                            <td class='xs'><label>Email</label><BR></td>
+                                            <td class='noborder'>
+                                                <input type='small' name='fwd_email' maxlength='50'>
+					    </td>
+					</tr>
 				</table>
 			<br>
 			</div>
@@ -976,18 +1247,37 @@ $(document).ready(function(){
 	
 
 <h1> <?php echo $user->get_name();?> </h1>
-<h3> <?php 
+ <?php 
 	if (!$status){
+
 		$phpdate = strtotime( $user->get_end_date() );
-		echo "[ left IGB ".date('F j Y',$phpdate)." ]";
+                
+                $removed = $_GET['removed'];
+                
+                if($removed == '1') {
+                    echo( "<br><br><h4> User successfully removed from the database</h4>");
+                
+                
+                    echo("<br>
+                    <a href='profile.php?user_id=" . $user_id . "'>View Profile >></a>
+                    <br>
+                    <a href='search.php'>Search another IGB member >></a><BR><BR>")	;
+                }
+
+		echo "<h3>[ left IGB ".date('F j Y',$phpdate)." ]";
 		echo "<BR>";
-		echo "[ Reason: ". $user->get_reason_leaving(). " ]";
+		echo "[ Reason: ". $user->get_reason_leaving(). " ]</h3>";
+                
 	}
 	else{
 		$phpdate = strtotime( $user->get_start_date() );
-		echo "[ IGB member since ".date('F j Y',$phpdate)." ]";;
+		echo "<h3>[ IGB member since ".date('F j Y',$phpdate)." ]</h3>";
 	}
-	 ?> </h3>
+        
+        if(isset($theme_link)) {
+            echo($theme_link . "<BR>");
+        }
+	 ?> 
 <br>
 <?php 
 //if($status=='1'){
@@ -1027,4 +1317,159 @@ if($status=='0') {
 
 include ("includes/footer.inc.php"); 
 
+function list_permissions($user_id) {
+    global $db;
+    $user = new user($db, $user_id);
+    $permissions = $user->get_permissions($user_id);
+    //print_r($permissions);
+   // echo("size = ".count($permissions));
+    for($i=0; $i<count($permissions); $i++) {
+        $theme_id = $permissions[$i]['theme_id'];
+        //echo("theme_id=$theme_id");
+        $name = $db->query("SELECT short_name from themes where theme_id='".$theme_id."'");
+        //print_r($name);
+        $theme_list .= $name[0]['short_name'];
+        if($i < count($permissions)-1) {
+            $theme_list .= ", ";
+        } 
+    }
+    return $theme_list;
+}
+
+
+function resizeImage($filename, $filetype) {
+    // The file
+    //$filename = 'test.jpg';
+    //
+    // Filetypes:
+    // "image/jpeg", "image/gif", "image/png", "image/pjpeg"
+    // 
+    // Set a maximum height and width
+    $width = 100;
+    $height = 100;
+    
+    $width_large=500;
+    $height_large=500;
+    $filename_large = str_replace(".", "_large.", $filename);
+    $filename_orig= str_replace(".", "_orig.", $filename);
+    //echo("File = $filename <BR>type = $filetype <BR>");
+    // Content type
+    //header('Content-Type: '.$filetype);
+
+    // Get new dimensions
+    list($width_orig, $height_orig) = getimagesize($filename);
+
+    $ratio_orig = $width_orig/$height_orig;
+    //echo("orig width, height = $width_orig, $height_orig<BR>");
+//echo("Ratio = $ratio_orig<BR>");
+    if ($width/$height > $ratio_orig) {
+        //height > width
+        //echo("1");
+       $width = $height*$ratio_orig;
+       $width_large = $height_large*$ratio_orig;
+    } else {
+        //echo("2");
+       $height = $width/$ratio_orig;
+       $height_large = $width_large/$ratio_orig;
+    }
+
+
+    
+    // Resample
+    $image_p = imagecreatetruecolor($width, $height);
+    $image_large = imagecreatetruecolor($width_large, $height_large);
+    $image_orig = imagecreatetruecolor($width_orig, $height_orig);
+//echo("Large width, height = $width_large, $height_large");
+    if($filetype == "image/jpeg" || $filetype == "image/pjpeg") {
+        $image = imagecreatefromjpeg($filename);
+    } else if($filetype == "image/gif") {
+        $image = imagecreatefromgif($filename);
+    } else if($filetype == "image/png") {
+        $image = imagecreatefrompng($filename);
+    }
+    try {
+        
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+    imagecopyresampled($image_orig, $image, 0, 0, 0, 0, $width_orig, $height_orig, $width_orig, $height_orig);
+    imagecopyresampled($image_large, $image, 0, 0, 0, 0, $width_large, $height_large, $width_orig, $height_orig);
+
+    // Output
+    
+    if($filetype == "image/jpeg" || $filetype == "image/pjpeg") {
+        //echo("1");
+        imagejpeg($image_p, $filename, 100);
+        imagejpeg($image_large, $filename_large, 500);
+        imagejpeg($image_orig, $filename_orig);
+    } else if($filetype == "image/gif") {
+        //echo("2");
+        imagegif($image_p, $filename, 100);
+        imagegif($image_large, $filename_large, 500);
+        imagegif($image_orig, $filename_orig);
+    } else if($filetype == "image/png") {
+        //echo("3");
+        imagepng($image_p, $filename, 100);
+        imagepng($image_large, $filename_large, 500);
+        imagepng($image_orig, $filename_orig);
+    }
+    } catch(Exception $e) {
+        echo($e."<BR>");
+        echo($e->getTraceAsString(). "<BR>");
+    }
+    
+}
+
+function delete_current_image($user) {
+    //echo("current image = ". $user->get_image()."<BR>");
+    if($user->get_image() != "default.png" ) {
+        $current_image_file = getcwd() . "/images/users/". $user->get_image();
+        $current_large_image_file = getcwd() . "/images/users/". $user->get_large_image();
+        unlink($current_image_file);
+        unlink($current_large_image_file);
+        $result = $user->update($user->get_user_id(), 'users', 'image_location', NULL);
+    }
+    
+}
+/*
+function update_theme_date($user_id, $old_theme_id, $new_theme_id, $date=null) {
+    global $db;
+    if($date == null) {
+        $date = date("Y-m-d");
+    }
+    if($old_theme_id == $new_theme_id) {
+        //echo("NOPE");
+        return;
+    }
+    $find_user_query = "SELECT * from theme_date where user_id = $user_id and theme_id = $old_theme_id";
+    //echo("find_user_query = $find_user_query <BR>");
+    $find_user_result = $db->query($find_user_query);
+    if(count($find_user_result) == 0) {
+        if($old_theme_id != null && $old_theme_id != 0) {
+        $query = "INSERT INTO theme_date (user_id, theme_id, start_date) VALUES('". $user_id . "','".$old_theme_id."','". $date ."')";
+        //echo("theme_date_ insert query = $query <BR>");
+        $db->non_select_query($query);
+        }
+    }
+    if($old_theme_id == null || $old_theme_id == 0) {
+        $query = "INSERT INTO theme_date (user_id, theme_id, start_date) VALUES('". $user_id . "','".$new_theme_id."','". $date ."')";
+        //echo("theme_date_query = $query <BR>");
+        $db->non_select_query($query);
+    } else if($new_theme_id == null || $new_theme_id == 0) {
+        $query = "UPDATE theme_date set end_date = '". $date . "' where user_id = '".$user_id . "' and theme_id='".$old_theme_id."' and (end_date IS NULL or end_date = 0)";
+        //echo("theme_date_query = $query <BR>");
+        $db->query($query);
+    } else {
+        $start_query = "UPDATE theme_date set start_date = '" . $date . "' WHERE user_id='".$user_id."' AND theme_id='".$new_theme_id."'";
+        $end_query = "UPDATE theme_date set end_date = '" . $date . "' WHERE user_id='".$user_id."' AND theme_id='".$old_theme_id."' and (end_date IS NULL or end_date = 0)";
+        $start_query = "INSERT INTO theme_date (user_id, theme_id, start_date) VALUES('". $user_id . "','".$new_theme_id."','". $date ."')";
+        //echo("end query = ". $end_query. "<BR>");
+        //echo("start query = ". $start_query . "<BR>");
+        
+        $db->query($start_query);
+        $db->query($end_query);
+    }
+    
+    
+}
+ * */
+ 
 ?> 

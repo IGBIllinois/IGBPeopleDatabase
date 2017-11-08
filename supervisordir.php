@@ -69,12 +69,13 @@ $(document).ready(function(){
 
 
 <?php
-$startScriptTime=microtime(TRUE);
 
-$curr_theme = $_GET['theme'];
 
-$theme_list = $db->query($select_theme);
+//$curr_theme = $_GET['theme'];
+$supervisor_id = $_GET['supervisor_id'];
 
+//$theme_list = $db->query($select_theme);
+//$supervisor_list = $user->supervisor_list($supervisor_id);
 
 $table_html = "";
 
@@ -86,23 +87,22 @@ $user_id = $user->user_exists("netid", $_SESSION['username']);
 
 $user->get_user($user_id);
 
-
 $html = "";
+$html .= "<table><tr><td>".displayUser($user, $supervisor_id)."</td></tr></table>";
+$html .= "<BR>Supervisor for:<BR>";
+/*
 	foreach( $theme_list as $key=>$option )
     {
             //echo("<BR><BR>THEME = ".$option['theme_id']."<BR><BR>");
 		if($user->get_admin()==1 || $user->has_permission($user_id, $option['theme_id'])) {
 		$filters = array();
-		//$filters["users.theme_id"] = array($option['theme_id'], "WHERE");
-		//$filters["users.theme_1_id"] = array($option['theme_id'], "OR");
-		//$filters["users.theme_2_id"] = array($option['theme_id'], "OR");	
-	
+		$filters["users.theme_id"] = array($option['theme_id'], "WHERE");
+		$filters["users.theme_1_id"] = array($option['theme_id'], "OR");
+		$filters["users.theme_2_id"] = array($option['theme_id'], "OR");
+		
 		//$search_results = $user->search($filters);
-                //$query = "SELECT users.user_id as user_id  FROM  users where theme_id='".$option['theme_id']. "' OR theme_1_id='".$option['theme_id']."' OR theme_2_id='".$option['theme_id']."'";
-		
-                $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$option['theme_id']. "' and active = 1";
-		
-                //echo("query = $query <BR>");
+                $query = "SELECT users.user_id as user_id  FROM  users where theme_id='".$option['theme_id']. "' OR theme_1_id='".$option['theme_id']."' OR theme_2_id='".$option['theme_id']."'";
+		//echo("query = $query <BR>");
                 $search_results = $db->query($query);
                 
                 if (count($search_results) == 0) { 
@@ -117,12 +117,13 @@ $html = "";
                 }
     }
     }
-    //$null_query = "SELECT users.user_id as user_id from users where theme_id='0' or theme_id=NULL'";
-    // select users who are stil enabled, but not active in any theme.
-    $null_query = "select * from users where user_id NOT IN (select user_id from user_theme where active=1) and user_enabled = 1";
+   
+    $null_query = "SELECT users.user_id as user_id from users where theme_id='0' or theme_id=NULL'";
     $null_search_results = $db->query($query);
     $html.="<a href='themedir.php?theme=0' class='themelink' >NO THEME</a> ";
-    if($curr_theme != null && $curr_theme != "") {
+ * 
+ */
+    //if($curr_theme != null && $curr_theme != "") {
 	
 			//$theme_html .= "<div class='dir' id='".$curr_theme."'>";
                         
@@ -130,10 +131,10 @@ $html = "";
                         //foreach($search_results as $userRecord) {
                         //    $theme_html .= displayUser($user, $userRecord['user_id']);
                         //}
-                        $theme_html .= displayUsersByType($user_tmp, $curr_theme);
+                        $theme_html .= displayUsersByType($user_tmp, $supervisor_id);
 			//$theme_html .= "</div>";
 		
-		}
+		//}
 		
 		//print_r($search_results);
                 //foreach($search_results as $userRecord) {
@@ -151,16 +152,14 @@ $html = "";
 
 	
 	
-$theme = new theme($db);
-$theme->get_theme($curr_theme);
-$theme_name = $theme->get_short_name();
+
 
 
 ?> 
 
 
 
-<h1> <?php echo $theme_name; ?> Directory </h1>
+<h1> IGB Theme Directory </h1>
 <br>
 <h3></h3>
 
@@ -190,27 +189,6 @@ include ("includes/footer.inc.php");
 ?> 
 
 <?php
-/*
-function displayUser($user, $user_id, $show_theme=0, $theme_id=0) {
-    
-        $user_info = $user->get_user($user_id);
-        $user_info = $user_info[0];
-        //echo(($show_theme && $user_info['supervisor_id'] && ($user->get_supervisor_name() != NULL) && ($user->get_supervisor_name() != "") &&($user->get_supervisor_name() != " ")) ? ("supervisor name = ". $user->get_supervisor_name()."<BR>") : "");
-        //print_r($user_info);
-        $image_location = "default.png";
-        if($user_info['image_location'] != null &&  $user_info['image_location'] != "") {
-            $image_location = $user_info['image_location'];
-        }
-        // do not show supervisor for admin (type id=12)
-      $html = "<a href='profile.php?user_id=".$user_info['user_id']. ($theme_id != 0 ? ("&from_theme=".$theme_id): "") ."'><img src='"."http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/". $image_location ."'><BR>".
-              $user_info['first_name'] . " ".$user_info['last_name']. "<BR>".
-              (($show_theme && $user_info['supervisor_id'] && ($user->get_supervisor_name() != NULL) && ($user->get_supervisor_name() != "") &&($user->get_supervisor_name() != " ")) ? ($user->get_supervisor_name() . " Group" . "<BR>" ) : "") . 
-              "</a>";
-      
-      return $html;
-      
-}
-*/
 
 function displayUser($user, $user_id, $show_theme=0) {
     
@@ -223,19 +201,16 @@ function displayUser($user, $user_id, $show_theme=0) {
             $image_location = $user_info['image_location'];
         }
         // do not show supervisor for admin (type id=12)
-        
       $html = "<a href='profile.php?user_id=".$user_info['user_id']."'><img src='"."http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/". $image_location ."'><BR>".
               $user_info['first_name'] . " ".$user_info['last_name']. "<BR>".
-              //(($show_theme && $user_info['supervisor_id'] && ($user->get_supervisor_name() != NULL) && ($user->get_supervisor_name() != "") &&($user->get_supervisor_name() != " ")) ? ($user->get_supervisor_name() . " Group" . "<BR>" ) : "") . 
-              ((( $user->count_users_for_supervisor($user_info['user_id']) > 0)) ? "<a href=supervisordir.php?supervisor_id=".$user_id.">[Show Group]</a>" : "").
+              (($show_theme && $user_info['supervisor_id'] && ($user->get_supervisor_name() != NULL) && ($user->get_supervisor_name() != "") &&($user->get_supervisor_name() != " ")) ? ($user->get_supervisor_name() . " Group" . "<BR>" ) : "") . 
               "</a>";
-      //$html .= $user->get_users_for_supervisor($user_id).length;
-      //$html .= "Users for supervisor $user_id = ".count($user->get_users_for_supervisor($user_info['user_id']));
+      
       return $html;
       
 }
 
-function displayUsersByType($user, $theme) {
+function displayUsersByType($user, $supervisor_id) {
     global $db;
     //We'd like the 
     //PI first, 
@@ -320,28 +295,28 @@ function displayUsersByType($user, $theme) {
       
                 //$other_filters["users.theme_1_id"] = array($theme, "OR");
 		//$other_filters["users.theme_2_id"] = array($theme, "OR");
-                    
+                 */   
                 
-		
+/*		
     //$leader_search_results = $user->search($leader_filters); // 11
-    $leader_search_results = $user->get_users_by_type($theme, array(11));
+    $leader_search_results = $user->get_users_for_supervisor($supervisor_id, array(11));
     //$admin_results = $user->search($admin_filters); // 12
-    $admin_results = $user->get_users_by_type($theme, array(12));
-    $faculty_results = $user->get_users_by_type($theme, array(1,2));
+    $admin_results = $user->get_users_for_supervisor($supervisor_id, array(12));
+    $faculty_results = $user->get_users_for_supervisor($supervisor_id, array(1,2));
     //$research_staff_results = $user->search($research_staff_filters);
-    $research_staff_results = $user->get_users_by_type($theme, array(6,4));
+    $research_staff_results = $user->get_users_for_supervisor($supervisor_id, array(6,4));
     //$tech_results = $user->search($tech_filters);
     // Research staff = 7
     // Hourly = 14,
     // Extra help = 20
-    $tech_results = $user->get_users_by_type($theme, array(7, 14, 20));
-    $admin_personnel_results = $user->get_users_by_type($theme, array(5));
+    $tech_results = $user->get_users_for_supervisor($supervisor_id, array(7, 14, 20));
+    $admin_personnel_results = $user->get_users_for_supervisor($supervisor_id, array(5));
     //$grad_results = $user->search($grad_filters);
-    $grad_results = $user->get_users_by_type($theme, array(3));
-    $undergrad_results = $user->get_users_by_type($theme, array(10));
+    $grad_results = $user->get_users_for_supervisor($supervisor_id, array(3));
+    $undergrad_results = $user->get_users_for_supervisor($supervisor_id, array(10));
     //$alumnus_results = $user->search($alumnus_filters);
     //$alumnus_results = $user->get_users_by_type($theme, array(21));
-    */
+   */ 
     $max = 5;
     
     $html = "<BR><table>".
@@ -350,15 +325,11 @@ function displayUsersByType($user, $theme) {
     $i=0;
     
     $type_query = "SELECT * from type order by field(name, 'Theme Leader') desc, type_id";
-    if($theme == 0) {
-        $type_query = "Select 0";
-    }
     $type_result = $db->query($type_query);
-    
     
     foreach($type_result as $type) {
         $i=0;
-        $user_results = $user->get_users_by_type($theme, array($type['type_id']));
+        $user_results = $user->get_users_for_supervisor($supervisor_id, array($type['type_id']));
         //print_r($user_results);
         if(count($user_results[0]) > 0) {
             $html .= "<table><th colspan='5'>".$type['name'] ."</th></tr><tr>";
@@ -369,7 +340,7 @@ function displayUsersByType($user, $theme) {
                 }
                 $user_id = $userRecord['user_id'];
                 $html .= "<td>";
-                $html .= displayUser($user, $user_id, 1 , $theme);
+                $html .= displayUser($user, $user_id);
                 $html .= "</td>";    
                 $i++;
             }
@@ -535,10 +506,8 @@ function displayUsersByType($user, $theme) {
         $html .= "</tr></table>";
     }
 */
-    $html .= "<BR><a href='alumnus.php?theme=".$theme."'>View Alumni</a><BR>";
-    $endScriptTime=microtime(TRUE);
-$totalScriptTime=$endScriptTime-$startScriptTime;
-//$html .= "\n\r".'Load time: '.number_format($totalScriptTime, 4).' seconds';
+    //$html .= "<BR><a href='alumnus.php?theme=".$theme."'>View Alumni</a><BR>";
+    
     //$html .= "</tr></table>";
     
     return $html;

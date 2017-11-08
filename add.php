@@ -1,5 +1,5 @@
 <?php #add new ticket 
-
+// DEV
 $page_title = "IGB Facilities Add New Record"; 
 
 include 'includes/header.inc.php'; 
@@ -37,6 +37,10 @@ $netid = $_POST['netid'];
 $uin = $_POST['uin']; 
 $email = $_POST['email']; 
 
+$igb_city = $_POST['igb_city'];
+$igb_state = $_POST['igb_state'];
+$igb_address = $_POST['igb_address'];
+$igb_zip = $_POST['igb_zip'];
 $igb_room = $_POST['igb_room']; 
 $igb_phone = $_POST['igb_phone']; 
 $dept_phone = $_POST['dept_phone']; 
@@ -78,6 +82,7 @@ $key_room = $_POST['key_room'];
 $safety_training = $_POST['safety_training']; 
 $prox_card = $_POST['prox_card']; 
 $admin = $_POST['admin'];
+$superadmin = $_POST['superadmin'];
 $grad_drop = $_POST['grad_drop']; 
 $year_drop = $_POST['year_drop']; 
 
@@ -86,7 +91,6 @@ $fields = array("First Name" => &$first_name,
 				"Last Name" => &$last_name,
 				"Net ID" => &$netid,
 				"Email" => &$email,
-				"UIN" => &$uin,
 				"IGB Room" => &$igb_room,
 				"IGB Phone" => &$igb_phone,
 				"Start Date" => &$start_date,
@@ -98,7 +102,7 @@ $fields = array("First Name" => &$first_name,
 	
 
 
-if (empty($first_name) || empty($last_name) || empty($netid) || empty($email) ||  empty($uin) || 
+if (empty($first_name) || empty($last_name) || empty($netid) || empty($email)  || 
 	empty($igb_room) || empty($igb_phone) || empty($start_date) || 
 	/*empty($home_address1) || empty($home_city) || empty($home_state) || empty($home_zip) ||*/
 	empty($theme_drop) || empty($type_drop) || empty($gender) || empty($supervisor) 
@@ -151,7 +155,7 @@ if (!$empty_form){
 		$error.="* NetID already exists in database<br>";
 		$error_count++;
 	}
-	if (!empty($uin_exists)){
+	if (!empty($uin_exists) && $uin != null && $uin != ""){
 		$error.="* UIN already exists in database<br>";
 		$error_count++;
 	}
@@ -159,7 +163,7 @@ if (!$empty_form){
 		$error.="* Invalid Supervisor NetID<br>";
 		$error_count++;
 	}
-	if (strlen($uin) < 9){
+	if ($uin != null && $uin != "" && strlen($uin) < 9){
 		$error.="* Please enter a valid UIN<br>";
 		$error_count++;
 	}
@@ -171,15 +175,19 @@ if (!$empty_form){
 		if ($error_count == 0){
 			
 			
-			$user_id = $user->add_user($first_name, $last_name, $netid, $uin, 
+			$user_id = $user->add_user_2($first_name, $last_name, $netid, $uin, 
 									  $email, $theme_drop, $theme_1_drop, $theme_2_drop,
 									  $type_drop, $type_1_drop, $type_2_drop, $dept_drop, $default_address, 
 									  $start_date, $key_deposit, $prox_card, 
-									  $safety_training, $gender, $supervisor_id, $admin);
+									  $safety_training, $gender, $supervisor_id, $admin, $superadmin);
 		if ($user_id != 0){
 			
 			$result = $user->add_igb_address($user_id, $igb_room);	
-			
+			$result = $user->update($user_id, 'address', 'address1', $igb_address, " AND type = 'IGB'");
+                $result = $user->update($user_id, 'address', 'city', $igb_city, " AND type = 'IGB'");
+                $result = $user->update($user_id, 'address', 'state', $igb_state, " AND type = 'IGB'");
+                $result = $user->update($user_id, 'address', 'zip', $igb_zip, " AND type = 'IGB'");
+                
 			if (!empty($dept_address1)){		
 			
 			   $dept_array["type"]="DEPT";
@@ -282,7 +290,7 @@ $add_form_html .="' >
 							  </td>
 							  <td class='noborder'>
 								  <label class='required'>UIN</label> 
-							  <label class='error'>". $aster[empty($uin)]." </label>
+							  
 							  </td>
 							  <td class='noborder'>
 								  <label class='required'>Email</label> 
@@ -400,6 +408,55 @@ $add_form_html .="' >
 $add_form_html .="' > 
 				</td>
 			  </tr>
+                          
+                          <tr>
+                          <td class='noborder'><label class='optional'>IGB Address</label></td></tr>
+                          ";
+
+$add_form_html .= "     <tr><td colspan=3 class='noborder'><input type='address' name='igb_address' maxlength='150'  
+					value='";
+			if (isset($igb_address)){
+				$add_form_html .= $igb_address;
+			} else {
+                                $add_form_html .= "1206 W. Gregory Dr";
+                        }
+        
+
+$add_form_html .= "'>        <tr>
+					<td class='noborder'><label class='optional'>City </label></td>
+					<td class='noborder'><label class='optional'> State</label></td>
+					<td class='noborder'><label class='optional'> Zip Code</label></td>
+				</tr>
+				
+				<tr>
+					<td class='noborder'><input type='medium' name='igb_city' maxlength='30'  
+						value='";
+			if (isset($igb_city)){
+				$add_form_html .= $igb_city;
+			} else {
+                            $add_form_html .= "Urbana";
+                        }
+$add_form_html .="' > 
+					</td>
+					
+					<td class='noborder'>". simple_drop( 'igb_state', $states_arr, "IL" ).
+					"</td>
+					
+					
+					<td class='noborder'>
+						<input type='small' name='igb_zip' maxlength='10' value='";
+						
+				if (isset($igb_zip)){
+                                    $add_form_html .= $igb_zip;
+                                } else {	
+                                    $add_form_html .= "61801";
+                                }
+$add_form_html .="' ></td>
+					
+			  </tr>
+                          
+
+
 			</table>
 			
 			<div class='alignright'>
@@ -582,12 +639,15 @@ THEMES & TYPE
 $add_form_html .="<div class = 'left sixty'>
 		<table>
 		
+                        <tr>
+                            <td class='xs' colspan=3>(Additional themes can be added in the user's profile page once they have been added)</td>
+                        </tr>
 			<tr>
 			  <td class='xs'><label class='required'>Main Theme </label>
 				<label class='error'>". $aster[empty($theme_drop)]." </label>
 			  </td>          
 			  <td class='xs'><label class='optional'>Theme 1</label></td>          
-			  <td class='noborder'><label class='optional'>Theme 2</label></td>
+			  <td class='noborder'><label class='optional'>Theme 2</label> </td>
 			</tr>
 			<tr>
 			  <td class='xs'>
@@ -692,7 +752,11 @@ $add_form_html .="<div class = 'right forty'>
 			<label class='required'>Safety Training </label>
 		<br />
 			<input type='checkbox' name='admin' value='checked' ".$admin .">
-			<label class='required'>Admin</label>
+			<label class='required'>Admin (can view and change all users) </label>
+		
+		<br />
+                    <input type='checkbox' name='admin' value='checked' ".$superadmin .">
+			<label class='required'>Superadmin (can manage themes, types, keys, departments)</label>
 		
 		<br />
 		<br /><br />
