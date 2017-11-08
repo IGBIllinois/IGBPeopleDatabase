@@ -42,7 +42,7 @@ $key_table = "
 /*
 Add Key
 */
-
+global $db;
 if (isset($_POST['add_key_assign'])){
 	$key_room = $_POST['key_room'];
 	$key_name = $_POST['key_name'];
@@ -69,9 +69,9 @@ if (isset($_POST['add_key_assign'])){
 	
 	if ($error_count == 0){
 		$key_room = trim(rtrim($key_room));
-		$key_room = mysql_real_escape_string($key_room,$db->get_link());
+		$key_room = mysqli_real_escape_string($db->get_link(), $key_room);
 		$key_name = trim(rtrim($key_name));
-		$key_name = mysql_real_escape_string($key_name,$db->get_link());
+		$key_name = mysqli_real_escape_string($db->get_link(), $key_name);
 		
 		$add_key_query = "INSERT INTO key_list (key_name, key_room)
 							VALUES ('".$key_name."','".$key_room."'	)";
@@ -301,8 +301,10 @@ $(document).ready(function(){
 <label class='errormsg'></label>
 <?php 
 	echo $key_table;
+	echo "<div class='right forty'>";
 	echo $key_add_table;
 	echo $key_delete_table;
+	echo "</div>";
 ?>
 <div class='clear'>
 				

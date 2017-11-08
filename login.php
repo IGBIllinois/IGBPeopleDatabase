@@ -38,18 +38,20 @@ if (isset($_POST['login'])) {
 			$connect = ldap_connect(ldap_host) or die ("can't connect");
 			$bindDN = "uid=" . $username . "," . ldap_people_ou;
 			$success = ldap_bind($connect, $bindDN, $password) ;
-			
 			if ($success){	
 						$user = new user($db);
-						$admin_id = $user->is_admin($username); //,$password
-				
-				
-						if (empty($admin_id)) {
+                                                $admin_id=0;
+                                                if($user->is_admin($username)) {
+                                                    //$admin_id = $user->is_admin($username); //,$password
+                                                    $admin_id = $user->is_superadmin($username);
+                                                    
+                                                }
+						//if (empty($admin_id)) {
 							
-							$message = "Authentication failed";
+						//	$message = "Authentication failed";
 								
-						}
-						else {
+						//}
+						//else {
 						 
 								session_destroy();
 								session_start();
@@ -58,11 +60,11 @@ if (isset($_POST['login'])) {
 								$_SESSION['admin_id'] = $admin_id;
 								$_SESSION['admin'] = TRUE;
 										
-							  $location = "http://" . $_SERVER['SERVER_NAME'] . $webpage;
+							  $location = "http://" . $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] == '80' ? '' : ":".$_SERVER['SERVER_PORT']) . $webpage;
 							  header("Location: " . $location);
 						
 					
-						}
+						//}
 				
 			}
 			else{

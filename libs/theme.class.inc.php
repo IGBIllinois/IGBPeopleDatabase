@@ -64,7 +64,7 @@ load theme values
 						 FROM themes LEFT JOIN users ON themes.leader_id = users.user_id 
 						 WHERE themes.theme_id = '".$theme_id."'";
 		$result = $this->db->query($theme_query);
-		echo $theme_query;
+		//echo $theme_query;
 		
 		$stats_query = "SELECT count(1) as count FROM users
 						WHERE theme_id = '".$theme_id."' 
@@ -200,7 +200,9 @@ returns the id number of the new record, 0 if it fails
 					  VALUES ('".$this->edit($name)."','". $this->edit($short_name)."',
 							  '". $leader_id."','". $status."'
 							  )";
-		$result = $this->db->insert_query($add_query);
+		//echo("add theme query = $add_query <BR>");
+                $result = $this->db->insert_query($add_query);
+                
 		return $result;
 
 
@@ -221,7 +223,7 @@ takes in a string and edits to a format suitable to enter into database
 	private function edit($string)
 	{
 		  $result = trim(rtrim($string));
-		  $result = mysql_real_escape_string($result,$this->db->get_link());
+		  $result = mysqli_real_escape_string($this->db->get_link(), $result);
 		  return $result;
 	
 	}
