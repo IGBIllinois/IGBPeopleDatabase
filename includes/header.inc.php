@@ -97,7 +97,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $header_html = "<div id='container'>
 				<div id='header'>
-				<br><center>IGB People Database - Testing</center>
+				<br><center>IGB People Database</center>
 				</div>
 				<div id='content' class='left'>
 				<ul>
