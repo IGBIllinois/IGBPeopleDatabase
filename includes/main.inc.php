@@ -19,7 +19,9 @@ include_once 'libs/ldap.class.inc.php';
 include 'includes/query.inc.php';
 
 
-$db = new db(mysql_host,mysql_database,mysql_user,mysql_password);	
+$db = new db(mysql_host,mysql_database,mysql_user,mysql_password);
+ini_set('session.cache_limiter','public');
+session_cache_limiter(false);
 session_start();
 
 /*
