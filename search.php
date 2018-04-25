@@ -3,10 +3,10 @@
 $page_title = "IGB People Database Search"; 
 
 include 'includes/header.inc.php'; 
-include 'includes/functions.inc.php'; 
-include_once 'includes/main.inc.php';
-include "libs/ExcelWriter.php";
-include 'includes/Writer.php';
+include_once 'includes/functions.inc.php'; 
+//include_once 'includes/main.inc.php';
+include_once "libs/ExcelWriter.php";
+//include_once 'includes/Writer.php';
 
 //include 'includes/user.class.inc.php';
 
@@ -54,12 +54,15 @@ $(window).unload(function(){
 </script>
 
 <?php
+
 //if(isset($_POST['value'])){
 
     if($_POST['value']=='unload'){
         try {
         //foreach(glob($targetFolder.'*.*') as $file){
+            if(file_exists("excel/igb_people.xls")) {
             unlink("excel/igb_people.xls"); // remove every file
+            }
         //}
         //rmdir($targetFolder); // remove directory
         } catch(Exception $e) {
@@ -178,7 +181,7 @@ $filters["phone.igb"] = array($igb_phone, "AND");
 
 $current_user_id = $user->get_current_user_id();
 
-	$search_results = $user->adv_search($user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);//$page, 
+	$search_results = $user->adv_search($user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
 if(isset($_POST['excel'] )) {
 	$filename = "igb_people.xls";
         try {
@@ -186,7 +189,7 @@ if(isset($_POST['excel'] )) {
         } catch(Exception $e){
             echo($e->getTraceAsString());
         }
-	while(!file_exists($filename)) {}
+	//while(!file_exists($filename)) {}
 	
 	//unlink($filename);
 }
@@ -198,7 +201,7 @@ if(isset($_POST['det_excel'] )) {
         } catch(Exception $e){
             echo($e->getTraceAsString());
         }
-	while(!file_exists($filename)) {}
+	//while(!file_exists($filename)) {}
 	
 	//unlink($filename);
 }
@@ -371,8 +374,8 @@ function writeExcel($search_results, $db, $filename="igb_people.xls") {
 		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
 		$line = array($search_results[$i]['first_name'] . " " . $search_results[$i]['last_name'],
 					  $search_results[$i]['email'],
-					  $search_results[$i]['theme_name'],
-					  $search_results[$i]['type_name'],
+					  $search_results[$i]['theme_list'],
+					  $search_results[$i]['type_list'],
 					  $search_results[$i]['igb_room'],
 					  get_address($db, $search_results[$i]['user_id'], "HOME")
 
@@ -409,8 +412,8 @@ function writeExcel2($search_results, $db, $filename="igb_people.xls") {
 		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
 		$line = array($search_results[$i]['first_name'] . " " . $search_results[$i]['last_name'],
 					  $search_results[$i]['email'],
-					  $search_results[$i]['theme_name'],
-					  $search_results[$i]['type_name'],
+					  $search_results[$i]['theme_list'],
+					  $search_results[$i]['type_list'],
 					  $search_results[$i]['igb_room'],
 					  get_address($db, $search_results[$i]['user_id'], "HOME")
 
@@ -469,7 +472,7 @@ Home college
 		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
 		$line = array( $search_results[$i]['last_name'],
                                 $search_results[$i]['first_name'],
-                                $search_results[$i]['theme_name'],
+                                $search_results[$i]['theme_list'],
                                 $search_results[$i]['status'],
                                 $search_results[$i]['igb_room'],
                                 $search_results[$i]['phone'],
@@ -538,7 +541,7 @@ Home college
 		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
 		$line = array( $search_results[$i]['last_name'],
                                 $search_results[$i]['first_name'],
-                                $search_results[$i]['theme_name'],
+                                $search_results[$i]['theme_list'],
                                 $search_results[$i]['status'],
                                 $search_results[$i]['igb_room'],
                                 $search_results[$i]['phone'],
