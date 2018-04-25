@@ -476,18 +476,23 @@ uin
 email
 
 param $filters = array with theme_id, type_id, dept_id, igb_room, igb_phone, home address
-
+    $active: 1 if active users, 0 if inactive users, 2 if both
 */	
 public function adv_search($active, $value, $user_id=null, $filters=0, $theme_id=0, $type_id=0, $start_date=0, $end_date=0, $supervisor="") {
+
     $search_arr = explode(" ",$value);
     if($theme_id != 0) {
-        $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and themes.theme_id='".$theme_id."' or user_theme.theme_id=0 and user_theme.active=1";
+        //or user_theme.theme_id=0
+        $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and themes.theme_id='".$theme_id."'  and user_theme.active=1";
     } else {
         // Only search themes the user has permissions for.
         if($user_id != null && !$this->is_admin($_SESSION['username'])) {
                    //select users.netid, themes.short_name, type.name from users left join user_theme on (user_theme.user_id = users.user_id and user_theme.theme_id=1) left join themes on (user_theme.theme_id = themes.theme_id) left join type on (user_theme.type_id = type.type_id)
                     $themelist = $this->get_permissions($user_id);
-                    $theme_query = " RIGHT JOIN themes on (user_theme.theme_id=themes.theme_id or user_theme.theme_id=0 and user_theme.active=1 and (";
+                    //$theme_query = " RIGHT JOIN themes on (user_theme.theme_id=themes.theme_id or user_theme.theme_id=0 and user_theme.active=1 and (";
+                    #$theme_query = " RIGHT JOIN themes on (user_theme.theme_id=themes.theme_id or user_theme.theme_id=0  and (";
+                    $theme_query = " RIGHT JOIN themes on (user_theme.theme_id=themes.theme_id  and (";
+                    
                     for($i=0; $i<count($themelist); $i++) {
                         $theme_id = $themelist[$i]['theme_id'];
                         $theme_query .= " ( themes.theme_id = '". $theme_id. "') ";
@@ -496,35 +501,47 @@ public function adv_search($active, $value, $user_id=null, $filters=0, $theme_id
                         }
                     }
                     $theme_query .= " )) ";
-                    if(!$active) {
+                    if($active != 1) { // 0 or 2 (deactivated or all)
                         $theme_query .= "or user_theme.theme_id=0";
                     }
                     //$theme_query = " AND ". $theme_query;
                     //echo("theme query = $theme_query<BR>");
 		
                 } else {
-                    $theme_query = " RIGHT JOIN themes on (user_theme.theme_id=themes.theme_id or user_theme.theme_id=0 and user_theme.active=1) ";
-                    if(!$active) {
-                        $theme_query .= "or user_theme.theme_id=0";
+                    //$theme_query = " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id or user_theme.theme_id=0) and user_theme.active=1) ";
+                    //$theme_query = " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id or user_theme.theme_id=0)) ";
+                    $theme_query = " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id )) ";
+
+                    if($active != 1) { // 0 or 2 (deactivated or all)
+                        $theme_query .= " or user_theme.theme_id=0";
                     }
                 }
     }
     
     if($type_id != 0) {
-        $type_query = " RIGHT JOIN type on (user_theme.type_id=type.type_id and type.type_id='".$type_id."' ";
+        $type_query = " RIGHT JOIN type on ((user_theme.type_id=type.type_id and type.type_id='".$type_id."' ";
          if($theme_id != 0) {
              $type_query .= " and user_theme.theme_id='".$theme_id."' ";
          }
-         $type_query .= " and active=1 )";
+         if($active == 1) { 
+             $type_query .= " and users.user_enabled=1 )) ";
+         } else if($active == 0) {
+             $type_query .= " and users.user_enabled=0 )) ";
+         } else {
+             $type_query .= ") or user_theme.theme_id='0')";
+         }
     } else {
-        $type_query = " RIGHT JOIN type on (user_theme.type_id=type.type_id) ";
+        $type_query = " RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') ";
     }
     $search_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
 			" themes.short_name as theme_name, type.name as type_name, ".
-                        " address.address2 as igb_room from user_theme 
+                        " address.address2 as igb_room, t.theme_list as theme_list, t2.type_list as type_list from user_theme 
+                            
                         LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
 			LEFT JOIN phone ON user_theme.user_id=phone.user_id
                         LEFT JOIN users on users.user_id=user_theme.user_id " .
+                        " left join (select group_concat(themes.short_name) as theme_list, user_theme.* from user_theme left join themes on themes.theme_id=user_theme.theme_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t on t.user_id=users.user_id ".
+                        " left join (select group_concat(type.name) as type_list, user_theme.* from user_theme left join type on type.type_id=user_theme.type_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t2 on t2.user_id=users.user_id ".
                         $theme_query . " ". $type_query;
                         
     
@@ -572,117 +589,30 @@ public function adv_search($active, $value, $user_id=null, $filters=0, $theme_id
 		//$search_query.=  " LIMIT " .$skip.", 20";
 		//echo("my adv search query = $search_query<BR>");
 		$result = $this->db->query($search_query);
+                
 		return $result;
 }
     
-    
-    public function adv_search_old($active, $value, $user_id=null, $filters = 0, $start_date=0, $end_date=0, $theme_id=0, $type_id=0) { //$page, 
-		//$skip = ($page - 1) * 20;
-		$search_arr = explode(" ",$value);
-		$search_query = "SELECT users.user_id as user_id, first_name, last_name, netid, uin, email, default_address, 
-						 themes.short_name as theme_name, type.name as type_name, address.address2 as igb_room
-						 
-						 FROM (users 
-						 
-						 LEFT JOIN address ON users.user_id=address.user_id AND address.type='IGB') 
-						 LEFT JOIN phone ON users.user_id=phone.user_id";
-                
-                
-		// If they selected a theme, only search that theme. Otherwise search all themes they have permissions for.
-                $theme_query = "";
-                if($theme_id != 0) {
-                   $theme_query = " LEFT JOIN user_theme on ( ( user_theme.user_id = users.theme_id and user_theme.theme_id = '". $theme_id. "') )";
-                } else {
-                if($user_id != null && !$this->is_admin($_SESSION['username'])) {
-                   //select users.netid, themes.short_name, type.name from users left join user_theme on (user_theme.user_id = users.user_id and user_theme.theme_id=1) left join themes on (user_theme.theme_id = themes.theme_id) left join type on (user_theme.type_id = type.type_id)
-                    $themelist = $this->get_permissions($user_id);
-                    $theme_query = "LEFT JOIN user_theme on ( ";
-                    for($i=0; $i<count($themelist); $i++) {
-                        $theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " ( user_theme.theme_id = users.theme_id and user_theme.theme_id = '". $theme_id. "') ";
-                        if($i < count($themelist)-1) {
-                            $theme_query .= " OR ";
-                        }
-                    }
-                    $theme_query .= " ) ";
-                    //$theme_query = " AND ". $theme_query;
-                    //echo("theme query = $theme_query<BR>");
-		
-                }
-                }
-                
-                if($type_id != 0) {
-                    $type_query = " LEFT JOIN user_theme on (user_theme.type_id = type.type_id and type.type_id = '". $type_id . "') ";
-                    $search_query .= $type_query;
-                }
-                
-                
-                $search_query .= $theme_query;
-                
-		$search_query .= " WHERE";
-		$i=0;
-		while( $i < count($search_arr))
-    	{
-			$search_query.=  " ( first_name LIKE '%".$search_arr[$i]."%'
-								OR last_name LIKE '%".$search_arr[$i]."%'
-								OR netid LIKE '%".$search_arr[$i]."%'								
-								OR uin LIKE '%".$search_arr[$i]."%'
-								OR email LIKE '%".$search_arr[$i]."%'
-								) ";
-			$i ++;
-			if ($i != count($search_arr)){
-				$search_query.= " AND ";
-			}
-		}
-		
-		$i=0;		
-		$array_keys = array_keys($filters);
-		
-		while( $i < count($filters))
-                {
-			if (!empty($filters[$array_keys[$i]][0])){
-				$search_query.= $filters[$array_keys[$i]][1] ." ".$array_keys[$i]." = '".$filters[$array_keys[$i]][0]."' ";
-			}
-			$i ++;
-			
-		}
-		if($active < 2) { // 0 = disabled, 1 = abled, 2 = all
-			$search_query.=  " AND user_enabled = '".$active."'";
-		}
-		if($start_date != 0 && $end_date != 0) {
-			$search_query .= " AND users.start_date BETWEEN '$start_date' AND '$end_date' ";
-		} else if($start_date != 0) {
-			$search_query .= " AND users.start_date >= '$start_date' ";
-		} else if($end_date != 0) {
-			$search_query .= " AND users.start_date <= '$end_date' ";
-		}
-                /*
-                $theme_query = "";
-                if($user_id != null && !$this->is_admin($_SESSION['username'])) {
-                   //select users.netid, themes.short_name, type.name from users left join user_theme on (user_theme.user_id = users.user_id and user_theme.theme_id=1) left join themes on (user_theme.theme_id = themes.theme_id) left join type on (user_theme.type_id = type.type_id)
-                    $themelist = $this->get_permissions($user_id);
-                    $theme_query = "LEFT JOIN user_theme on ( ";
-                    for($i=0; $i<count($themelist); $i++) {
-                        $theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " ( user_theme.user_id = users.theme_id and user_theme.theme_id = '". $theme_id. "') ";
-                        if($i < count($themelist)-1) {
-                            $theme_query .= " OR ";
-                        }
-                    }
-                    $theme_query .= " ) ";
-                    //$theme_query = " AND ". $theme_query;
-                    echo("theme query = $theme_query<BR>");
-		
-                }
-                 * */
-                 
-                //$search_query .= $theme_query;
-		$search_query.=  " ORDER BY users.last_name ";
-		//$search_query.=  " LIMIT " .$skip.", 20";
-		//echo("my adv search query = $search_query<BR>");
-		$result = $this->db->query($search_query);
-		return $result;
+    public function get_forwarding_addresses() {
+        $query = "select users.first_name, users.last_name, users.email, address.address1, address.address2, address.city, address.state, address.zip, t.theme_list, users.end_date, users.reason_leaving from users left join address on address.user_id = users.user_id 
+left join (select users.first_name, users.last_name, group_concat(themes.short_name) as theme_list, user_theme.* from user_theme left join themes on themes.theme_id=user_theme.theme_id left join users on users.user_id = user_theme.user_id  group by user_id order by users.last_name) as t on t.user_id=users.user_id 
+where address.forward=1 order by users.last_name";
+        $result = $this->db->query($query);
+        return $result;
     }
+    
+    public function get_database_users() {
+        $admin_query = "select users.first_name, users.last_name, users.netid, users.email, if((users.superadmin = 1), 'SUPERADMIN', 'ADMIN') as theme_list from users where users.admin=1 or users.superadmin=1 order by last_name";
+        $query = "select users.first_name, users.last_name, users.netid, users.email, group_concat(themes.short_name) as theme_list from permissions left join users on permissions.user_id=users.user_id left join themes on themes.theme_id=permissions.theme_id where netid is not null group by netid order by last_name";
+        
+        $admin_result = $this->db->query($admin_query);
+        
+        $admin_result = array_merge($admin_result, array(array()));
+        $result = $this->db->query($query);
+        //print_r(array_merge($admin_result, $result));
+        return array_merge($admin_result, $result);
+    }
+    
 	
 
 /*
@@ -738,7 +668,7 @@ searches values inputed into generic text input and checks to see if those value
                     //"  right join (select * from (select * from user_theme where end_date is not null and end_date != 0 and active=1) ut1 where user_id not in (select user_id from user_theme where end_date is null or end_date = 0 and active=1) order by user_id) ut2 on users.user_id=ut2.user_id";
                     " right join user_id on (select * from (select * from user_theme where ((end_date is not null and end_date != 0) or theme_id = 0) and active=1) ut1 where user_id not in (select user_id from user_theme where ((end_date is null or end_date = 0) and theme_id != 0) and active=1) order by user_id)  order by user_id";
         */
-            $search_query = "SELECT distinct (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, address.address2 as igb_room from user_theme LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' LEFT JOIN phone ON user_theme.user_id=phone.user_id LEFT JOIN users on users.user_id=user_theme.user_id right join (select * from (select * from user_theme where ((end_date is not null and end_date != 0) or theme_id = 0) and active=1) ut1 where user_id not in (select user_id from user_theme where ((end_date is null or end_date = 0) and theme_id != 0) and active=1) order by user_id) ut2 on ut2.user_id=user_theme.user_id order by users.last_name";
+            $search_query = "SELECT distinct (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, address.address2 as igb_room from user_theme LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' LEFT JOIN phone ON user_theme.user_id=phone.user_id LEFT JOIN users on users.user_id=user_theme.user_id right join (select * from (select * from user_theme where ((end_date is not null and end_date != 0) or theme_id = 0) and active=1) ut1 where user_id not in (select user_id from user_theme where ((end_date is null or end_date = 0) and theme_id != 0) and active=1) order by user_id) ut2 on ut2.user_id=user_theme.user_id where user_enabled = $status order by users.last_name";
 
         } else {
         //select * from users where user_enabled=1 and users.user_id in (select distinct user_id from user_theme where user_theme.end_date != 0 and user_theme.end_date is not null) and users.user_id not in (select distinct user_id from user_theme where (user_theme.end_date is null or user_theme.end_date=0))
@@ -788,8 +718,10 @@ searches values inputed into generic text input and checks to see if those value
         }
         
         
-        $search_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
-			" themes.short_name as theme_name, type.name as type_name, ".
+        $search_query = "SELECT DISTINCT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
+//			" themes.short_name as theme_name, 
+			" type.name as type_name, ".
+                        " (SELECT GROUP_CONCAT(t.short_name) as theme_list from themes t, users u, user_theme ut where ut.user_id = u.user_id and ut.theme_id= t.theme_id and ut.active=1 and users.user_id=u.user_id group by users.user_id) as theme_name, ".
                         " address.address2 as igb_room from user_theme 
                         LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
 			LEFT JOIN phone ON user_theme.user_id=phone.user_id
@@ -905,7 +837,8 @@ searches values inputed into generic text input and checks to see if those value
 */
 	
 	public function alpha_search($letter, $user_id=null, $isSupervisor=0) {
-		$alpha_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
+            /*
+$alpha_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
 			" themes.short_name as theme_name, type.name as type_name, ".
                         " address.address2 as igb_room from user_theme 
                         LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
@@ -914,10 +847,28 @@ searches values inputed into generic text input and checks to see if those value
                         "RIGHT JOIN themes on user_theme.theme_id = themes.theme_id  
                          RIGHT JOIN type on user_theme.type_id = type.type_id ".
 			" WHERE SUBSTR(last_name,1,1) = '".$letter."'";
-		if ($isSupervisor==1){
+             
+           
+             * 
+             */  
+            
+            $alpha_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
+			" themes.short_name as theme_name, type.name as type_name, ".
+                        " address.address2 as igb_room, t.theme_list as theme_list, t2.type_list as type_list from user_theme 
+                            
+                        LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
+			LEFT JOIN phone ON user_theme.user_id=phone.user_id
+                        LEFT JOIN users on users.user_id=user_theme.user_id " .
+                        " left join (select group_concat(themes.short_name) as theme_list, user_theme.* from user_theme left join themes on themes.theme_id=user_theme.theme_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t on t.user_id=users.user_id ".
+                        " left join (select group_concat(type.name) as type_list, user_theme.* from user_theme left join type on type.type_id=user_theme.type_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t2 on t2.user_id=users.user_id ".
+                        " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id )) RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') " .
+                        " WHERE SUBSTR(last_name,1,1) = '".$letter."'  and users.user_enabled=1 ";
+            
+            
+		//if ($isSupervisor==1){
 			//$alpha_query.=  " AND (users.type_id = 1 or users.type_id = 2 or users.type_id = 4 
 			//					   or users.type_id = 5 or users.type_id = 11) ";
-		}
+		//}
                 
                 if($user_id != null && !$this->is_admin($_SESSION['username'])) {
                     $themelist = $this->get_permissions($user_id);
@@ -939,40 +890,6 @@ searches values inputed into generic text input and checks to see if those value
 		return $result;
     }
 
-    
-    public function alpha_search2($letter, $user_id=null, $isSupervisor=0) {
-		$alpha_query = "SELECT users.user_id as user_id, first_name, last_name, netid, uin, email,  default_address, 
-						 themes.short_name as theme_name, type.name as type_name, address.address2 as igb_room
-						 FROM (((users LEFT JOIN themes ON users.theme_id=themes.theme_id)
-						 LEFT JOIN type ON users.type_id=type.type_id) 
-						 LEFT JOIN address ON users.user_id=address.user_id AND address.type='IGB') 
-						 LEFT JOIN phone ON users.user_id=phone.user_id 
-						WHERE SUBSTR(last_name,1,1) = '".$letter."'";
-		if ($isSupervisor==1){
-			$alpha_query.=  " AND (users.type_id = 1 or users.type_id = 2 or users.type_id = 4 
-								   or users.type_id = 5 or users.type_id = 11) ";
-		}
-                
-                if($user_id != null && !$this->is_admin($_SESSION['username'])) {
-                    $themelist = $this->get_permissions($user_id);
-                    $theme_query = " ( ";
-                    for($i=0; $i<count($themelist); $i++) {
-                        $theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " users.theme_id = '". $theme_id. "' ";
-                        if($i < count($themelist)-1) {
-                            $theme_query .= " OR ";
-                        }
-                    }
-                    $theme_query .= " ) ";
-                    $alpha_query .= " AND ". $theme_query;
-		
-                }
-		$alpha_query.=  " ORDER BY users.last_name ";
-		
-		$result = $this->db->query($alpha_query);
-                //echo "alpha query = $alpha_query";
-		return $result;
-    }
     
         /* get list of people a user is supervisor for */
     public function get_users_for_supervisor($supervisor_id, $types=null) {
