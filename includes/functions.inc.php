@@ -11,7 +11,8 @@
 //////////////////////////////////////////
 
 
-
+include_once "libs/ExcelWriter.php";
+//include_once '/Writer.php';
 
 /*
 
@@ -174,8 +175,8 @@ else {
                 $table_html .= "<td><a id='profile' href='profile.php?user_id=" . $search_results[$i]["user_id"] . "'>>></a></td>";
                 $table_html .= "<td>" . $search_results[$i]["first_name"] ." ". $search_results[$i]["last_name"]."</td>";
                 $table_html .= "<td>" . $search_results[$i]["email"] . "</td>";
-                $table_html .= "<td>" . $search_results[$i]["theme_name"] . "</td>";
-                $table_html .= "<td>" . $search_results[$i]["type_name"] . "</td>";
+                $table_html .= "<td>" . $search_results[$i]["theme_list"] . "</td>";
+                $table_html .= "<td>" . $search_results[$i]["type_list"] . "</td>";
                 $table_html .= "<td>" . $search_results[$i]["igb_room"] . "</td>";	
                 $table_html .= "</tr>";
         
@@ -683,5 +684,103 @@ return $result;
 		
 }
 
+function writeExcel3($search_results, $db, $filename="igb_people.xls") {
+	//$filename = "./igb_people.xls";
+   
+    try {
+	$excel= new ExcelWriter("excel/".$filename);
+	$myArr=array("<b>Name</b>","<b>Email</b>","<b>Theme</b>","<b>Type</b>","<b>Room Number</b>","<b>Address</b>");
+	$excel->writeLine($myArr);
+	for ($i = 0; $i < count($search_results); $i++) {
+		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
+		$line = array($search_results[$i]['first_name'] . " " . $search_results[$i]['last_name'],
+					  $search_results[$i]['email'],
+					  $search_results[$i]['theme_name'],
+					  $search_results[$i]['type_name'],
+					  $search_results[$i]['igb_room'],
+					  get_address($db, $search_results[$i]['user_id'], "HOME")
+
+					  );
+                //echo($line . "<BR>");
+		$excel->writeLine($line);
+	}
+	$excel->close();
+	header("Location: excel/". $filename);
+    } catch(Exception $e) {
+        echo($e);
+        echo($e->getTrace());
+    }
+
+}
+ 
+ 
+
+function write_forwarding_address_report($search_results, $db, $filename) {
+    try {
+    $headers = array("First Name", "Last Name","Email","Address1","Address2","City","State","Zip","Theme list","End Date","Reason Leaving");
+
+    $excel= new ExcelWriter("excel/".$filename);
+
+    $excel->writeLine($headers);
+
+    for ($i = 0; $i < count($search_results); $i++) {
+		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
+		$line = array($search_results[$i]['first_name'],
+                                        $search_results[$i]['last_name'],
+					  $search_results[$i]['email'],
+					  $search_results[$i]['address1'],
+					  $search_results[$i]['address2'],
+					  $search_results[$i]['city'],
+                                          $search_results[$i]['state'],
+                                          $search_results[$i]['zip'],
+                                          $search_results[$i]['theme_list'],
+                                          $search_results[$i]['end_date'],
+                                          $search_results[$i]['reason_leaving']
+
+					  );
+
+                //echo("<BR>");
+		$excel->writeLine($line);
+	}
+       
+        $excel->close();
+	header("Location: excel/". $filename);
+    } catch(Exception $e) {
+        echo($e);
+        echo($e->getTrace());
+    }
+}
+
+function write_database_users_report($search_results, $db, $filename) {
+    try {
+    $headers = array("First Name", "Last Name", "Netid", "Email", "Themes");
+    $excel= new ExcelWriter("excel/".$filename);
+    $excel->writeLine($headers);
+
+    for ($i = 0; $i < count($search_results); $i++) {
+        if(count($search_results[$i]) == 0) {
+            $line = array();
+        } else {
+		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
+		$line = array($search_results[$i]['first_name'],
+                                        $search_results[$i]['last_name'],
+					  $search_results[$i]['netid'],
+					  $search_results[$i]['email'],
+                                          $search_results[$i]['theme_list']
+
+					  );
+        }
+                //echo("<BR>");
+		$excel->writeLine($line);
+	}
+       
+        $excel->close();
+	header("Location: excel/". $filename);
+    } catch(Exception $e) {
+        echo($e);
+        echo($e->getTrace());
+    }
+    
+}
 
 ?>
