@@ -60,7 +60,7 @@ if (isset($_POST['login'])) {
 								$_SESSION['admin_id'] = $admin_id;
 								$_SESSION['admin'] = TRUE;
 										
-							  $location = "http://" . $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] == '80' ? '' : ":".$_SERVER['SERVER_PORT']) . $webpage;
+							  $location = "https://" . $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] == '80' ? '' : ":".$_SERVER['SERVER_PORT']) . $webpage;
 							  header("Location: " . $location);
 						
 					
