@@ -53,44 +53,22 @@ $(document).ready(function(){
 
 
 <?php
-/*
+
 if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""){
     $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: $redirect");
 }
-*/
+
 include_once 'includes/main.inc.php';
 date_default_timezone_set('America/Chicago');
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
+
+
 //error_reporting(E_ALL);
 /*ini_set('display_errors', '1');
 
-<li><a id='account' href='' onclick='return false;'>Account</a>
-					
-						<ul id='account'>
-		
-							<li>
-								<a href='profile.php?user_id=".$user_id."' >Profile</a>
-							</li>
-							<li>test</li>
-		
-						</ul>
-					</li>
-
-					<li><a id='account' href='' onclick='return false;'>Account</a>
-					
-						<div id='account'>
-						<ul id='account'>
-							<li>
-								<a href='search.php' >Profile</a>
-							</li>
-							<li>test</li>
-		
-						</ul>
-						</div>
-					</li>
 
 */
 
@@ -132,7 +110,8 @@ $header_html = "<div id='container'>
 							</li>
 		
 						</ul>
-					</li>")
+					</li>".
+                                        "<li id='reports'><a href='reports.php'>Reports</a></li>")
                                         : "") .
 					"<li><a href='logout.php'>Log Out</a></li>  
 				</ul>
