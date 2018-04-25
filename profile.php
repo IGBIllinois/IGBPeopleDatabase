@@ -1398,18 +1398,18 @@ function resizeImage($filename, $filetype) {
     if($filetype == "image/jpeg" || $filetype == "image/pjpeg") {
         //echo("1");
         imagejpeg($image_p, $filename, 100);
-        imagejpeg($image_large, $filename_large, 500);
-        imagejpeg($image_orig, $filename_orig);
+        imagejpeg($image_large, $filename_large, 100);
+        imagejpeg($image_orig, $filename_orig, 100);
     } else if($filetype == "image/gif") {
         //echo("2");
-        imagegif($image_p, $filename, 100);
-        imagegif($image_large, $filename_large, 500);
+        imagegif($image_p, $filename);
+        imagegif($image_large, $filename_large);
         imagegif($image_orig, $filename_orig);
     } else if($filetype == "image/png") {
         //echo("3");
-        imagepng($image_p, $filename, 100);
-        imagepng($image_large, $filename_large, 500);
-        imagepng($image_orig, $filename_orig);
+        imagepng($image_p, $filename, 9);
+        imagepng($image_large, $filename_large, 9);
+        imagepng($image_orig, $filename_orig, 9);
     }
     } catch(Exception $e) {
         echo($e."<BR>");
@@ -1427,7 +1427,6 @@ function delete_current_image($user) {
         unlink($current_large_image_file);
         $result = $user->update($user->get_user_id(), 'users', 'image_location', NULL);
     }
-    
 }
 /*
 function update_theme_date($user_id, $old_theme_id, $new_theme_id, $date=null) {
