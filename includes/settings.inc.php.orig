@@ -26,4 +26,6 @@ define("ldap_people_ou","");
 define("ldap_group_ou","");
 define("ldap_ssl",TRUE);
 define("ldap_port",389);
+
+define("DEFAULT_IMAGE", "default.png");
 ?>

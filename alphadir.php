@@ -3,8 +3,6 @@
 $page_title = "IGB People Database Search"; 
 
 include 'includes/header.inc.php'; 
-include 'includes/functions.inc.php'; 
-include_once 'includes/main.inc.php';
 
 if (!$_SESSION['admin']){
 header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	

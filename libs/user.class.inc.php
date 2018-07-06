@@ -1317,11 +1317,15 @@ takes in a string and edits to a format suitable to enter into database
         }
 
 
-
-
-
-
-
+        public function delete_current_image() {
+            if($this->get_image() != DEFAULT_IMAGE ) {
+                $current_image_file = getcwd() . "/images/users/". $this->get_image();
+                $current_large_image_file = getcwd() . "/images/users/". $this->get_large_image();
+                unlink($current_image_file);
+                unlink($current_large_image_file);
+                $result = $this->update($this->get_user_id(), 'users', 'image_location', NULL);
+            }
+        }
 
 }
 

@@ -10,8 +10,7 @@
 //
 //////////////////////////////////////////
 
-
-include_once "libs/ExcelWriter.php";
+//include_once "libs/ExcelWriter.php";
 //include_once '/Writer.php';
 
 /*
@@ -781,6 +780,17 @@ function write_database_users_report($search_results, $db, $filename) {
         echo($e->getTrace());
     }
     
+}
+
+
+function get_address($db, $user_id, $type="HOME") {
+
+	$query = "SELECT address1, address2, city, state, zip from address where type = '" . $type . "' AND user_id = '" . $user_id ."'";
+	$result = $db->query($query);
+	$addr = $result[0]['address1'] . " " . ($result[0]['address2'] != "" ? ($result[0]['address2'] . " ") : "") . "\r\n" . $result[0]['city'] .
+		", " . $result[0]['state'] . " " . $result[0]['zip'];
+	//echo $addr;
+	return $addr;
 }
 
 ?>

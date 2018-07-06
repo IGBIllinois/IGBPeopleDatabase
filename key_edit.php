@@ -2,9 +2,7 @@
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php'; 
-include 'includes/functions.inc.php'; 
-include_once 'includes/main.inc.php';
+include 'includes/header.inc.php';
 
 
 if (!$_SESSION['admin']){

@@ -2,11 +2,10 @@
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php'; 
-include 'includes/functions.inc.php'; 
-include_once 'includes/main.inc.php';
+include_once 'includes/header.inc.php'; 
 
 if (!$_SESSION['admin']){
+    echo("no admin");
 header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
 exit(); 
 }
