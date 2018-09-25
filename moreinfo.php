@@ -35,12 +35,8 @@ $key_list = $db->query($select_active_key);
 
 /*
 KEY INFO TABLE HTML
-
-for later
-<input type='button' name='add_mult_keys' id='add_mult_keys' value='Add Multiple Keys'  >
-
-
 */
+
 $key_info = "<div class='left forty'>
 		<div class='profile_header'>
 				<p class='alignleft'>[ key info ]</p>
@@ -253,66 +249,7 @@ $return_key_html = " <div id='return_key_html'>
 			</div>
 			";	
 			
-/*
-EDIT KEY HTML
 
-		
-$edit_key_html = "";
-		for ($i = 0; $i < count($active_key); $i++) {
-			
-			$edit_key_html .= "<div id='edit_".$active_key[$i]["keyinfo_id"]."'>
-				<div>
-				<form method='post' action='moreinfo.php?user_id=".$user_id."' name='edit_key_".$active_key[$i]["keyinfo_id"]."'>
-				
-				<label class='required'>Edit Key Info for ".$user->get_name()."</label>	
-				<br>
-				<br>
-				
-				<table class = 'profile'>
-					<tr >
-					  <td class='small'><label>Room # / Key Name </label><br> </td>
-					  <td class='noborder'>
-					  	<input type='text' name='key_room' maxlength='12' value='".$active_key[$i]["key_room"]."' >
-					  </td>
-					</tr>
-					<tr >
-					  <td class='small'><label>Deposit</label><br> </td>
-					  <td class='noborder'>
-					  	<input type='radio' name='payment_status' value='1' "; 
-				if ($active_key[$i]["paid"] == '1') 
-					{$edit_key_html .= $checked;} 
-				$edit_key_html .=">
-							<label class='note'>Paid</label>
-						<input type='radio' name='payment_status' value='0' "; 
-				if ($active_key[$i]["paid"] == '0') 
-					{$edit_key_html .= $checked;} 
-				$edit_key_html .="><label class='note'>Not Paid</label>
-					  </td>
-					</tr>
-					<tr >
-					  <td class='small'><label>Date Issued</label><br> </td>
-					  <td class='noborder'>
-						<input type='date' name='date_issued' value='".$active_key[$i]["date_issued"]."' >					  
-					  </td>
-					</tr>
-				</table>
-				<br>
-				</div>
-				<div class='alignright'>
-					<input type='submit' name='edit_key_".$active_key[$i]["keyinfo_id"]."' 
-						id='edit_key_".$active_key[$i]["keyinfo_id"]."' value='Edit Key'>
-				</div>
-				</form>
-				
-				</div>
-				
-				";
-				
-			
-		}
-
-
-*/
 ?> 
  
 
@@ -384,7 +321,7 @@ $(document).ready(function(){
         <?php
 			echo $add_key_html;
 			echo $return_key_html;
-			//echo $edit_key_html ;
+
 		?>
 		
         

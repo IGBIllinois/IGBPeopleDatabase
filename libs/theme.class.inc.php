@@ -46,10 +46,10 @@ class theme{
 load theme id
 */
 
-	public function load($theme_id) {
+    public function load($theme_id) {
         $this->id = $theme_id;
         $this->get_theme_id();
-        $this->set_theme($theme_id);
+        $this->get_theme($theme_id);
     }
 
 /*
@@ -57,14 +57,18 @@ load theme values
 */
 
 
-//$select_theme_leaders = "SELECT user_id, CONCAT(first_name, ' ', last_name) AS full_name, netid FROM users where type_id = '11' "; 
+/** Loads a Theme from a theme ID
+ * 
+ * @param int $theme_id ID of the Theme to load into this Theme object
+ * @return type
+ */
 	
 	public function get_theme($theme_id) { 
 		$theme_query = "SELECT themes.*, users.user_id, CONCAT(users.first_name, ' ', users.last_name) AS theme_leader_name 
 						 FROM themes LEFT JOIN users ON themes.leader_id = users.user_id 
 						 WHERE themes.theme_id = '".$theme_id."'";
 		$result = $this->db->query($theme_query);
-		//echo $theme_query;
+
 		
 		$stats_query = "SELECT count(1) as count FROM users
 						WHERE theme_id = '".$theme_id."' 
@@ -207,7 +211,24 @@ returns the id number of the new record, 0 if it fails
 
 
 	}
-
+        
+// Static Functions
+        
+        public static function get_themes($db, $active) {
+            
+            $themes = array();
+            
+            $query = "SELECT theme_id FROM themes WHERE theme_active = '1' ORDER BY short_name ASC "; 
+            $params = array();
+            $result = $db->get_query_result($query, $params);
+            foreach($result as $theme_data) {
+                $theme_id = $theme_data['theme_id'];
+                $curr_theme = new theme($db, $theme_id);
+                $themes[] = $curr_theme;
+                
+            }
+            return $themes;
+        }
 
 
 /////////////////Private Functions///////////////////

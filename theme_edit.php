@@ -63,12 +63,6 @@ if (isset($_POST['add_theme'])){
 		$error_count++;
 		
 	}
-	/*
-	else if (!empty($)){    // check if theme already exists?
-		$error_msg = "Key already exists";
-		$error_count++;
-	}
-	*/
 	
 	if ($error_count == 0){
 		$result = $theme->add_theme($theme_name, $theme_short_name, $theme_leader_id, $theme_status); 

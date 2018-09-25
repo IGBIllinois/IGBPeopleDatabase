@@ -53,11 +53,6 @@ $(document).ready(function(){
 
 <?php
 
-//function microtime_float()
-//{
-//    list($usec, $sec) = explode(" ", microtime());
-//    return ((float)$usec + (float)$sec);
-//}
 
 $curr_letter = $_GET['letter'];
 
@@ -81,31 +76,15 @@ $html = "";
 	for($i=0; $i<26; $i++){
 		
 		$letter = $alphabet[$i];
-		//$search_results = $user->alpha_search($letter, $user_id);
-		//$query = "SELECT users.user_id as user_id  FROM  users where last_name like '$letter%'";
-                //$search_results = $db->query($query);
-		//if (count($search_results) == 0) { 
-		//  	$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
-		//			class='alphabutton disabled' > ";
-	  	//}
-		//else {
+
                     
                     $html .= "<a href='alphadir.php?letter=".$letter."' class='alphalink' >".$letter."</a> ";
                     
-			//$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
-			//		class='alphabutton' > ";
-	
-			//$letter_html .= "<div class='dir' id='".$letter."'>";
-			//$letter_html .= result_table( $letter, $search_results, "alphatable" );
-			//$letter_html .= "</div>";
-		
-		//}
 		
 
 
 	}
-//$time_end = microtime_float();	
-//echo("time = " .($time_end - $time_start) . "<BR>");
+
 
 if($curr_letter != null && $curr_letter != "") {
     $search_results = $user->alpha_search($curr_letter, $user_id);

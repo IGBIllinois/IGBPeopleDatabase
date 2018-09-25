@@ -17,6 +17,7 @@ class db {
 	////////////////Private Variables//////////
 
 	private $link; //mysql database link
+        private $link2; // TEMPORARY PDO link for transitioning to PDO
 	private $host;	//hostname for the database
 	private $database; //database name
 	private $username; //username to connect to the database
@@ -34,6 +35,24 @@ class db {
 
 	}
 
+        public function open_new($host,$database,$username,$password,$port = 3306) {
+		//Connects to database.
+		try {
+			$this->link = new PDO("mysql:host=$host;dbname=$database",$username,$password,
+					array(PDO::ATTR_PERSISTENT => true));
+                        
+			$this->host = $host;
+			$this->database = $database;
+			$this->username = $username;
+			$this->password = $password;
+                        
+		}
+		catch(PDOException $e) {
+                    echo "couldn't create db<BR>";
+			echo $e->getMessage();
+		}
+	}
+        
 	//open()
 	//$host - hostname
 	//$database - name of the database
@@ -48,7 +67,19 @@ class db {
                 //printf("Connect failed: %s\n", mysqli_connect_error());
                 exit();
                 }
-		//@mysql_select_db($database,$this->link) or die("Unable to select database " . $database . mysql_error());
+
+                try {
+			$this->link2 = new PDO("mysql:host=$host;dbname=$database",$username,$password,
+					array(PDO::ATTR_PERSISTENT => true));
+                        
+
+                        
+		}
+		catch(PDOException $e) {
+                    echo "couldn't create db<BR>";
+			echo $e->getMessage();
+		}
+                
 		@mysqli_select_db($this->link, $database) or die("Unable to select database " . $database . mysqli_error($this->link));
                 $this->host = $host;
 		$this->database = $database;
@@ -95,8 +126,7 @@ class db {
 	//Used for SELECT queries
 	//returns an associative array of the select query results.
 	public function query($sql) {
-            //echo("<BR>query = $sql <BR>");
-		//$result = mysql_query($sql,$this->link);
+
                 $result = mysqli_query($this->link, $sql);
 		return $this->mysqlToArray($result);
 	}
@@ -106,33 +136,47 @@ class db {
 	public function get_link() {
 		return $this->link;
 	}
+        
+        // TEMPORARY
+        // For transitioning to PDO queries
+        public function get_link2() {
+		return $this->link2;
+	}
+        
+        public function get_query_result($query_string, $query_array) {
+            $statement = $this->get_link2()->prepare($query_string, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $statement->execute($query_array);
+            $result = $statement->fetchAll();
+            return $result;
+
+        }
+
+        public function get_update_result($query_string, $query_params) {
+            // Update queries should probably only update one record. This will ensure 
+            // only one record gets updated in case of a malformed query.
+            $query_string .= " LIMIT 1"; 
+            $statement = $this->get_link2()->prepare($query_string, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $result = $statement->execute($query_params);
+            return $result;
+        }
+
+        public function get_insert_result($query_string, $query_array) {
+
+            $statement = $this->get_link2()->prepare($query_string, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $stmt = $statement->execute($query_array);
+            $result =  $this->get_link2()->lastInsertId();
+            return $result;
+        }
 
 	/////////////////Private Functions///////////////////
-/*
-	//mysqlToArray
-	//$mysqlResult - a mysql result
-	//returns an associative array of the mysql result.
-	private function mysqlToArray($mysqlResult) {
-		$dataArray = array();
-		$i =0;
-		while($row = mysql_fetch_array($mysqlResult,MYSQL_ASSOC)){
-			foreach($row as $key=>$data) {
-				$dataArray[$i][$key] = $data;
-			}
-			$i++;
-		}
-		return $dataArray;
-	}
-        */
+
         private function mysqlToArray($mysqlResult) {
 		$dataArray = array();
 		$i =0;
-                //print_r($mysqlResult);
                 
                 if($mysqlResult != null) {
 		while($row = mysqli_fetch_array($mysqlResult,MYSQLI_ASSOC)){
 			foreach($row as $key=>$data) {
-                            //echo("key, data = ($key, $data)<BR>");
 				$dataArray[$i][$key] = $data;
 			}
 			$i++;

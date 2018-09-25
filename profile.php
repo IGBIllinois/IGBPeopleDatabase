@@ -11,9 +11,6 @@ header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF
 exit(); }
 
 
-//echo "<body onLoad=\"document.add.first_name.focus()\">"; 
-
-
 
 $igb_edit = FALSE;
 $personal_edit = FALSE;
@@ -77,12 +74,6 @@ $home_address2 = $user->get_home_address2();
 $home_city = $user->get_home_city();
 $home_state = $user->get_home_state();
 $home_zip = $user->get_home_zip();
-//$theme_name = $user->get_theme();
-//$theme_1_name = $user->get_theme_1();
-//$theme_2_name = $user->get_theme_2();
-//$type_1_name = $user->get_type_1();
-//$type_2_name = $user->get_type_2();
-//$other_theme_name = $user->get_other_theme();
 $default_address = $user->get_default_address();
 
 

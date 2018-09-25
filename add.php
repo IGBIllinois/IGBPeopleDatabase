@@ -1,5 +1,5 @@
-<?php #add new ticket 
-// DEV
+<?php 
+
 $page_title = "IGB Facilities Add New Record"; 
 
 include 'includes/header.inc.php';
@@ -102,7 +102,6 @@ $fields = array("First Name" => &$first_name,
 
 if (empty($first_name) || empty($last_name) || empty($netid) || empty($email)  || 
 	empty($igb_room) || empty($igb_phone) || empty($start_date) || 
-	/*empty($home_address1) || empty($home_city) || empty($home_state) || empty($home_zip) ||*/
 	empty($theme_drop) || empty($type_drop) || empty($gender) || empty($supervisor) 
 	)
 {
@@ -113,25 +112,6 @@ if (empty($first_name) || empty($last_name) || empty($netid) || empty($email)  |
 			$error .= $field . "<BR>";
 		}
 	}
-
-
-/*
-	$error.="
-	First name = " . $first_name . "<br>
-	Last name = " . $last_name . "<br>
-	NetID = ". $netid . "<br>
-	Email = ". $email . "<br>
-	UIN = " . $uin . "<br>
-	Room = ". $igb_room . "<br>
-	Phone = ".$igb_phone . "<br>
-	Start Date = ".$start_date ."<br>
-	Theme = " . $theme_drop . "<br>
-	Type = " . $type_drop . "<br>
-	Gender = " . $gender . "<br>
-	Supervisor = ". $supervisor . "<br>";
-	*/
-	
-	
 	
 	$empty_form=TRUE;
 }
@@ -837,36 +817,6 @@ $filters = NULL;
 $user = new user($db);
 $html = "";
 $htmltest = "";
-/*
-	for($i=0; $i<26; $i++){
-		
-		$letter = $alphabet[$i];
-		$search_results = $user->alpha_search($letter, '1');
-		
-		if (count($search_results) == 0) { 
-		  	$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
-					class='alphabutton disabled' > ";
-			$htmltest .=  "<a href='javascript:TINY.box.fill(\"ajax.html\",1,0,1)'> ".$letter." </a>";
-	  	}
-		
-		else {
-			$html .= "<input type='button' name='".$letter."' id='".$letter."' value='".$letter."' 
-					class='alphabutton' > ";
-					
-			$htmltest .=  "<a href='javascript:TINY.box.load(boxid:".$letter.",1,0,1)'> ".$letter." </a>";
-	
-			//$letter_html .= "<div class='box' id='".$letter."' style='display:none;'>";
-			//$letter_html .= result_list($search_results);
-			//$letter_html .= "</div>";
-			
-		
-		}
-		
-
-
-	}
-*/
-
 
 ?> 
 	<div style='display:none'>
@@ -880,7 +830,6 @@ $htmltest = "";
         <div id="display_search">
         <?php
 		   echo $search;
-		   //echo "SEARCH GOES HERE";
 		?>
         </div>
 	</div>

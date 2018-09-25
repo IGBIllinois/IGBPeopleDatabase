@@ -3,11 +3,11 @@
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type='text/javascript' language='javascript' src='libs/jquery-1.6.1.min.js'></script>
-<script type='text/javascript' language='javascript' src='libs/jquery.dataTables.min.js'></script>
-<script type='text/javascript' language='javascript' src='libs/jquery.maskedinput-1.3.min.js'></script>
-<script type='text/javascript' language='javascript' src='libs/jquery.colorbox.js'></script>
+
+<script type='text/javascript' language='javascript' src='includes/js/jquery-1.6.1.min.js'></script>
+<script type='text/javascript' language='javascript' src='includes/js/jquery.dataTables.min.js'></script>
+<script type='text/javascript' language='javascript' src='includes/js/jquery.maskedinput-1.3.min.js'></script>
+<script type='text/javascript' language='javascript' src='includes/js/jquery.colorbox.js'></script>
 
 
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css"></link>
@@ -20,14 +20,7 @@
 <BODY>
 
 <script>
-/*
-jQuery(function($){
-   $("#date").mask("99/99/9999");
-   $("#phone").mask("(999) 999-9999");
-   $("#tin").mask("99-9999999");
-   $("#ssn").mask("999-99-9999");
-});
-*/
+
 
 $(document).ready(function(){			   
   
@@ -42,9 +35,6 @@ $(document).ready(function(){
   $("#uin").mask("999999999");
   $(".phone").mask("(999) 999-9999");
   
-  /*$('#input').click(function() {
-	$(this).setCursorPosition(1);
-  });*/
 
 });
 

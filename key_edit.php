@@ -58,12 +58,7 @@ if (isset($_POST['add_key_assign'])){
 		$error_count++;
 		
 	}
-	/*
-	else if (!empty($key_exists)){  
-		$error_msg = "Key already exists";
-		$error_count++;
-	}
-	*/
+
 	
 	if ($error_count == 0){
 		$key_room = trim(rtrim($key_room));

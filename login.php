@@ -40,16 +40,10 @@ if (isset($_POST['login'])) {
 						$user = new user($db);
                                                 $admin_id=0;
                                                 if($user->is_admin($username)) {
-                                                    //$admin_id = $user->is_admin($username); //,$password
                                                     $admin_id = $user->is_superadmin($username);
                                                     
                                                 }
-						//if (empty($admin_id)) {
-							
-						//	$message = "Authentication failed";
-								
-						//}
-						//else {
+
 						 
 								session_destroy();
 								session_start();
@@ -61,19 +55,12 @@ if (isset($_POST['login'])) {
 							  $location = "https://" . $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] == '80' ? '' : ":".$_SERVER['SERVER_PORT']) . $webpage;
 							  header("Location: " . $location);
 						
-					
-						//}
 				
 			}
 			else{
 				$message = "Invalid username or password";	
 			}
 
-						/*
-                }
-                else {//if ($success != "1") {
-                        $message .= "Invalid Login"; 
-                }*/
         }       
 }
 

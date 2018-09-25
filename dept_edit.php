@@ -45,12 +45,6 @@ if (isset($_POST['add_dept'])){
 		$error_count++;
 		
 	}
-	/*
-	else if (!empty($key_exists)){  
-		$error_msg = "Key already exists";
-		$error_count++;
-	}
-	*/
 	
 	if ($error_count == 0){
 		$dept_name = trim(rtrim($dept_name));
@@ -67,9 +61,7 @@ if (isset($_POST['add_dept'])){
 		unset($_POST['add_dept']);
                 
                 $dept_list = $db->query($select_dept);
-		//$redirectpage= "/dept_edit.php";
-		//header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
-		//exit(); 
+
 	}
 
 }			
@@ -78,25 +70,21 @@ if (isset($_POST['submit_edit_dept'])){
         $dept_id = $_POST['edit_dept_drop'];
 	$dept_name = $_POST['name'];
 	$dept_code = $_POST['dept_code'];
-	//echo("id = $dept_id");
+
 	if (!empty($dept_id)){
             $query = "UPDATE department set name='". mysqli_real_escape_string($db->get_link(),$dept_name) . 
                     "', dept_code='".mysqli_real_escape_string($db->get_link(),$dept_code) .
                     "' where dept_id = '". $dept_id."'";
-            //echo("query = $query");
+
             
             $db->non_select_query($query);
-                    
-		//$result = $theme->update($theme_id, 'themes', 'name', $theme_name);
-		//$result = $theme->update($theme_id, 'themes', 'short_name', $theme_short_name);
+
 	}
 	unset($_POST['submit_edit_dept']);
 	
         echo("<h3>Department information updated.</h3><BR>");
         $dept_list = $db->query($select_dept);
-	//$redirectpage= "/dept_edit.php";
-	//header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
-	//exit();
+
 	
 }			
 
@@ -163,31 +151,7 @@ $dept_add_table = "<form method='post' action='dept_edit.php' name='add_dept'>
                         
 			</form>
 			";
-/*
-$dept_edit_table = "<form method='post' action='dept_edit.php' name='edit_dept'>
 
-		<div class='right forty bordered'>
-			<div class='profile_header'>
-				<p class='alignleft'>[ Edit department ]</p>
-			</div>
-			<div class='noborder'>
-			 	<label class='errormsg'>".$error_msg."</label><br>
-				
-				<table class = 'profile'>
-					
-					
-				</table>
-				
-			</div>
-			<div class='alignright'>
-					<input type='submit' name='edit_dept' id='edit_dept' value='Edit'  >
-					
-				</div >
-			
-			<br></div>
-			</form>
-			";			
-*/
 	
 $dept_edit_table = "<form method='post' action='dept_edit.php' name='submit_edit_dept' id='submit_edit_dept'>
 

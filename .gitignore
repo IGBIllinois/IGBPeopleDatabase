@@ -3,3 +3,5 @@
 /nbproject/
 /excel/
 /vendor/
+/components/
+composer.lock

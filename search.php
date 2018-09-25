@@ -103,9 +103,9 @@ $search_field="any";
 $table_html = "";
 
 $filters = NULL;
-	
+
 $user = new user($db);
-	
+
 $filters = array();
 
 $filters["users.dept_id"] = array($dept_drop, "AND");
@@ -115,9 +115,19 @@ $filters["phone.igb"] = array($igb_phone, "AND");
 
 $current_user_id = $user->get_current_user_id();
 
-	$search_results = $user->adv_search($user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
 
-	$table_html = result_table( "search_results", $search_results );
+	//$search_results = $user->adv_search($user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
+
+	//$table_html = result_table( "search_results", $search_results );
+
+$other_filters = array();
+$other_filters["phone"] = $igb_phone;
+$other_filters["dept"] = $dept_drop;
+$other_filters["room"] =  $igb_room;
+        
+        $userlist = user::search_2($db, $user_enabled, $search_value, $current_user_id, $other_filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
+        
+        $table_html .= html::write_user_table("search_results", $userlist);
 
 
 }
@@ -191,7 +201,7 @@ $current_user_id = $user->get_current_user_id();
             value="<?php if (isset($igb_phone)){echo "$igb_phone";}else{echo "";} ?>" >
         </td>
     	<td class="noborder">
-	  		<?php echo dropdown( "theme_drop", $theme_list , $theme_drop  ); ?> 
+	  	<?php echo dropdown( "theme_drop", $theme_list , $theme_drop  ); ?> 
       	</td>            
       	<td class="noborder">
       		<?php echo dropdown( "type_drop", $type_list , $type_drop  );?>
@@ -253,13 +263,12 @@ $current_user_id = $user->get_current_user_id();
 echo("</form>");
 echo $table_html; 
 if($table_html != null) {
-//echo"<BR><input type='submit' name='excel' value='Create Excel' class='btn' />";
-//echo"<BR><input type='submit' style='width:150px' name='det_excel' value='Create Detailed Excel' class='btn' />";
+
     
 ?>
 <BR><BR>
 <form class='form-inline' action='report.php' method='post'>
-    <!--class='btn btn-primary'-->
+
  <input  type='submit' 
                 name='create_excel' value='Create Excel'>
   <select
@@ -270,7 +279,6 @@ if($table_html != null) {
         </select>
 
         <?php 
-         //	$search_results = $user->adv_search($user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
 
         echo("<input type='hidden' name='user_enabled' value='$user_enabled'>"); 
         echo("<input type='hidden' name='search_value' value='$search_value'>"); 
@@ -288,7 +296,7 @@ if($table_html != null) {
 </form>
 
 <form class='form-inline' action='report.php' method='post'>
-    <!--class='btn btn-primary'-->
+
  <input  type='submit' style='width:150px'
                 name='create_detailed_excel' value='Create Detailed Excel'>
   <select

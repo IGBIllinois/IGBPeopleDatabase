@@ -52,15 +52,10 @@ if (!empty($_POST['add_type']) && !empty($_POST['type_name'])){
 		$error_count++;
 		
 	}
-	/*
-	else if (!empty($key_exists)){  
-		$error_msg = "Key already exists";
-		$error_count++;
-	}
-	*/
+
 	
 	if ($error_count == 0){
-            echo("1<BR>");
+
 		$type_name = trim(rtrim($type_name));
 		$type_name = mysqli_real_escape_string($db->get_link(), $type_name);
 		
