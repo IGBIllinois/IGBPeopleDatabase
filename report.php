@@ -1,6 +1,8 @@
 <?php
 include_once 'includes/header.inc.php';
 
+// writing large files may take a little longer
+set_time_limit(300);
 
 $type = $_POST['report_type'];
 
