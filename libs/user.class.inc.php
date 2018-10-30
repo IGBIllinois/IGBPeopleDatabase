@@ -1263,13 +1263,13 @@ takes in a string and edits to a format suitable to enter into database
                     $u = $users[$i];
 
                     if($theme_id != null && $theme_id != 0 && !$u->is_in_theme($theme_id)) {
-                        echo("unsetting $i");
+
                         unset($users[$i]);
                         continue;
                     }
                     
                     if(($type_id != null) && ($type_id != 0) && !$u->is_type($type_id)) {
-                        echo("unsetting $i");
+
                         unset($users[$i]);
                         continue;
                     }
@@ -1277,7 +1277,7 @@ takes in a string and edits to a format suitable to enter into database
                     if(($start_date != 0) && 
                             ($u->get_start_date() < $start_date ||
                             $u->get_start_date() > $end_date)) {
-                        echo("3 unsetting $i");
+
                         unset($users[$i]);
                         continue;
                     }
