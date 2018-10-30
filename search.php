@@ -13,42 +13,7 @@ exit();
 }
 ?>
 
-<script>
-$(document).ready(function(){
 
-  $("a#adv_search_text").click(function(){
-  $("div#adv_search").toggle();
-  });
-  
-
-	$('#search_results').dataTable( {
-		"bPaginate": true,
-		"sPaginationType": "full_numbers",
-		"bLengthChange": false,
-		"bFilter": false,
-		"bSort": false,
-		"bInfo": false,
-		"bAutoWidth": true } );
-  
-
-});
-
-$(window).bind('beforeunload',function(){
-    if(1){ //whatever check you wish to do
-        //return 'Are you sure you want to leave?';
-    }
-});
-$(window).unload(function(){
-    $.ajax({
-        type: 'POST',
-        url: 'search.php',
-        data: 'value=unload',
-        async: false // this will not work if set to 'true'
-    });
-    alert('done');
-});
-
-</script>
 
 <?php
 

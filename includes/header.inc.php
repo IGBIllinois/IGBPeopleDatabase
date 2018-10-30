@@ -9,6 +9,7 @@
 <script type='text/javascript' language='javascript' src='includes/js/jquery.maskedinput-1.3.min.js'></script>
 <script type='text/javascript' language='javascript' src='includes/js/jquery.colorbox.js'></script>
 
+<script type='text/javascript' language='javascript' src='includes/js/script.js'></script>
 
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css"></link>
 
@@ -19,27 +20,7 @@
 
 <BODY>
 
-<script>
 
-
-$(document).ready(function(){			   
-  
-  $("a#directory").click(function(){
-  $("ul#directory").toggle();
-  });
-  
-  $("a#admin").click(function(){
-  $("ul#admin").toggle();
-  });
-
-  $("#uin").mask("999999999");
-  $(".phone").mask("(999) 999-9999");
-  
-
-});
-
-
-</script>
 
 
 <?php

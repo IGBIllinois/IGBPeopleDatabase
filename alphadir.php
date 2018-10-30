@@ -1,8 +1,8 @@
-<?php #alpha
+<?php 
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php'; 
+require_once 'includes/header.inc.php'; 
 
 if (!$_SESSION['admin']){
 header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
@@ -11,43 +11,6 @@ exit();
 
 ?>
 
-<script>
-
-
-
-$(document).ready(function(){
-
-
-
-
- //$("ul#directory").show();
- //var letter = "A";
- 	//$('.dir').css("z-index","-1");
- 	//$('.alphatable').hide();
-	$('.alphatable').dataTable( {
-					"bPaginate": true,
-					"sPaginationType": "full_numbers",
-					"bLengthChange": false,
-					"bFilter": false,
-					"bSort": false,
-					"bInfo": false,
-					"bRetrieve": true,
-					"bAutoWidth": false } );
-	//$('#'+letter+'.alphatable').show();
-	//$('#'+letter+'_wrapper').show(); 
-	//$('#'+letter+'.dir').css("z-index","1");
-		
- 
-});
-
-
-
-
-
-
-
-
-</script>
 
 
 
@@ -120,6 +83,6 @@ if($curr_letter != null && $curr_letter != "") {
  
 <?php 
 
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 
 ?> 

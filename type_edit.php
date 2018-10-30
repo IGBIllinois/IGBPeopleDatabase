@@ -178,28 +178,7 @@ $type_edit_table = "
 
 <script>
 $(document).ready(function(){
- $("ul#admin").show();
- $("ul#directory").hide();
-	$('#type_list_table').dataTable( {
-		"bPaginate": false,
-		"bLengthChange": false,
-		"bFilter": false,
-		"bSort": false,
-		"bInfo": false,
-		"bAutoWidth": false } );
 
-	var r;
-	function confirm_change()
-	{
-		r=confirm("Are you sure you want to change this status?");
-	}
-				
-	$('#edit_type').submit(function(){ 
-			confirm_change();
-			if(r==false){
-				return false;
-			}	 
-		});
 
 });
 </script>

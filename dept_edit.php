@@ -2,7 +2,7 @@
 
 $page_title = "IGB People Database"; 
 
-include 'includes/header.inc.php';
+require_once 'includes/header.inc.php';
 
 
 if (!$_SESSION['admin']){
@@ -302,6 +302,6 @@ here</a> for additional department codes ]
 <br>
 <?php 
 
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 
 ?> 

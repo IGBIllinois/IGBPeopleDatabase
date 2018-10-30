@@ -257,35 +257,7 @@ $edit_key_html = "";
  
 
 
-<script>
-$(document).ready(function(){
- $("ul#admin").show();
- $("ul#directory").hide();
-	$('#key_list_table').dataTable( {
-		"bPaginate": true,
-		"bLengthChange": true,
-		"aLengthMenu": [[10, 15, 20], [10, 15, 20]],
-		"bFilter": true,
-		"bSort": false,
-		"bInfo": true,
-		"bAutoWidth": false } );
-	
-	var r;
-	function confirm_change()
-	{
-		r=confirm("Are you sure you want to change this status?");
-	}
-				
-	$('#key_change').submit(function(){ 
-			confirm_change();
-			if(r==false){
-				return false;
-			}	 
-		});
 
-
-});
-</script>
 
 
 <h1> Key management </h1>

@@ -257,36 +257,7 @@ $return_key_html = " <div id='return_key_html'>
 <script>
 $(document).ready(function(){
 
-	$('input#add_key').colorbox({width:"40%", height:"35%", inline:true, href:"#add_key_html"});	
-	$('input#return_key').colorbox({width:"40%", height:"35%", inline:true, href:"#return_key_html"});	
-	
-	$('a.key_edit').click(function(){
-		var keyid = $(this).attr("id");
-		$.colorbox({width:"40%", height:"35%", inline:true, href:"#edit_"+keyid+""});
-	});
-	
 
-	
-	/*
-
-	$('input#submit_key').colorbox({width:"40%", height:"30%", inline:true, href:"#add_key_html"});
-*/
-
-	$('#active_key_data').dataTable( {
-		"bPaginate": true,
-		"bLengthChange": false,
-		"bFilter": false,
-		"bSort": false,
-		"bInfo": true,
-		"bAutoWidth": true } );
-	
-	$('#inactive_key_data').dataTable( {
-		"bPaginate": true,
-		"bLengthChange": false,
-		"bFilter": false,
-		"bSort": false,
-		"bInfo": true,
-		"bAutoWidth": true } );
 
 });
 </script>

@@ -2,7 +2,7 @@
 
 $page_title = "IGB Facilities Add New Record"; 
 
-include 'includes/header.inc.php';
+require_once 'includes/header.inc.php';
 
 if (!$_SESSION['admin']){
 header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
@@ -160,11 +160,11 @@ if (!$empty_form){
 									  $safety_training, $gender, $supervisor_id, $admin, $superadmin);
 		if ($user_id != 0){
 			
-			$result = $user->add_igb_address($user_id, $igb_room);	
-			$result = $user->update($user_id, 'address', 'address1', $igb_address, " AND type = 'IGB'");
-                $result = $user->update($user_id, 'address', 'city', $igb_city, " AND type = 'IGB'");
-                $result = $user->update($user_id, 'address', 'state', $igb_state, " AND type = 'IGB'");
-                $result = $user->update($user_id, 'address', 'zip', $igb_zip, " AND type = 'IGB'");
+                    $result = $user->add_igb_address($user_id, $igb_room);	
+                    $result = $user->update($user_id, 'address', 'address1', $igb_address, " AND type = 'IGB'");
+                    $result = $user->update($user_id, 'address', 'city', $igb_city, " AND type = 'IGB'");
+                    $result = $user->update($user_id, 'address', 'state', $igb_state, " AND type = 'IGB'");
+                    $result = $user->update($user_id, 'address', 'zip', $igb_zip, " AND type = 'IGB'");
                 
 			if (!empty($dept_address1)){		
 			
@@ -773,20 +773,7 @@ SEARCH<BR>
 ?> 
 
 
-<script>
-$(document).ready(function(){
 
-	$("input.search").click(function(){
-	//$("div.search").show();
-	});
-
-	//$(".example8").colorbox({width:"60%", inline:true, href:"#inline_example1"});
-	$('a#search').colorbox({width:"80%", inline:true, height:"90%", href:"#display_search"});
-
-
-
-});
-</script>
 	
 
 
@@ -799,7 +786,7 @@ if ($success){
 else{
 	echo $add_form_html; 
 }
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 
 ?> 
 

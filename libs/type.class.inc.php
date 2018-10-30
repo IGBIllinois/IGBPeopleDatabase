@@ -29,7 +29,9 @@ class type{
     public function get_name() { return $this->name; }
     public function get_active() { return $this->active; }
     
-    
+    public static function get_type_id_from_name($name) {
+        //$query = "SELECT type_id from type where "
+    }
     
     // Private functions
     private function load($type_id) {

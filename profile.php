@@ -1115,25 +1115,7 @@ $remove_html = " <div id='remove_member'>
 
 <script>
 $(document).ready(function(){
-	var r;
-	function confirm_remove()
-	{
-		r=confirm("Are you sure you want to remove this member?");
-		
-		if(r==false){
-				$.colorbox.close();
-		}
 
-	}
-	
-	$('input#remove').colorbox({width:"50%", height:"50%", inline:true, href:"#remove_html",
-				onComplete:function(){ confirm_remove(); }
-					
-				
-				
-				
-				
-			});
 
 
 
