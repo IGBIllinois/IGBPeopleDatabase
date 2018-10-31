@@ -32,6 +32,8 @@ if(isset($_GET['reactivate'])){$reactivate = $_GET['reactivate'];}
 $user = new user($db, $user_id);
 $array = $user->get_user($user_id);
 
+$current_user = new user($db, $user->get_current_user_id());
+
 $theme_list = $db->query($select_theme);
 $type_list = $db->query($select_type);
 $dept_list = $db->query($select_dept);
@@ -319,11 +321,11 @@ if (isset($_POST['update_igb'])){
 		$igb_edit=TRUE;
 	}
                 
-        //echo("current image = $image <BR>");
+
         $imageDir =  $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) ."/images/users/";
-        //echo("imageDir = $imageDir");
+
         $basename = "";
-        //echo("delete_image = ".$user->is_checked($_POST['delete_image']) . "<BR>");
+
         if($user->is_checked($_POST['delete_image'])) {
             $user->delete_current_image();
         }
@@ -593,8 +595,9 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			  <td class='noborder'><input type='text' class='phone' name='fax' maxlength='14'  
         		value='". $fax."'></td>
    			</tr>
-                        
-			<tr>
+";
+if($current_user->get_admin()) {
+    $igb_info_edit .= "<tr>
 			  <td class='xs'><label>Add Theme </label></td>
 			  <td class='xs'>". dropdown( 'add_theme', $theme_list, 0 ). "</td>
 			</tr>
@@ -604,8 +607,9 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			<tr >
 			  <td class='xs'><label>Add Type </label></td>
 			  <td class='noborder'>". dropdown( 'add_type', $type_list, 0 )."</td>
-   			</tr>
-                        <tr>
+   			</tr>";
+}
+    $igb_info_edit  .=      "<tr>
 			  <td class='xs'><label>Remove Theme </label></td>
 			  <td class='xs'>". dropdown( 'remove_theme', $user_theme_list, 0 ). "</td>
 			</tr>
