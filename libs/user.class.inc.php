@@ -1235,7 +1235,7 @@ takes in a string and edits to a format suitable to enter into database
                 // only get themes this user has permission for.
                     $themelist = $this_user->get_permissions($user_id);
                     
-                    $theme_query = " RIGHT JOIN user_theme on ((user_theme.user_id = users.user_id) AND ";
+                    $theme_query = " RIGHT JOIN user_theme on ((user_theme.user_id = users.user_id) AND (";
                     
                     for($i=0; $i<count($themelist); $i++) {
                         $my_theme_id = $themelist[$i]['theme_id'];
@@ -1244,7 +1244,7 @@ takes in a string and edits to a format suitable to enter into database
                             $theme_query .= " OR ";
                         }
                     }
-                    $theme_query .= ")";
+                    $theme_query .= "))";
 
 		
                 }
@@ -1253,7 +1253,7 @@ takes in a string and edits to a format suitable to enter into database
 
                  $query .= " ORDER BY last_name";
                  $result = $db->get_query_result($query, $params);
-                 
+
                  $users = array();
                  foreach($result as $curr_user) {
                     $users[] = new user($db, $curr_user['user_id']);
