@@ -2,16 +2,7 @@
 
 $page_title = "IGB People Database Search"; 
 
-include_once 'includes/header.inc.php'; 
-
-if (!$_SESSION['admin']){
-    echo("no admin");
-header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
-
-
-$admin_id = $_SESSION['admin_id'];
+require_once 'includes/header.inc.php'; 
 
 
 $success_html = "<br><h4>

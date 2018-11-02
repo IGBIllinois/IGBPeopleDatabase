@@ -760,7 +760,6 @@ function write_database_users_report($search_results, $db, $filename) {
         if(count($search_results[$i]) == 0) {
             $line = array();
         } else {
-		//$thisuser = new user($dbase, $search_results[$i]['user_id']);
 		$line = array($search_results[$i]['first_name'],
                                         $search_results[$i]['last_name'],
 					  $search_results[$i]['netid'],
@@ -769,7 +768,7 @@ function write_database_users_report($search_results, $db, $filename) {
 
 					  );
         }
-                //echo("<BR>");
+
 		$excel->writeLine($line);
 	}
        
@@ -789,7 +788,6 @@ function get_address($db, $user_id, $type="HOME") {
 	$result = $db->query($query);
 	$addr = $result[0]['address1'] . " " . ($result[0]['address2'] != "" ? ($result[0]['address2'] . " ") : "") . "\r\n" . $result[0]['city'] .
 		", " . $result[0]['state'] . " " . $result[0]['zip'];
-	//echo $addr;
 	return $addr;
 }
 

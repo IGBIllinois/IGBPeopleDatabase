@@ -2,12 +2,7 @@
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php'; 
-
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
+require_once 'includes/header.inc.php'; 
 
 ?>
 
@@ -19,7 +14,6 @@ if(isset($_GET['theme'])) {
 }
 
 $theme_list = $db->query($select_theme);
-
 
 $table_html = "";
 
@@ -33,48 +27,40 @@ $user->get_user($user_id);
 $html = "";
 	foreach( $theme_list as $key=>$option )
     {
-
 		if($user->get_admin()==1 || $user->has_permission($user_id, $option['theme_id'])) {
 
-                $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$option['theme_id']. "' and active = 1";
+                    $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$option['theme_id']. "' and active = 1";
 
-                $search_results = $db->query($query);
-                
-                if (count($search_results) == 0) { 
-		  	$html .= "<input type='button' name='".$option['theme_id']."' id='".$option['short_name']."' value='".$option['short_name']."' 
-					class='themebutton disabled' > ";
-                    
-	  	}
-		else {	
+                    $search_results = $db->query($query);
 
-                    $html .= "<a href='themedir.php?theme=".$option['theme_id']."' class='themelink' >".$option['short_name']."</a> ";
+                    if (count($search_results) == 0) { 
+                            $html .= "<input type='button' name='".$option['theme_id']."' id='".$option['short_name']."' value='".$option['short_name']."' 
+                                            class='themebutton disabled' > ";
+
+                    } else {	
+                        $html .= "<a href='themedir.php?theme=".$option['theme_id']."' class='themelink' >".$option['short_name']."</a> ";
+                    }
                 }
-    }
     }
 
     // select users who are stil enabled, but not active in any theme.
     $null_query = "select * from users where user_id NOT IN (select user_id from user_theme where active=1) and user_enabled = 1";
-    $null_search_results = $db->query($query);
+
+    $null_search_results = $db->query($null_query);
+
     $html.="<a href='themedir.php?theme=0' class='themelink' >NO THEME</a> ";
     if($curr_theme != null && $curr_theme != "") {
 
-                        $theme_html .= html::displayUsersByType($db, $user_tmp, $curr_theme);
+        $theme_html .= html::displayUsersByType($db, $user_tmp, $curr_theme);
 
-		
-		}
-		
+    }
 
-
-
-	
-	
 $theme = new theme($db);
 $theme->get_theme($curr_theme);
 $theme_name = $theme->get_short_name();
 
 
 ?> 
-
 
 
 <h1> <?php echo $theme_name; ?> Directory </h1>
@@ -102,7 +88,7 @@ $theme_name = $theme->get_short_name();
  
 <?php 
 
-include ("includes/footer.inc.php"); 
+require_once("includes/footer.inc.php"); 
 
 ?> 
 

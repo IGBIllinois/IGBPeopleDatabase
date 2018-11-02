@@ -2,15 +2,9 @@
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php';
+require_once 'includes/header.inc.php';
 
 error_reporting(E_ERROR | E_PARSE);
-
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); }
-
-
 
 $igb_edit = FALSE;
 $personal_edit = FALSE;
@@ -1196,7 +1190,7 @@ if($status=='0') {
 <br>
 <?php 
 
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 
 function list_permissions($user_id) {
     global $db;

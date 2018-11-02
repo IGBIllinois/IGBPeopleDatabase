@@ -3,14 +3,9 @@
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php';
+require_once 'includes/header.inc.php';
 
-//include 'includes/user.class.inc.php';
 
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
 ?>
 
 
@@ -288,6 +283,6 @@ if($table_html != null) {
 
 <?php 
 }
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 
 ?> 

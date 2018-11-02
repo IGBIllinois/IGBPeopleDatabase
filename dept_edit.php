@@ -5,11 +5,6 @@ $page_title = "IGB People Database";
 require_once 'includes/header.inc.php';
 
 
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
-
 if(isset($_GET['dept_id'])){$user_id = $_GET['dept_id'];}
 
 $dept_list = $db->query($select_dept);

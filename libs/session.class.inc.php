@@ -1,74 +1,99 @@
 <?php
 
-//include_once 'ldap.class.inc.php';
-//include_once 'user.class.inc.php';
-
 class session {
 
-        ////////////////Private Variables//////////
-        private $db; //mysql database object
-        private $user; //user object
-        private $ldap;
-        private $password;
-        private $username;
-        
-        
+
+	///////////////Private Variables//////////
+	private $session_name;
+
         ////////////////Public Functions///////////
 
-        public function __construct($db,$ldap,$username,$password) {
-                $this->db = $db;
-                $this->ldap = $ldap;
-                $this->password = $password;
-                $this->username = $username;
-                $this->user = new user($this->db,0,$username);
-                
+        public function __construct($session_name) {
+		$this->session_name = $session_name;
+		$this->set_settings();
+		$this->start_session();		
         }
-        public function __destruct() {}
-        
-       public function get_user() { return $this->user; }
 
+	public function __destruct() {}
 
-        public function authenticate($ldap_people_ou) {
-                $this->ldap->set_ldap_people_ou($ldap_people_ou);
-                if (($this->ldap->bind($this->user->get_user_name(),$this->get_password())) && ($this->valid_user())) {
-                        return true;
+	public function get_var($name) {
+		$result = false;
+		if ($this->is_session_started() && (isset($_SESSION[$name]))) {
+			$result = $_SESSION[$name];
+		}
+		return $result;
+
+	}
+
+	public function get_all_vars() {
+		return $_SESSION;
+
+	}
+	public function set_session($session_array) {
+		foreach ($session_array as $key=>$var) {
+			$this->set_session_var($key,$var);
+		}
+
+	}
+
+	public function get_session_id() { 
+		return session_id();
+	}
+	public function get_session_name() {
+		return $this->session_name;
+	}
+
+	public function destroy_session() {
+		if ($this->is_session_started()) {
+			unset($_SESSION);
+			session_destroy();
+		}
+	}
+
+        public function set_session_var($name,$var) {
+                $result = false;
+                if ($this->is_session_started()) {
+                        $_SESSION[$name] = $var;
+                        $result = true;
                 }
-                else { return false; }
-                return true;
-        }
-
-        public function is_admin() {
-                
-                if ($this->user->get_group() == "Administrators") { return true; }      
-                else { return false; }
+                return $result;
 
         }
-        
-        public function is_user() {
-                if ($this->user->get_group() == "Users") { return true; }
-                else { return false; }
-                
+
+	////////////////Private Functions/////////////
+
+	private function start_session() {
+            if($this->is_session_started()) {
+                session_destroy();
+            }
+                session_name($this->session_name);
+                session_start();
         }
-        
-        public function is_business() {
-                if ($this->user->get_group() == "Business") { return true; }
-                else { return false; }
-        }       
+	private function is_session_started() {
+		$result = false;
+		if ($this->get_session_id() != "") {
+			$result = true;
+		}
+		return $result;
+	}
 
-        public function is_supervisor() {
-                return $this->user->is_supervisor();
-        
-        }
 
-        //////////////Private Functions/////////////
-
-        private function get_password() { return $this->password; }
-
-        private function valid_user() {
-                if ($this->user->get_user_id()) { return true; }
-                else { return false; }
-        }       
+	private function set_settings() {
+		$session_hash = "sha512";
+		if (in_array($session_hash,hash_algos())) {
+			ini_set("session.hash_function","sha512");
+		}
+		ini_set("session.entropy_file","/dev/urandom");
+		ini_set("session.entropy_length","512");
+		ini_set("session.hash_bits_per_character",6);
+	}
 
 }
+
+
+
+
+
+
 
 ?>

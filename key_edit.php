@@ -2,13 +2,7 @@
 
 $page_title = "IGB People Database Search"; 
 
-include 'includes/header.inc.php';
-
-
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
+require_once 'includes/header.inc.php';
 
 
 $key_list = $db->query($select_key);
@@ -283,6 +277,6 @@ $edit_key_html = "";
 <br>
 <?php 
 
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 
 ?> 

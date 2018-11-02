@@ -2,14 +2,7 @@
 
 $page_title = "IGB People Database"; 
 
-include 'includes/header.inc.php';
-
-
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
-
+require_once 'includes/header.inc.php';
 
 $type_list = $db->query($select_all_types);
 $error_msg = "";
@@ -195,28 +188,12 @@ $(document).ready(function(){
 	
 	echo $type_add_table;
 	echo $type_edit_table;
-	
 
-
-	
 ?>
 
-
-<div style='display:none'>
-		<div id='theme_add_table'>
-        <?php
-			//echo $theme_add_table;
-		?>
-		</div>
-        
-
-        
-        
-        
-</div>
 <br>
 <?php 
 
-include ("includes/footer.inc.php"); 
+require_once("includes/footer.inc.php"); 
 
 ?> 

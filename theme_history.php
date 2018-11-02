@@ -11,10 +11,6 @@ $page_title = "IGB People Database";
 
 require_once 'includes/header.inc.php'; 
 
-if (!$_SESSION['admin']){
-header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
 
 $user_id = $_GET['user_id'];
 

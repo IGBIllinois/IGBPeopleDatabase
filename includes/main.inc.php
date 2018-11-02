@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////
 
-	ini_set('display_errors',1);
+ini_set('display_errors',1);
 
 set_include_path(get_include_path().";libs;");
 include_once('settings.inc.php');
@@ -25,16 +25,16 @@ function my_autoloader($class_name) {
 
 require_once 'vendor/autoload.php';
 
-
-include 'query.inc.php';
-include_once 'functions.inc.php';
+require_once 'query.inc.php';
+require_once 'functions.inc.php';
 
 spl_autoload_register('my_autoloader');
 
 $db = new db(mysql_host,mysql_database,mysql_user,mysql_password);
+$ldap = new ldap(ldap_host,ldap_ssl,ldap_port,ldap_base_dn);
+
 ini_set('session.cache_limiter','public');
 session_cache_limiter(false);
-session_start();
 
 	
 ?>

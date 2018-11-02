@@ -1,3 +1,7 @@
+<?php
+	require_once 'main.inc.php';
+        require_once 'session.inc.php';
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <HTML>
@@ -20,28 +24,10 @@
 
 <BODY>
 
-
-
-
 <?php
 
-if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""){
-    $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-    header("HTTP/1.1 301 Moved Permanently");
-    header("Location: $redirect");
-}
-
-include_once 'includes/main.inc.php';
 date_default_timezone_set('America/Chicago');
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-
-
-
-//error_reporting(E_ALL);
-/*ini_set('display_errors', '1');
-
-
-*/
 
 
 $header_html = "<div id='container'>

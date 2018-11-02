@@ -3,7 +3,7 @@
 
 $page_title = "IGB People Database Reports"; 
 
-include 'includes/header.inc.php'; 
+require_once 'includes/header.inc.php'; 
 
 
 echo("<h1> Reports </h1>");
@@ -37,5 +37,5 @@ echo("<h1> Reports </h1>");
 <?php
 
 
-include ("includes/footer.inc.php"); 
+require_once ("includes/footer.inc.php"); 
 

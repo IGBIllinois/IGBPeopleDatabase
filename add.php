@@ -4,12 +4,6 @@ $page_title = "IGB Facilities Add New Record";
 
 require_once 'includes/header.inc.php';
 
-if (!$_SESSION['admin']){
-header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php"); 	
-exit(); 
-}
-
-
 
 echo "<body onLoad=\"document.add.first_name.focus()\">"; 
 $success = FALSE;
@@ -153,7 +147,7 @@ if (!$empty_form){
 		if ($error_count == 0){
 			
 			
-			$user_id = $user->add_user_2($first_name, $last_name, $netid, $uin, 
+			$user_id = $user->add_user($first_name, $last_name, $netid, $uin, 
 									  $email, $theme_drop, $theme_1_drop, $theme_2_drop,
 									  $type_drop, $type_1_drop, $type_2_drop, $dept_drop, $default_address, 
 									  $start_date, $key_deposit, $prox_card, 

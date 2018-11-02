@@ -132,6 +132,7 @@ label {
 	color:#763984;
 	font-weight:none;
 	margin:auto;
+        font-size:12px;
 }
 
 label.required {
@@ -470,7 +471,7 @@ td, th{
 
 
 table.xs{
-	width:30%;	
+	width:30%;
 }
 
 table.small{
@@ -504,6 +505,7 @@ td.xs {
 	border: 0px;
 	width:17%;	
 	padding: 2px 20px 2px 0px;
+        font-size:12px;
 }
 
 td.small {
