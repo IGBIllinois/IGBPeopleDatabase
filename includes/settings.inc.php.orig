@@ -18,14 +18,16 @@ define("mysql_user","");
 define("mysql_password", "");
 define("mysql_database","");
 
-
-
 define("ldap_host",'');
 define("ldap_base_dn","");
 define("ldap_people_ou","");
 define("ldap_group_ou","");
-define("ldap_ssl",TRUE);
+define("ldap_admin_group","");
+define("ldap_ssl",FALSE);
 define("ldap_port",389);
 
 define("DEFAULT_IMAGE", "default.png");
+define("__SESSION_NAME__", "igbpeopledatabasesession");
+define("__SESSION_TIMEOUT__",36000);
+
 ?>
