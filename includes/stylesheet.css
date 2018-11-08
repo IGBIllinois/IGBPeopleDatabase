@@ -429,6 +429,20 @@ div.clear {
 	clear:both;
 }
 
+div.success {
+font-size:14px; 
+color: #C03;
+}
+
+div.error {
+font-size:14px; 
+color: #F00;
+}
+
+div.warning {
+font-size:14px; 
+color: #F00;
+}
 
 div#account {
 	padding:0px;

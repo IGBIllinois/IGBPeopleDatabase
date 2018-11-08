@@ -80,16 +80,16 @@ $year_drop = $_POST['year_drop'];
 
 
 $fields = array("First Name" => &$first_name,
-				"Last Name" => &$last_name,
-				"Net ID" => &$netid,
-				"Email" => &$email,
-				"IGB Room" => &$igb_room,
-				"IGB Phone" => &$igb_phone,
-				"Start Date" => &$start_date,
-				"Theme" => &$theme_drop,
-				"Type" => &$type_drop,
-				"Gender" => &$gender,
-				"Supervisor" => &$supervisor);
+                "Last Name" => &$last_name,
+                "Net ID" => &$netid,
+                "Email" => &$email,
+                "IGB Room" => &$igb_room,
+                "IGB Phone" => &$igb_phone,
+                "Start Date" => &$start_date,
+                "Theme" => &$theme_drop,
+                "Type" => &$type_drop,
+                "Gender" => &$gender,
+                "Supervisor" => &$supervisor);
 
 	
 
@@ -148,10 +148,10 @@ if (!$empty_form){
 			
 			
 			$user_id = $user->add_user($first_name, $last_name, $netid, $uin, 
-									  $email, $theme_drop, $theme_1_drop, $theme_2_drop,
-									  $type_drop, $type_1_drop, $type_2_drop, $dept_drop, $default_address, 
-									  $start_date, $key_deposit, $prox_card, 
-									  $safety_training, $gender, $supervisor_id, $admin, $superadmin);
+				$email, $theme_drop, $theme_1_drop, $theme_2_drop,
+				$type_drop, $type_1_drop, $type_2_drop, $dept_drop, $default_address, 
+				$start_date, $key_deposit, $prox_card, 
+				$safety_training, $gender, $supervisor_id, $admin, $superadmin);
 		if ($user_id != 0){
 			
                     $result = $user->add_igb_address($user_id, $igb_room);	
@@ -196,7 +196,7 @@ if (!$empty_form){
 			$user_id = $user->user_exists("netid",$netid);
 		}
 		else {
-			$error = "* Error occurred when adding user.  Please try again."	;
+			$error = "* Error occurred when adding user.  Please try again.";
 		}
 			
 	  

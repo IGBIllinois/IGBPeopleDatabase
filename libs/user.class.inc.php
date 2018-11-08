@@ -53,7 +53,13 @@ class user{
         private $supervisor_name;
 	private $start_date;
 	private $end_date;
+        
+        /** Array of theme ids that this user is in, and their associated
+         * type ids.
+         * The array key is the theme id, and the value is the type id
+         */
 	private $themes;
+        
 	private $admin;
         private $superadmin;
 	private $reason_leaving;
@@ -210,6 +216,11 @@ returns values of specific user
 		}
 	}
         
+        /** Returns the image uploaded for this user, or a default image if
+         *  none exists.
+         * 
+         * @return string Name of the image file for this user.
+         */
         public function get_image() { 
 
             if($this->image != null) {
@@ -275,8 +286,29 @@ returns values of specific user
 	public function get_dept_zip() { return $this->dept_zip; }
 	
 	//theme & type
+        
+        /**
+         * Returns an array of theme ids this user is in, and their associated
+         * type ids.
+         * @return array An array of key->value pairs representing the 
+         * themes this user is in. 
+         * For each element in the array, the key value is the theme id 
+         * and the value is the associated type for that theme.
+         */
         public function get_themes_array() {return $this->themes; }
+        
+        /** Returns an array of the ids of the types this user holds.
+         * 
+         * @return array An array of type ids for the themes this user is in.
+         */
         public function get_types() { return array_values($this->themes); }
+        
+        /** Returns an array of the names
+         * of the Types this user has in their Themes.
+         * 
+         * @return array An array of strings that are the names
+         * of the Types this user has in their Themes.
+         */
         public function get_type_names() {
             $names =array();
             if($this->themes != null && count($this->themes) > 0) {
@@ -288,6 +320,13 @@ returns values of specific user
             }
             return $names;
         }
+        
+        /** Returns an array of the names
+         * of the Themes this user is in.
+         * 
+         * @return array An array of strings that are the short names
+         * of the Themes this user is in.
+         */
         public function get_theme_short_names() {
             $names =array();
             if($this->themes != null && count($this->themes) > 0) {
@@ -299,6 +338,12 @@ returns values of specific user
             }
             return $names;
         }
+        
+        /** Determines if this user is in a specific theme
+         * 
+         * @param int $theme_id The id of the Theme to check
+         * @return boolean True if this user is in the given Theme, else false.
+         */
         public function is_in_theme($theme_id) {
 
             if(array_key_exists($theme_id, $this->themes)) {
@@ -307,6 +352,13 @@ returns values of specific user
                 return false;
             }
         }
+        
+        /** Determines if this user has the given Type in one of their Themes
+         * 
+         * @param int $type_id The id of the Type to check
+         * @return boolean True if this user has the given Type in one
+         * of their Themes, else false.
+         */
         public function is_type($type_id) {
             if(in_array($type_id, $this->themes)) {
                 return true;
@@ -594,10 +646,14 @@ searches values inputed into generic text input and checks to see if those value
     }
     
     
-       // get all users of a specific type in a group
-    //
-    // @param $group_id: The id number of the theme
-    // @param $types: An array of type ids
+    /** Gets all users of a specific type in a group
+     * 
+     * @param int $theme_id
+     * @param array $types
+     * @param int $status
+     * @param int $supervisor
+     * @return type
+     */
     public function get_users_by_type($theme_id, $types, $status=1, $supervisor=-1) {
         if($theme_id==0) {
             // if theme_id == 0, get users who have no theme.
@@ -775,6 +831,12 @@ searches values inputed into generic text input and checks to see if those value
     
     }
     
+    /** Gets the number of people the given user is supervisor for.
+     * 
+     * @param type $supervisor_id Id of the supervisor to check
+     * @return int The number of people who have the given user
+     * listed as their supervisor
+     */
     public function count_users_for_supervisor($supervisor_id) {
         $query = "select * from users where supervisor_id=$supervisor_id";
         $result = $this->db->query($query);
@@ -808,47 +870,32 @@ updates given field (as param) with given value (param)
 		return $result;
     }
 
-
-
-
-
-
-
-	
-/*
-add_user()
-$user_info - array with user info to insert
-returns the id number of the new record, 0 if it fails
-*/
-	public function add_user($first_name, $last_name, $netid, $uin, $email, 
-							 $theme_drop, $theme_1_drop, $theme_2_drop, $type_drop, $type_1_drop, $type_2_drop,
-							 $dept_drop, $default_address,
-							 $start_date, $key_deposit, $prox_card, $safety_training, $gender, $supervisor_id, $admin) {
-		$key = $this->is_checked($key_deposit);
-		$prox = $this->is_checked($prox_card);
-		$safety = $this->is_checked($safety_training);
-		$isAdmin = $this->is_checked($admin);
-		
-		$add_user_query = "INSERT INTO users (first_name, last_name, netid, uin, email,
-											  theme_id, theme_1_id, theme_2_id, type_id, type_1_id, type_2_id, dept_id, default_address, start_date, 
-											  key_deposit, prox_card, safety_training, gender, supervisor_id, admin, user_time_created)
-							VALUES ('".$this->edit($first_name)."','". $this->edit($last_name)."','". $this->edit($netid)."',
-									'". $this->edit($uin)."','". $this->edit($email)."',
-									'". $this->edit($theme_drop)."','". $this->edit($theme_1_drop)."','".
-									$this->edit($theme_2_drop)."',
-									'". $this->edit($type_drop)."','". $this->edit($type_1_drop)."','".
-									$this->edit($type_2_drop)."','". $this->edit($dept_drop)."',
-									'".$this->edit($default_address)."','".$this->edit($start_date)."',	
-									'".$key."',	'".$prox."','".$safety."','".$gender."','".$this->edit($supervisor_id)."','".$isAdmin."', NOW()
-									)";
-		$result = $this->db->insert_query($add_user_query);
-		return $result;
-
-
-	}
-        
-        //
-        public function add_user_2($first_name, $last_name, $netid, $uin, $email, 
+    
+    /** Adds a new User
+     * 
+     * @param string $first_name User's first name
+     * @param string $last_name User's last name
+     * @param string $netid Users university netid
+     * @param int $uin User's university id number
+     * @param string $email User's email address
+     * @param int $theme_drop Theme ID from the first drop-down menu
+     * @param int $theme_1_drop Theme ID from the second drop-down menu
+     * @param int $theme_2_drop Theme ID from the third drop-down menu
+     * @param int $type_drop Type ID from the first drop-down menu
+     * @param int $type_1_drop Type ID from the second drop-down menu
+     * @param int $type_2_drop Type ID from the third drop-down menu
+     * @param int $dept_drop Department ID
+     * @param string $default_address Default address type
+     * @param string $start_date User's starting date
+     * @param boolean $key_deposit True if the User has given a key deposit
+     * @param boolean $prox_card True if the User has a prox card
+     * @param boolean $safety_training True if the User has taken saftey training
+     * @param string $gender "M" or "F"
+     * @param int $supervisor_id ID of the user's supervisor
+     * @param type $admin True if the user is a database admin
+     * @return type ID of the newly created user
+     */
+        public function add_user($first_name, $last_name, $netid, $uin, $email, 
 							 $theme_drop, $theme_1_drop, $theme_2_drop, $type_drop, $type_1_drop, $type_2_drop,
 							 $dept_drop, $default_address,
 							 $start_date, $key_deposit, $prox_card, $safety_training, $gender, $supervisor_id, $admin) {
@@ -896,6 +943,13 @@ returns the id number of the new record, 0 if it fails
      
         }
         
+        /** Add a user to a theme
+         * 
+         * @param int $user_id ID of the user to add
+         * @param int $theme_id ID of the theme to add the user to
+         * @param int $type_id ID of the Type the user will be within the Theme
+         * @return type ID of the entry into the theme_result table
+         */
         public function add_theme($user_id, $theme_id, $type_id) {
             $user_theme_query = "INSERT INTO user_theme(user_id, theme_id, type_id, active, start_date) VALUES ('".
                                             $user_id. "', '".$this->edit($theme_id). "', '". $this->edit($type_id)."', '1', NOW())";
@@ -904,6 +958,11 @@ returns the id number of the new record, 0 if it fails
                 return $theme_result;
         }
         
+        /** Removes a user from a theme
+         * 
+         * @param type $user_id ID of the user to remove
+         * @param type $theme_id ID of the theme to remove the user from
+         */
         public function remove_theme($user_id, $theme_id) {
             $user_theme_query = "UPDATE user_theme set active='0', end_date=NOW() where user_id='$user_id' AND theme_id=$theme_id AND active='1'";
                 $this->db->non_select_query($user_theme_query);
@@ -921,6 +980,12 @@ returns the id number of the new record, 0 if it fails
             return $result;
         }
         
+        /** Change the Type of a user in a theme
+         * 
+         * @param type $user_id ID of the User 
+         * @param type $theme_id ID of the Theme
+         * @param type $type_id ID of the new Type 
+         */
         public function change_type($user_id, $theme_id, $type_id) {
             $query = "UPDATE user_theme set type_id = $type_id where user_id=$user_id and theme_id=$theme_id and active=1";
             $this->db->non_select_query($query);
@@ -943,11 +1008,17 @@ returns the id number of the new record, 0 if it fails
 
 	}
 
-/*
-add_address()
-to add dept or home address
-returns the id number of the new record, 0 if it fails
-*/
+        /**
+         * Adds an address for this user.
+         * @param int $user_id ID of the User
+         * @param array $address Address array in the form:
+         *      [type=>address_type ("IGB", "Home", Dept."),
+         *       address1=>address line 1
+         *       address2=>address line 2)]
+         * @param type $country
+         * @param type $fwd
+         * @return type
+         */
 	public function add_address($user_id, $address, $country="United States", $fwd=0 ) 
 	{
 
@@ -981,11 +1052,15 @@ returns the id number of the new record, 0 if it fails
 
 	}
 	
-/*
-add_key()
-add key entry
-returns the id number of the new record, 0 if it fails
-*/	
+        
+        /** Adds user to the key to the user
+         * 
+         * @param int $user_id The ID of the user to add a key for
+         * @param int $key_id The ID of the key
+         * @param string $date_issued Date the key was issued
+         * @param boolean $paid True if the user paid deposit, else false
+         * @return int The ID of the newly created entry
+         */
 	public function add_key($user_id, $key_id, $date_issued, $paid) 
 	{
 		
@@ -1007,7 +1082,7 @@ Provide email address (raw input)
 Returns true if the email address has the email 
 address format and the domain exists.
 */
-function is_valid_email($email)
+public function is_valid_email($email)
 {
    $email = trim(rtrim($email));
    $isValid = true;
@@ -1072,27 +1147,36 @@ function is_valid_email($email)
 
 	
 
-/*
-is_admin()
-verifies input is valid email address
-returns TRUE or FALSE
-*/	
-	public function is_admin($username, $password= NULL) 
+        /** Determines if a User is a database administrator
+         * 
+         * @param string $username The username of the user to check
+         * 
+         * @return boolean True if this user is a database admin, else false
+         */
+	public function is_admin($username) 
 	{
 		$admin_query = "SELECT user_id FROM users WHERE netid = '".$username."' AND admin = '1' ";
-                //echo("admin_query = $admin_query");
 		$result = $this->db->query($admin_query);
-                //echo("User = ". $result[0]['user_id']);
-		return $result[0]['user_id'];
+                if(count($result) > 0) {
+                    return $result[0]['user_id'];
+                } else {
+                    return false;
+                }
 
 	}
         
+        /** Determines if a User is a database superadministrator
+        * 
+        * @param string $username The username of the user to check
+        * 
+        * @return boolean True if this user is a database superadmin, else false
+        */
 	public function is_superadmin($username, $password= NULL) 
 	{
 		$admin_query = "SELECT user_id FROM users WHERE netid = '".$username."' AND superadmin = '1' ";
-                //echo("admin_query = $admin_query");
+
 		$result = $this->db->query($admin_query);
-                //echo("User = ". $result[0]['user_id']);
+
 		return $result[0]['user_id'];
 
 	}
