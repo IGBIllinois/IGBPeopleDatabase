@@ -46,7 +46,6 @@ function dropdown( $name, $options, $selected=null )
 
     $selected = $selected;
     /*** loop over the options ***/
- 
     foreach( $options as $key=>$option )
     {
 		$array_keys = array_keys($option);
@@ -325,42 +324,7 @@ coming soon: possibly add theme secretary?
 
 */
 
-function theme_list_table( $id, $search_results)
-{
-	$status_arr = array(0=>"Inactive", 1=>"Active");
-	$table_html = "<table name='".$id."' id='".$id."' >
-			<thead>
-			<tr>
-					<th >Theme Name</th>
-					<th >Abbrev.</th>	
-					<th >Leader</th>
-					<th >Status</th>
-					<th ></th>	
-			</tr>
-			</thead>";
-	if (count($search_results) == 0) { 
-			  
-		  }
-	else {
-		$table_html .= "";
-		for ($i = 0; $i < count($search_results); $i++) {
-				$x = $i % 2;
-				
-					$table_html .= "<tr >"; 
-					$table_html .= "<td>" . $search_results[$i]["name"] . "</td>";
-					$table_html .= "<td>" . $search_results[$i]["short_name"] . "</td>";
-					$table_html .= "<td>
-							<a href='profile.php?user_id=" . $search_results[$i]["leader_id"] . "'>
-							" . $search_results[$i]["theme_leader_name"] . "</a></td>";
-					$table_html .= "<td>" . $status_arr[$search_results[$i]["theme_active"]] . "</td>";
-					$table_html .= "<td>view details</td>";
-					$table_html .= "</tr>";
-			
-			}
-	}
-	$table_html .= "</table>"; 
-	return $table_html;
-}
+
 
 
 

@@ -173,10 +173,10 @@ return $table_html;
 }
 
 public static function success_message($message){
-		return "<div class='alert alert-success'>".$message."</div>";
+		return "<div class='success'>".$message."</div>";
 	}
 	public static function error_message($message){
-		return "<div class='alert alert-danger'>".$message."</div>";
+		return "<div class='error'>".$message."</div>";
 	}
 	public static function warning_message($message){
 		return "<div class='alert alert-warning'>".$message."</div>";
@@ -262,5 +262,50 @@ public static function success_message($message){
         ob_end_flush();
         die();
     }
+    
+    
+    /** Writes an HTML table of Themes
+     * 
+     * @param string $id Table name
+     * @param array $theme_array Array of Theme objects
+     * @return string
+     */
+    public static function theme_list_table( $id, $theme_array)
+{
+	$status_arr = array(0=>"Inactive", 1=>"Active");
+	$table_html = "<table name='".$id."' id='".$id."' >
+			<thead>
+			<tr>
+					<th >Theme Name</th>
+					<th >Abbrev.</th>	
+					<th >Leader</th>
+					<th >Status</th>
+					<th ></th>	
+			</tr>
+			</thead>";
+	if (count($theme_array) == 0) { 
+			  
+		  }
+	else {
+		$table_html .= "";
+		for ($i = 0; $i < count($theme_array); $i++) {
+                    $theme= $theme_array[$i];
+				$x = $i % 2;
+				
+					$table_html .= "<tr >"; 
+					$table_html .= "<td>" . $theme->get_name() . "</td>";
+					$table_html .= "<td>" . $theme->get_short_name() . "</td>";
+					$table_html .= "<td>
+							<a href='profile.php?user_id=" . $theme->get_leader_id() . "'>
+							" . $theme->get_leader_name() . "</a></td>";
+					$table_html .= "<td>" . $status_arr[$theme->get_status()] . "</td>";
+					$table_html .= "<td>view details</td>";
+					$table_html .= "</tr>";
+			
+			}
+	}
+	$table_html .= "</table>"; 
+	return $table_html;
+}
 
 }

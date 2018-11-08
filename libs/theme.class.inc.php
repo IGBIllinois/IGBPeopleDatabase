@@ -42,20 +42,16 @@ class theme{
 	}
 	
 	
-/*
-load theme id
-*/
 
+/** Loads theme data into this Theme object
+ * 
+ * @param type $theme_id ID of the Theme to load data for.
+ */
     public function load($theme_id) {
         $this->id = $theme_id;
         $this->get_theme_id();
         $this->get_theme($theme_id);
     }
-
-/*
-load theme values
-*/
-
 
 /** Loads a Theme from a theme ID
  * 
@@ -83,8 +79,6 @@ load theme values
 		$this->leader_name = $result[0]['theme_leader_name'];
 		$this->num_members = $theme_stats[0]['count'];
 
-		
-		
 		return $result;
 	}
 /*
@@ -106,16 +100,24 @@ returns values of specific theme
 	
 
 	
-/*
-get all themes
-*/
-	
-	
+        /** Returns an array of all Theme data
+         * 
+         * @return array Array of theme data
+         */
 	public function get_all_themes() { 
-		$theme_query = "SELECT themes.*, users.user_id, CONCAT(users.first_name, ' ', users.last_name) AS theme_leader_name 
-						 FROM themes LEFT JOIN users ON themes.leader_id = users.user_id ";
-		$result = $this->db->query($theme_query);	
-		return $result;
+		//$theme_query = "SELECT themes.*, users.user_id, CONCAT(users.first_name, ' ', users.last_name) AS theme_leader_name 
+		//				 FROM themes LEFT JOIN users ON themes.leader_id = users.user_id ";
+		//$result = $this->db->query($theme_query);	
+		//return $result;
+                $theme_query = "SELECT theme_id from themes";
+                $result = $this->db->get_query_result($theme_query, null);
+                $all_themes = array();
+                foreach($result as $theme_data) {
+                    $theme = new theme($this->db, $theme_data['theme_id']);
+                    $all_themes[] = $theme;
+                }
+                
+                return $all_themes;
 	}
 	
 	
@@ -164,27 +166,59 @@ returns number of rows where $field = $value in $table
 
 
 
-/*
-update
-update query
-updates given field (as param) with given value (param)
-*/
 	
-	public function update($theme_id, $table, $field, $value, $conditional = NULL) {
-		$update_val = $this->edit($value);
+    /** Updates a field in the Theme
+     * 
+     * @param int $theme_id ID of the Theme to update
+     * @param string $table 
+     * @param string $field
+     * @param string $value
+     * @return type
+     */
+	public function update($theme_id, $table, $field, $value) {
+
 		$count = $this->num_rows('theme_id', $theme_id, $table, $conditional);
+                $params = array("theme_id"=>$theme_id, $field=>$value);
 		if ($count == 0){
-			  $add_query = "INSERT INTO ".$table."  (theme_id, ".$field." )
-							VALUES ('".$theme_id."','". $update_val."')";
-			  $result = $this->db->insert_query($add_query);
+
+                    $add_query = "INSERT INTO $table (theme_id, $field) VALUES
+                        (:theme_id, :$field)";
+                    $result = $this->db->get_insert_result($add_query, $params);
 		}
 		else{
-			$update_query = "UPDATE ".$table." SET ".$field." = '".$update_val."' WHERE theme_id = '".$theme_id."' ";
-			$update_query .= $conditional;
-			$result = $this->db->query($update_query);
+                    $update_query = "UPDATE $table SET $field = :$field where theme_id=:theme_id ";
+
+                        $result = $this->db->get_update_result($update_query, $params);
 		}
-		//$load = $this->get_theme($theme_id);
+
 		return $result;
+    }
+    
+    
+    /** Updates a Theme
+     * 
+     * @param type $theme_id ID of the Theme to change
+     * @param type $theme_name New name for the Theme
+     * @param type $theme_short_name New short name for the Theme
+     * @param type $theme_leader_id ID of the leader of the Theme
+     * @param type $theme_status Theme Status (1 for Active, 0 for Inactive)
+     * @return type Number of records changed (should be one)
+     */
+    public function update_theme($theme_id, $theme_name, $theme_short_name, $theme_leader_id, $theme_status) {
+        $query = "UPDATE themes set name=:theme_name, "
+                . "short_name=:theme_short_name,"
+                . "leader_id=:theme_leader_id,"
+                . "theme_active = :theme_status "
+                . " WHERE theme_id = :theme_id ";
+        $params = array("theme_id"=>$theme_id,
+                        "theme_name"=>$theme_name,
+                        "theme_short_name"=>$theme_short_name,
+                        "theme_leader_id"=>$theme_leader_id,
+                        "theme_status"=>$theme_status);
+        $result = $this->db->get_update_result($query, $params);
+        return $result;
+        
+                    
     }
 
 
@@ -194,18 +228,32 @@ updates given field (as param) with given value (param)
 
 
 	
-/*
-add_theme()
-returns the id number of the new record, 0 if it fails
-*/
+
+    /** Adds a new Theme
+     * 
+     * @param string $name Name of the new Theme
+     * @param string $short_name Short name of the new Theme
+     * @param int $leader_id ID of the leader of the Tneme
+     * @param boolean $status Theme status (1 for Active, 0 for Inactive)
+     * @return ID of the newly created Theme
+     */
 	public function add_theme($name, $short_name, $leader_id, $status) {
 		
 		$add_query = "INSERT INTO themes (name, short_name, leader_id, theme_active)
 					  VALUES ('".$this->edit($name)."','". $this->edit($short_name)."',
 							  '". $leader_id."','". $status."'
 							  )";
-		//echo("add theme query = $add_query <BR>");
-                $result = $this->db->insert_query($add_query);
+                
+                $add_query = "INSERT INTO themes
+                    (name, short_name, leader_id, theme_active)
+			VALUES (:name, :short_name, :leader_id, :theme_active)";
+                $params = array("name"=>$name, 
+                    "short_name"=>$short_name, 
+                    "leader_id"=>$leader_id, 
+                    "theme_active"=>$status);
+                        
+                $result = $this->db->get_insert_result($add_query, $params);       
+                //$result = $this->db->insert_query($add_query);
                 
 		return $result;
 

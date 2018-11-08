@@ -14,27 +14,23 @@ $all_themes = $theme->get_all_themes();
 $error_msg = "";
 
 
-echo "<script>";
+$theme_array = "<script>";
 
-echo "var themeArr = [];\n"; 
-foreach($all_themes as $id=>$t)
+$theme_array .= "var themeArr = [];\n"; 
+foreach($all_themes as $theme)
 {
-        echo "themeArr[\"".$t['theme_id']."\"] = new Array(\"".$t['name']."\",\"".$t['short_name']."\",\"".
-					   $t['leader_id']."\",\"".$t['theme_active']."\");\n";
+    $theme_array .= "themeArr[\"".$theme->get_theme_id()."\"] = new Array(\"".$theme->get_name()."\",\"".$theme->get_short_name()."\",\"".
+            $theme->get_leader_id()."\",\"".$theme->get_status()."\");\n";
 }
-echo "</script>"; 
-
+$theme_array .= "</script>"; 
 
 
 
 /*
 THEME INFO TABLE HTML
-
-
-
 */
 $theme_table = "<div class='noborder'>
-				".theme_list_table("theme_list_table",$all_themes)."
+				".html::theme_list_table("theme_list_table",$all_themes)."
 			</div>
 			";
 			
@@ -62,7 +58,7 @@ if (isset($_POST['add_theme'])){
 		$result = $theme->add_theme($theme_name, $theme_short_name, $theme_leader_id, $theme_status); 
 		
 		unset($_POST['add_theme']);
-		$redirectpage= "/theme_edit.php";
+		$redirectpage= "/theme_edit.php?add_theme_result=".$result;
 		header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
 		exit(); 
 	}
@@ -138,7 +134,7 @@ THEME REMOVE FORM HTML
 
 
 */
-$theme_remove = "<form method='post' action='theme_edit.php' name='remove_theme' id='submit_remove'>
+$theme_remove = "<form method='post' action='theme_edit.php' name='remove_theme' id='submit_remove_theme'>
 			<label class='required'>Remove Theme </label>	
 				<br>
 			<div class='noborder'>
@@ -174,14 +170,17 @@ if (isset($_POST['select_edit'])){
 	$theme_status = $_POST['theme_status'];
 	
 	if (!empty($theme_id)){
-		$result = $theme->update($theme_id, 'themes', 'name', $theme_name);
-		$result = $theme->update($theme_id, 'themes', 'short_name', $theme_short_name);
-		$result = $theme->update($theme_id, 'themes', 'leader_id', $theme_leader_id);
-		$result = $theme->update($theme_id, 'themes', 'theme_active', $theme_status);
+            
+            $result = $theme->update_theme(
+                    $theme_id, 
+                    $theme_name, 
+                    $theme_short_name, 
+                    $theme_leader_id, 
+                    $theme_status);
 	}
 	unset($_POST['select_edit']);
 	
-	$redirectpage= "/theme_edit.php";
+	$redirectpage= "/theme_edit.php?edit_theme_result=".$result;
 	header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
 	exit();
 	
@@ -190,16 +189,18 @@ if (isset($_POST['select_edit'])){
 			
 /*
 THEME SELECT EDIT HTML
-
-
-
 */
+
+$theme_data = array();
+foreach($all_themes as $theme) {
+    $theme_data[$theme->get_theme_id()] = array("theme_id"=>$theme->get_theme_id(), "theme_name"=>$theme->get_name());
+}
 $theme_edit = "	<form method='post' action='theme_edit.php' name='select_edit' id='select_edit'>
 				<table class = 'profile'>
 					<tr >
 					  <td class='noborder'><label>Select Theme to Edit:</label><br> </td>
 					  <td class='noborder'>
-					  	".dropdown( 'edit_theme_drop', $all_themes)."
+					  	".dropdown( 'edit_theme_drop', $theme_data)."
 					  </td>
 					</tr>
 				</table>
@@ -239,57 +240,23 @@ $theme_edit = "	<form method='post' action='theme_edit.php' name='select_edit' i
 			";
 
 ?> 
- 
-
-
-<script>
-$(document).ready(function(){
- $("ul#admin").show();
- $("ul#directory").hide();
-	var r;
-	function confirm_remove()
-	{
-		r=confirm("Are you sure you want to remove this theme?");
-	}
-	
-	$('a#add_theme').colorbox({width:"40%", height:"35%", inline:true, href:"#theme_add_table"});
-	$('a#remove_theme').colorbox({width:"40%", height:"30%", inline:true, href:"#theme_remove"});
-	$('a#edit_theme').colorbox({width:"45%", height:"35%", inline:true, href:"#theme_edit"});
-				
-	$('#submit_remove').submit(function(){ 
-			confirm_remove();
-			if(r==false){
-				$.colorbox.close();
-				return false;
-			}	 
-		});
-	
-	
-	
-	
-	$("#edit_theme_drop").change(function() {	
-			var selectedId = $(this).val();
-			$('#theme_name').val(themeArr[selectedId][0]);
-			$('#theme_short_name').val(themeArr[selectedId][1]);
-			$('#theme_leader_id').val(themeArr[selectedId][2]);
-			$('#theme_status').val(themeArr[selectedId][3]);
-
-	});
-	
-	$('#theme_list_table').dataTable( {
-		"bPaginate": false,
-		"bLengthChange": false,
-		"bFilter": false,
-		"bSort": false,
-		"bInfo": false,
-		"bAutoWidth": false } );
-
-
-});
-</script>
 
 
 <h1> theme management </h1>
+
+<?php
+if(isset($_GET['add_theme_result'])) {
+    if($_GET['add_theme_result'] != 0) {
+        $error_msg .= (html::success_message("Theme added successfully.<BR>"));
+    }
+}
+
+if(isset($_GET['edit_theme_result'])) {
+    if($_GET['edit_theme_result'] != 0) {
+        $error_msg .= (html::success_message("Theme edited successfully.<BR>"));
+    }
+}
+?>
 
 <h3>
 <a id='add_theme' href='#'>[ add new theme ]  </a>
@@ -299,6 +266,7 @@ $(document).ready(function(){
 
 </h3>
 <?php 
+    echo $theme_array;
 	echo $error_msg;
 	echo $theme_table;
 ?>
@@ -324,7 +292,6 @@ $(document).ready(function(){
 		<div id='theme_edit_form'>
          
         <?php
-			//echo $theme_edit_form;
 
 		?>
 		</div>
