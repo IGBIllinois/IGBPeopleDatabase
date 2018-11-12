@@ -1,0 +1,36 @@
+<?php
+/////////////////////////////////////////////////
+//
+//	IGB People Database
+//	settings.inc.php
+//
+//	Settings for the scripts.
+//
+//	Crystal Ahn
+//	April 2010
+//
+////////////////////////////////////////////////
+
+define("enable",TRUE);
+
+define("mysql_host","");
+define("mysql_user","");
+define("mysql_password", "");
+define("mysql_database","");
+
+define("ldap_host",'');
+define("ldap_base_dn","");
+define("ldap_people_ou","");
+define("ldap_group_ou","");
+define("ldap_admin_group","");
+define("ldap_ssl",FALSE);
+define("ldap_port",389);
+
+define("DEFAULT_IMAGE", "default.png");
+define("__SESSION_NAME__", "igbpeopledatabasesession");
+define("__SESSION_TIMEOUT__",36000);
+
+define("IMAGE_DIR", $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) ."/html/images/users/");
+define("IMAGE_DIR_URL", "https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" );
+
+?>

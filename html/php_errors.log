@@ -1,0 +1,6 @@
+[08-Nov-2018 17:32:00 America/Chicago] PHP Warning:  require_once(vendor/autoload.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase\html\includes\main.inc.php on line 26
+[08-Nov-2018 17:32:00 America/Chicago] PHP Fatal error:  require_once(): Failed opening required 'vendor/autoload.php' (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach;;libs;') in C:\Apache24\htdocs\IGBPeopleDatabase\html\includes\main.inc.php on line 26
+[08-Nov-2018 17:38:04 America/Chicago] PHP Warning:  include_once(settings.inc.php): failed to open stream: No such file or directory in C:\Apache24\htdocs\IGBPeopleDatabase\html\includes\main.inc.php on line 17
+[08-Nov-2018 17:38:04 America/Chicago] PHP Warning:  include_once(): Failed opening 'settings.inc.php' for inclusion (include_path='.;C:\PHP\ext;C:\PHP\ext\imagick;C:\ImageMagick;C:\Users\mbach;;libs;') in C:\Apache24\htdocs\IGBPeopleDatabase\html\includes\main.inc.php on line 17
+[08-Nov-2018 17:38:04 America/Chicago] PHP Fatal error:  Class 'db' not found in C:\Apache24\htdocs\IGBPeopleDatabase\html\includes\main.inc.php on line 33
+[08-Nov-2018 17:38:37 America/Chicago] PHP Fatal error:  Class 'db' not found in C:\Apache24\htdocs\IGBPeopleDatabase\html\includes\main.inc.php on line 33

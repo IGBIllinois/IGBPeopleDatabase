@@ -1,7 +1,8 @@
-/includes/settings.inc.php
-/images/
+/conf/settings.inc.php
+/html/images/
 /nbproject/
 /excel/
 /vendor/
+/html/vendor/
 /components/
 composer.lock

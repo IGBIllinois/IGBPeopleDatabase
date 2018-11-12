@@ -232,9 +232,9 @@ returns values of specific user
         
         public function get_image_location() { 
             if($this->image != null) {
-                           return  "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" . $this->image; 
+                           return  IMAGE_DIR_URL . $this->image; 
                           } else {
-                           return  "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" . "default.png";   
+                           return  IMAGE_DIR_URL . "default.png";   
                           }
         }
         
@@ -253,9 +253,9 @@ returns values of specific user
             if($this->image != null) {
                 $large_image = $this->image;
                 $large_image = str_replace(".", "_large.", $large_image);
-                return  "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" . $large_image; 
+                return  IMAGE_DIR_URL . $large_image; 
             } else {
-                return  "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" . "default.png";   
+                return  IMAGE_DIR_URL .  "default.png";   
             }
         }
 	
@@ -1257,10 +1257,13 @@ takes in a string and edits to a format suitable to enter into database
 
         public function delete_current_image() {
             if($this->get_image() != DEFAULT_IMAGE ) {
-                $current_image_file = getcwd() . "/images/users/". $this->get_image();
-                $current_large_image_file = getcwd() . "/images/users/". $this->get_large_image();
+                $current_image_file = IMAGE_DIR . $this->get_image();
+                $current_large_image_file = IMAGE_DIR . $this->get_large_image();
+                $orig_image_filename = $filename_orig= str_replace(".", "_orig.", $this->get_image());
+                $current_orig_image_file = IMAGE_DIR . $orig_image_filename;
                 unlink($current_image_file);
                 unlink($current_large_image_file);
+                unlink($current_orig_image_file);
                 $result = $this->update($this->get_user_id(), 'users', 'image_location', NULL);
             }
         }
