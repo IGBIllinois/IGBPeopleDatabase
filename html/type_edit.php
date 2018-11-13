@@ -9,10 +9,8 @@ $error_msg = "";
 
 /*
 TYPE INFO TABLE HTML
-
-
-
 */
+
 $type_table = "<div class='left sixty'>
 			<div class='noborder'>
 				".

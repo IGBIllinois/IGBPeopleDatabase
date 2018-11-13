@@ -105,10 +105,7 @@ returns values of specific theme
          * @return array Array of theme data
          */
 	public function get_all_themes() { 
-		//$theme_query = "SELECT themes.*, users.user_id, CONCAT(users.first_name, ' ', users.last_name) AS theme_leader_name 
-		//				 FROM themes LEFT JOIN users ON themes.leader_id = users.user_id ";
-		//$result = $this->db->query($theme_query);	
-		//return $result;
+            
                 $theme_query = "SELECT theme_id from themes";
                 $result = $this->db->get_query_result($theme_query, null);
                 $all_themes = array();
@@ -133,24 +130,7 @@ get active theme names
 		$result = $this->db->query($theme_query);	
 		return $result;
 	}
-		
-	
-	
-	
-	
-/*
-user_exists
-searches to see if exact value already exists in specified field in user table
-returns user_id in which it exists
-	
-	public function user_exists($field, $value, $conditional = NULL) {
-		$exists_query = "SELECT user_id FROM users WHERE ".$field." = '".$value."' ";
-		$exists_query .= $conditional;
-		$result = $this->db->query($exists_query);
-		return $result[0]['user_id'];
-    }
-	
-*/	
+
 	
 /*
 num_rows
