@@ -749,7 +749,7 @@ function write_database_users_report($search_results, $db, $filename) {
 function get_address($db, $user_id, $type="HOME") {
 
 	$query = "SELECT address1, address2, city, state, zip from address where type = '" . $type . "' AND user_id = '" . $user_id ."'";
-	$result = $db->query($query);
+	$result = $db->get_query_result($query);
 	$addr = $result[0]['address1'] . " " . ($result[0]['address2'] != "" ? ($result[0]['address2'] . " ") : "") . "\r\n" . $result[0]['city'] .
 		", " . $result[0]['state'] . " " . $result[0]['zip'];
 	return $addr;

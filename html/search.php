@@ -13,9 +13,9 @@ require_once 'includes/header.inc.php';
 <?php
 
 //variables
-$dept_list = $db->query($select_dept);
-$theme_list = $db->query($select_theme);
-$type_list = $db->query($select_type);
+$dept_list = $db->get_query_result($select_dept);
+$theme_list = $db->get_query_result($select_theme);
+$type_list = $db->get_query_result($select_type);
 $user_enabled = '1';
 $selected = "selected";
 
