@@ -341,9 +341,10 @@ if (isset($_POST['update_igb'])){
                 $i++;
             }
             $uploadfile = IMAGE_DIR . $basename;
+            $localuploadfile = LOCAL_IMAGE_DIR .$basename;
             $fileresult = 0;
             try{ 
-                $fileresult = (move_uploaded_file($_FILES['imageFile']['tmp_name'], $uploadfile)) ;
+                $fileresult = (move_uploaded_file($_FILES['imageFile']['tmp_name'], $localuploadfile)) ;
 
             } catch (Exception $ex) {
                     echo($ex);
@@ -351,7 +352,7 @@ if (isset($_POST['update_igb'])){
             }
             if($fileresult == "" || $fileresult) {
                 try {
-                    functions::resizeImage($uploadfile, $_FILES["imageFile"]["type"]);
+                    functions::resizeImage($localuploadfile, $_FILES["imageFile"]["type"]);
                 } catch(Exception $e) {
                     echo(html::error_message("Error in uploading image.<BR>"));
                 }

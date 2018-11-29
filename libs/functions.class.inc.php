@@ -47,6 +47,7 @@ class functions {
         // "image/jpeg", "image/gif", "image/png", "image/pjpeg"
         // 
         // Set a maximum height and width
+
         $width = 100;
         $height = 100;
 
@@ -56,11 +57,19 @@ class functions {
         // Add "_large" suffix for large image,
         // "_orig" to the original image.
         // Base filename will be the thumbnail
+        
+        // remove leading period, replace suffix, then replace leading period
+        $filename= trim($filename, ".");
+        
+        
         $filename_large = str_replace(".", "_large.", $filename);
         $filename_orig= str_replace(".", "_orig.", $filename);
-        // Content type
-        //header('Content-Type: '.$filetype);
-
+        
+        $filename_large = ".".$filename_large;
+        $filename_orig = ".".$filename_orig;
+        $filename = ".".$filename;
+        
+        echo("image large = ".$filename_large."<BR>");
         // Get new dimensions
         list($width_orig, $height_orig) = getimagesize($filename);
 
