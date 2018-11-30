@@ -29,7 +29,8 @@ if (isset($_POST['add_dept'])){
 	$error_msg = "";
 	
 	$key_exists = NULL;
-	
+	$temp_dept = new department($db);
+        
 	if (empty($dept_name)){  
 		$error_msg .= "Please enter department name<br>";
 		$error_count++;
@@ -40,19 +41,25 @@ if (isset($_POST['add_dept'])){
 		$error_count++;
 		
 	}
+        
+        if($temp_dept->dept_code_exists($dept_code) !== false) {
+            $error_msg .= "A department with the code '$dept_code' already exists.<br>";
+            $error_count++;
+        }
+        
+        if($temp_dept->dept_name_exists($dept_name) !== false) {
+            $error_msg .= "A department with the name '$dept_name' already exists.<br>";
+            $error_count++;
+        }
 	
 	if ($error_count == 0){
-		$dept_name = trim(rtrim($dept_name));
-		$dept_name = mysqli_real_escape_string($db->get_link(),$dept_name);
-		$dept_code = trim(rtrim($dept_code));
-		$dept_code = mysqli_real_escape_string($db->get_link(),$dept_code);
-		
-		$add_dept_query = "INSERT INTO department (name, dept_code)
-							VALUES ('".$dept_name."','".$dept_code."'	)";
-		$result = $db->insert_query($add_dept_query);
+
+                $params = array("dept_name"=>$dept_name, "dept_code"=>$dept_code);
+                
+		$dept_id = department::add_dept($db, $dept_name, $dept_code);
 		
 		
-		
+		echo("<h3>Department added.</h3><BR>");
 		unset($_POST['add_dept']);
                 
                 $dept_list = $db->query($select_dept);
@@ -65,20 +72,35 @@ if (isset($_POST['submit_edit_dept'])){
         $dept_id = $_POST['edit_dept_drop'];
 	$dept_name = $_POST['name'];
 	$dept_code = $_POST['dept_code'];
+        $edit_error_msg = "";
 
+        $department = new department($db, $dept_id);
+        
 	if (!empty($dept_id)){
-            $query = "UPDATE department set name='". mysqli_real_escape_string($db->get_link(),$dept_name) . 
-                    "', dept_code='".mysqli_real_escape_string($db->get_link(),$dept_code) .
-                    "' where dept_id = '". $dept_id."'";
-
             
-            $db->non_select_query($query);
+            if($department->dept_code_exists($dept_code) !== false) {
+                $edit_error_msg .= "A department with the code '$dept_code' already exists.<br>";
+                $error_count++;
+            }
 
-	}
-	unset($_POST['submit_edit_dept']);
-	
-        echo("<h3>Department information updated.</h3><BR>");
-        $dept_list = $db->query($select_dept);
+            if($department->dept_name_exists($dept_name) !== false) {
+                $edit_error_msg .= "A department with the name '$dept_name' already exists.<br>";
+                $error_count++;
+            }
+
+            if ($error_count == 0){
+
+                $department->edit_dept($dept_name, $dept_code);
+
+                unset($_POST['submit_edit_dept']);
+
+                echo("<h3>Department information updated.</h3><BR>");
+                
+                $dept_list = $db->query($select_dept);
+            }
+        }
+                
+                
 
 	
 }			
@@ -155,6 +177,7 @@ $dept_edit_table = "<form method='post' action='dept_edit.php' name='submit_edit
 				<p class='alignleft'>[ Edit department ]</p>
 			</div>
 			<table class = 'profile'>
+                        <label class='errormsg'>".$edit_error_msg."</label><br>
 					<tr >
                                         <tr >
 					  <td class='noborder'><label>Department Name </label><br> </td>
