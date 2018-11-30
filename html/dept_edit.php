@@ -98,19 +98,13 @@ if (isset($_POST['submit_edit_dept'])){
                 
                 $dept_list = $db->query($select_dept);
             }
-        }
-                
-                
-
-	
+        }	
 }			
 
 /*
 DEPT INFO TABLE HTML
-
-
-
 */
+
 $dept_table = "<div class='left sixty'>
 
 			
@@ -124,9 +118,6 @@ $dept_table = "<div class='left sixty'>
 			<br>
 			";
 			
-
-
-	
 
 /*
 DEPT ADD FORM HTML
@@ -255,28 +246,8 @@ $dept_edit_html2 = "<div id='dept_edit_html'>
 <script>
 $(document).ready(function(){
 
-$('input#edit_dept').colorbox({width:"40%", height:"35%", inline:true, href:"#dept_edit_html"});	
-
-$("#edit_dept_drop").change(function() {	
-			var selectedId = $(this).val();
-			$('#name').val(deptArr[selectedId][0]);
-			$('#dept_code').val(deptArr[selectedId][1]);
-			
-
-	});
-        
  $("ul#admin").show();
  $("ul#directory").hide();
-
-	$('#dept_list_table').dataTable( {
-		"bPaginate": true,
-		"bLengthChange": true,
-		"aLengthMenu": [[10, 15, 20], [10, 15, 20]],
-		"bFilter": true,
-		"bSort": false,
-		"bInfo": true,
-		"bAutoWidth": false } );
-
 
 });
 </script>
@@ -286,7 +257,7 @@ $("#edit_dept_drop").change(function() {
 
 <h3>
 [ see 
-<a href='http://www.fms.uiuc.edu/ClassScheduling/SubjectsAndDepartmentInfo/index.asp?report=Subjects_and_Departments_(by%20Department).xml'>
+<a href='http://www.dmi.illinois.edu/ddd/mkexcel.asp'>
 here</a> for additional department codes ]
 
 </h3>
@@ -297,25 +268,15 @@ here</a> for additional department codes ]
         echo "<div style='display:none'>";
         echo $dept_edit_html;
         echo("</div>");
-	
-	
 
-
-	
 ?>
 
 
 <div style='display:none'>
 		<div id='theme_add_table'>
-        <?php
-			//echo $theme_add_table;
-		?>
-		</div>
-        
 
-        
-        
-        
+		</div>
+
 </div>
 <br>
 <?php 

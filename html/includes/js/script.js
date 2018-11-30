@@ -185,6 +185,26 @@ $(document).ready(function(){
 		"bFilter": false,
 		"bSort": false,
 		"bInfo": false,
-		"bAutoWidth": false } );            
-                
+		"bAutoWidth": false } );      
+            
+            
+        // dept_edit.php
+
+        $('input#edit_dept').colorbox({width:"40%", height:"35%", inline:true, href:"#dept_edit_html"});	
+
+        $("#edit_dept_drop").change(function() {	
+                var selectedId = $(this).val();
+                $('#name').val(deptArr[selectedId][0]);
+                $('#dept_code').val(deptArr[selectedId][1]);
+        });
+
+        $('#dept_list_table').dataTable( {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aLengthMenu": [[10, 15, 20], [10, 15, 20]],
+                "bFilter": true,
+                "bSort": false,
+                "bInfo": true,
+                "bAutoWidth": false } );
+
 });
