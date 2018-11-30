@@ -506,7 +506,9 @@ returns user_id in which it exists
 	public function user_exists($field, $value, $conditional = NULL, $new_params = null) {
 		$exists_query = "SELECT user_id FROM users WHERE ".$field." = :$field ";
                 $params = array($field=>$value);
-                $params = array_merge($params, $new_params);
+                if($new_params != null) {
+                    $params = array_merge($params, $new_params);
+                }
 		$exists_query .= $conditional;
 		$result = $this->db->get_query_result($exists_query, $params);
 		return $result[0]['user_id'];
