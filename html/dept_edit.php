@@ -38,8 +38,7 @@ if (isset($_POST['add_dept'])){
 	}
 	if (empty($dept_code)){  
 		$error_msg .= "Please enter department code<br>";
-		$error_count++;
-		
+		$error_count++;	
 	}
         
         if($temp_dept->dept_code_exists($dept_code) !== false) {

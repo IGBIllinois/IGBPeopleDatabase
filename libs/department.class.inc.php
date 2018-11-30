@@ -29,7 +29,11 @@ class department {
 
 	}
         
-        /** Edit a department
+        public function get_id() { return $this->dept_id; }
+        public function get_code() { return $this->dept_code; }
+        public function get_name() { return $this->name; }
+        
+        /** Edit this department
          * 
          * @param string $dept_code New department code
          * @param string $name New department name
@@ -42,7 +46,7 @@ class department {
             
             $params = array("dept_code"=>$dept_code,
                             "name"=>$name,
-                            "dept_id"=>$dept_id);
+                            "dept_id"=>($this->dept_id));
             
             $this->db->get_update_result($query, $params);
             
@@ -112,6 +116,11 @@ class department {
         
         
         // Private functions
+        
+        /** Loads database info into this Department object
+         * 
+         * @param int $dept_id ID of the Department to load
+         */
         private function load($dept_id) {
             
             $query = "SELECT * from department where dept_id=:dept_id LIMIT 1";

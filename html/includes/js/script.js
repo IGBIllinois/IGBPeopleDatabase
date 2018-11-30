@@ -126,7 +126,7 @@ $(document).ready(function(){
 
         
      
-    // theme_edit.php
+    // type_edit.php
 
      $('#type_list_table').dataTable( {
 		"bPaginate": false,
@@ -137,18 +137,20 @@ $(document).ready(function(){
 		"bAutoWidth": false } );
 
 	var r3;
-	function confirm_change()
+	function confirm_type_change()
 	{
 		r3=confirm("Are you sure you want to change this status?");
 	}
 				
 	$('#edit_type').submit(function(){ 
-			confirm_change();
+			confirm_type_change();
 			if(r3==false){
 				return false;
-			}	 
+			}
 		});
-                
+              
+    
+    // theme_edit.php
 	var r;
 	function confirm_remove_theme()
 	{

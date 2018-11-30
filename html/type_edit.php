@@ -32,6 +32,10 @@ global $db;
 if(!empty($_GET['success'])) {
     echo("<h3>Type ". $_GET['type_name'] . ' successfully added.<BR></h3>');
 }
+
+/*
+ *  Add type
+ */
 if (!empty($_POST['add_type']) && !empty($_POST['type_name'])){
 
 	$type_name = $_POST['type_name'];
@@ -43,33 +47,49 @@ if (!empty($_POST['add_type']) && !empty($_POST['type_name'])){
 		$error_count++;
 		
 	}
+        
+        $tmp_type = new type($db);
+        if($tmp_type->type_name_exists($type_name) !== false) {
+            $error_msg .= "A type with the name $type_name already exists.<br>";
+            $error_count++;
+		
+        }
 
 	
 	if ($error_count == 0){
+            
+            type::add_type($db, $type_name, 1);
 
-		$type_name = trim(rtrim($type_name));
-		$type_name = mysqli_real_escape_string($db->get_link(), $type_name);
-		
-		$add_query = "INSERT INTO type (name) VALUES ('".$type_name."')";
-                echo($add_query);
-		$result = $db->insert_query($add_query);
-		
-		
-		
-		unset($_POST['add_type']);
-		$redirectpage= "/type_edit.php?success=true&type_name=".  htmlentities($type_name);
-		header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
-		exit(); 
+            unset($_POST['add_type']);
+            $redirectpage= "/type_edit.php?success=true&type_name=".  htmlentities($type_name);
+            header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+            exit(); 
 	}
 
+}
+
+/*
+CHANGE TYPE STATUS
+*/
+
+if (isset($_POST['edit_type'])){
+	$type_id = $_POST['type_id'];
+	$type_status = $_POST['type_status'];
+	
+        $type = new type($db, $type_id);
+        $type->edit_type($type->get_name(), $type_status);
+
+        unset($_POST['edit_type']);
+        $redirectpage= "/type_edit.php";
+        header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+        exit(); 
 }	
+
 			
 /*
 TYPE ADD FORM HTML
-
-
-
 */
+
 $type_add_table = "<form method='POST' action='type_edit.php' name='add_type'>
 
 		<div class='right forty bordered'>
@@ -98,35 +118,12 @@ $type_add_table = "<form method='POST' action='type_edit.php' name='add_type'>
 			</form>
 			";		
 
-
-/*
-CHANGE TYPE STATUS
-*/
-
-if (isset($_POST['edit_type'])){
-	$type_id = $_POST['type_id'];
-	$type_status = $_POST['type_status'];
-	
 		
-		$type_query = "UPDATE type SET type_active ='".$type_status."' WHERE type_id = '".$type_id."'";
-		$result = $db->query($type_query);
-		
-		
-		
-		unset($_POST['edit_type']);
-		$redirectpage= "/type_edit.php";
-		header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
-		exit(); 
-	
-
-}			
 			
 /*
 TYPE STATUS FORM HTML
-
-
-
 */
+
 $type_edit_table = "
 
 
@@ -163,16 +160,7 @@ $type_edit_table = "
 		
 
 
-?> 
- 
-
-
-<script>
-$(document).ready(function(){
-
-
-});
-</script>
+?>
 
 
 <h1> Type management </h1>
