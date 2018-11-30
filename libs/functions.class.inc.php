@@ -69,7 +69,6 @@ class functions {
         $filename_orig = ".".$filename_orig;
         $filename = ".".$filename;
         
-        echo("image large = ".$filename_large."<BR>");
         // Get new dimensions
         list($width_orig, $height_orig) = getimagesize($filename);
 

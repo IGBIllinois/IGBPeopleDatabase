@@ -105,21 +105,23 @@ class user{
 						 FROM (((users LEFT JOIN themes ON users.theme_id=themes.theme_id)
 						 LEFT JOIN type ON users.type_id=type.type_id) 
 						 LEFT JOIN department ON users.dept_id=department.dept_id)
-						 WHERE user_id = '".$user_id."'";
-		$result = $this->db->query($profile_query);
-
-		$address_query = "SELECT * FROM address 
-						WHERE user_id = '".$user_id."'";
-		$address_list = $this->db->query($address_query);
-		$phone_query = "SELECT * FROM phone 
-						WHERE user_id = '".$user_id."'";
-		$phone_list = $this->db->query($phone_query);
-		$supervisor_query = "SELECT first_name, last_name, netid FROM users 
-						WHERE user_id = ".$result[0]['supervisor_id']."";
-
-		$supervisor_result = $this->db->query($supervisor_query);
+						 WHERE user_id = :user_id";
+                $params = array("user_id"=>$user_id);
+		$result = $this->db->get_query_result($profile_query, $params);
                 
-                $theme_query = "SELECT * from user_theme where user_id=:user_id and active=1";
+		$address_query = "SELECT * FROM address 
+						WHERE user_id = :user_id";
+		$address_list = $this->db->get_query_result($address_query, $params);
+		$phone_query = "SELECT * FROM phone 
+						WHERE user_id = :user_id";
+		$phone_list = $this->db->get_query_result($phone_query, $params);
+                
+		$supervisor_query = "SELECT first_name, last_name, netid FROM users 
+						WHERE user_id = :supervisor_id";
+                $params = array("supervisor_id"=>$result[0]['supervisor_id']);
+		$supervisor_result = $this->db->get_query_result($supervisor_query, $params);
+                 
+               $theme_query = "SELECT * from user_theme where user_id=:user_id and active=1";
 
                 $theme_params = array("user_id"=>$user_id);
                 $theme_result = $this->db->get_query_result($theme_query, $theme_params);
@@ -411,54 +413,62 @@ returns values of specific user
         public function get_db() { return $this->db; }
 	
 	
-/*
-get_keyid
-returns result of keys in posession of given user
-*/	
-public function get_key_id($key_room) { 
-		$key_query = "SELECT key_id
-						 FROM key_list
-						 WHERE key_room = '".$key_room."'";
-		$result = $this->db->query($key_query);	
-		return $result;
+	
+        /**
+         * Returns result of keys in posession of given user
+         *
+         * @param type $key_room Room to get the key for
+         * @return int The ID of the key
+         */
+        public function get_key_id($key_room) { 
+            $key_query = "SELECT key_id
+                            FROM key_list
+                            WHERE key_room = :key_room";
+            $params = array("key_room"=>$key_room);
+            $result = $this->db->get_query_result($key_query, $params);	
+            return $result;	
+        }
 		
-	
-}
-	
-	
-/*
-get_keys
-returns result of keys in posession of given user
-*/	
-public function get_keys($user_id, $active) { 
-		$key_query = "SELECT keyinfo_id, key_room, date_issued, date_returned, return_condition,
-							 paid, payment_returned
-						 FROM key_info LEFT JOIN key_list
-						 ON key_info.key_id = key_list.key_id 
-						 WHERE user_id = '".$user_id."' 
-						 AND key_info.key_active = '".$active."' 
-						 ORDER BY date_issued";
-		$result = $this->db->query($key_query);	
+        /**
+         * Returns result of keys in posession of given user
+         * 
+         * @param int $user_id ID of the user to get keys for
+         * @param boolean $active True if getting active keys, else false
+         * @return type array of key data
+         */
+        public function get_keys($user_id, $active) { 
+		$key_query = "SELECT keyinfo_id, key_room, key_name, date_issued, date_returned, return_condition,
+				paid, payment_returned
+                                FROM key_info LEFT JOIN key_list
+                                ON key_info.key_id = key_list.key_id 
+                                WHERE user_id = :user_id 
+                                AND key_info.key_active = :active
+                                ORDER BY date_issued";
+                $params = array("user_id"=>$user_id, "active"=>$active);
+		$result = $this->db->get_query_result($key_query, $params);	
 		return $result;
-		
-	
-}
+
+        }
 
 
-/*
-key_exists
-*/	
-public function key_exists($user_id, $key_id) { 
+
+        /** Determines if a user has a specfic key
+         * 
+         * @param type $user_id
+         * @param type $key_id
+         * @return type
+         */
+        public function key_exists($user_id, $key_id) { 
 		$key_query = "SELECT keyinfo_id
-						FROM key_info =
-					    WHERE user_id = '".$user_id."' 
+						FROM key_info 
+					    WHERE user_id = :user_id 
 					    AND key_active = '1' 
-					    AND key_id = '".$key_id."' ";
-		$result = $this->db->query($key_query);	
+					    AND key_id = :key_id";
+                $params = array("user_id"=>$user_id, "key_id"=>$key_id);
+		$result = $this->db->get_query_result($key_query, $params);
+                
 		return $result;
-		
-	
-}
+        }
 	
 	
 	
@@ -466,10 +476,14 @@ public function key_exists($user_id, $key_id) {
 num_rows
 returns number of rows where $field = $value in $table
 */		
-	public function num_rows($field, $value, $table, $conditional) {
-		$exists_query = "SELECT count(*) as count FROM ".$table." WHERE ".$field." = '".$value."'";
+	public function num_rows($field, $value, $table, $conditional, $new_params = null) {
+		$exists_query = "SELECT count(*) as count FROM ".$table." WHERE ".$field." = :$field ";
+                $params = array($field=>$value);
+                if($new_params != null ) {
+                    $params = array_merge($params, $new_params);
+                }
 		$exists_query .= $conditional;
-		$result = $this->db->query($exists_query);
+		$result = $this->db->get_query_result($exists_query, $params);
 		return $result[0]['count'];
     }
 	
@@ -479,144 +493,28 @@ user_exists
 searches to see if exact value already exists in specified field in user table
 returns user_id in which it exists
 */		
-	public function user_exists($field, $value, $conditional = NULL) {
-		$exists_query = "SELECT user_id FROM users WHERE ".$field." = '".$value."' ";
+    /** Determines if a specified user exists
+     * 
+     * @param string $field Database field to check
+     * @param string $value Value of the field
+     * @param string $conditional Additional conditions
+     * @param array $new_params Array of parameters, if any. In the form:
+     * array("fieldname"=>$value), where "fieldname" corresponds to a 
+     * ":fieldname" in the $conditional argument.
+     * @return type
+     */
+	public function user_exists($field, $value, $conditional = NULL, $new_params = null) {
+		$exists_query = "SELECT user_id FROM users WHERE ".$field." = :$field ";
+                $params = array($field=>$value);
+                $params = array_merge($params, $new_params);
 		$exists_query .= $conditional;
-		$result = $this->db->query($exists_query);
+		$result = $this->db->get_query_result($exists_query, $params);
 		return $result[0]['user_id'];
     }
 	
 
 			
-/*
-adv_search
-advanced search query
-searches values inputed into generic text input and checks to see if those values exist in following fields
-limits results to include only the matching results to advanced search query
 
-first_name
-last_name
-netid
-uin
-email
-
-param $filters = array with theme_id, type_id, dept_id, igb_room, igb_phone, home address
-    $active: 1 if active users, 0 if inactive users, 2 if both
-*/	
-    /*
-public function adv_search($active, $value, $user_id=null, $filters=0, $theme_id=0, $type_id=0, $start_date=0, $end_date=0, $supervisor="") {
-
-    $search_arr = explode(" ",$value);
-    if($theme_id != 0) {
-        //or user_theme.theme_id=0
-        $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and themes.theme_id='".$theme_id."'  and user_theme.active=1";
-    } else {
-        // Only search themes the user has permissions for.
-        if($user_id != null && !$this->is_admin($_SESSION['username'])) {
-                    $themelist = $this->get_permissions($user_id);
-
-                    $theme_query = " RIGHT JOIN themes on (user_theme.theme_id=themes.theme_id  and (";
-                    
-                    for($i=0; $i<count($themelist); $i++) {
-                        $theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " ( themes.theme_id = '". $theme_id. "') ";
-                        if($i < count($themelist)-1) {
-                            $theme_query .= " OR ";
-                        }
-                    }
-                    $theme_query .= " )) ";
-                    if($active != 1) { // 0 or 2 (deactivated or all)
-                        $theme_query .= "or user_theme.theme_id=0";
-                    }
-
-		
-                } else {
-
-                    $theme_query = " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id )) ";
-
-                    if($active != 1) { // 0 or 2 (deactivated or all)
-                        $theme_query .= " or user_theme.theme_id=0";
-                    }
-                }
-    }
-    
-    if($type_id != 0) {
-        $type_query = " RIGHT JOIN type on ((user_theme.type_id=type.type_id and type.type_id='".$type_id."' ";
-         if($theme_id != 0) {
-             $type_query .= " and user_theme.theme_id='".$theme_id."' ";
-         }
-         if($active == 1) { 
-             $type_query .= " and users.user_enabled=1 )) ";
-         } else if($active == 0) {
-             $type_query .= " and users.user_enabled=0 )) ";
-         } else {
-             $type_query .= ") or user_theme.theme_id='0')";
-         }
-    } else {
-        $type_query = " RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') ";
-    }
-    $search_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
-			" themes.short_name as theme_name, type.name as type_name, ".
-                        " address.address2 as igb_room, t.theme_list as theme_list, t2.type_list as type_list from user_theme 
-                            
-                        LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
-			LEFT JOIN phone ON user_theme.user_id=phone.user_id
-                        LEFT JOIN users on users.user_id=user_theme.user_id " .
-                        " left join (select group_concat(themes.short_name) as theme_list, user_theme.* from user_theme left join themes on themes.theme_id=user_theme.theme_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t on t.user_id=users.user_id ".
-                        " left join (select group_concat(type.name) as type_list, user_theme.* from user_theme left join type on type.type_id=user_theme.type_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t2 on t2.user_id=users.user_id ".
-                        $theme_query . " ". $type_query;
-                        
-    
-    $search_query .= " WHERE ";
-		$i=0;
-		while( $i < count($search_arr))
-    	{
-			$search_query.=  " ( first_name LIKE '%".$search_arr[$i]."%'
-								OR last_name LIKE '%".$search_arr[$i]."%'
-								OR netid LIKE '%".$search_arr[$i]."%'								
-								OR uin LIKE '%".$search_arr[$i]."%'
-								OR email LIKE '%".$search_arr[$i]."%'".
-                                                                (($supervisor != "") ? (" AND supervisor_id=(SELECT user_id from users where netid='". $supervisor."') ") : "")."
-								) ";
-			$i ++;
-			if ($i != count($search_arr)){
-				$search_query.= " AND ";
-			}
-		}
-		
-		$i=0;		
-		$array_keys = array_keys($filters);
-		
-		while( $i < count($filters))
-                {
-			if (!empty($filters[$array_keys[$i]][0])){
-				$search_query.= $filters[$array_keys[$i]][1] ." ".$array_keys[$i]." = '".$filters[$array_keys[$i]][0]."' ";
-			}
-			$i ++;
-			
-		}
-		if($active < 2) { // 0 = disabled, 1 = abled, 2 = all
-			$search_query.=  " AND user_enabled = '".$active."'";
-		}
-		if($start_date != 0 && $end_date != 0) {
-			$search_query .= " AND users.start_date BETWEEN '$start_date' AND '$end_date' ";
-		} else if($start_date != 0) {
-			$search_query .= " AND users.start_date >= '$start_date' ";
-		} else if($end_date != 0) {
-			$search_query .= " AND users.start_date <= '$end_date' ";
-		}
-                
-
-		$search_query.=  " group by user_id ORDER BY users.last_name ";
-
-		//echo("my adv search query = $search_query<BR>");
-		$result = $this->db->query($search_query);
-                
-		return $result;
-}
-
-    */
-    
     /** Gets a list of forwarding addresses and other data for users
      * who have left iGB.
      * @return array of database data for users who have left IGB
@@ -686,115 +584,6 @@ public function adv_search($active, $value, $user_id=null, $filters=0, $theme_id
         return array_merge($admin_result, $result);
     }
 
-    
-    /** Gets all users of a specific type in a group
-     * 
-     * @param int $theme_id ID of the Theme to get users from
-     * @param array $types Array of Type IDs for users
-     * @param boolean $status Active (1) or Inactive (0) users
-     * @param int $supervisor Supervisor ID (or -1 if not grouped by supervisor)
-     * @return type
-     */
-    public function get_users_by_type_orig($theme_id, $types, $status=1, $supervisor=-1) {
-        echo("get_users_by_type orig<BR>");
-        if($theme_id==0) {
-            // if theme_id == 0, get users who have no theme.
-            $type_id = $types[0];
-
-            $search_query = "SELECT distinct (users.user_id) as user_id, "
-                    . "first_name, "
-                    . "last_name, "
-                    . "netid, "
-                    . "uin, "
-                    . "email, "
-                    . "default_address, "
-                    . "address.address2 as igb_room "
-                    . "from user_theme "
-                    . "LEFT JOIN address ON "
-                    . "user_theme.user_id=address.user_id "
-                    . "AND address.type='IGB' "
-                    . "LEFT JOIN phone ON "
-                    . "user_theme.user_id=phone.user_id "
-                    . "LEFT JOIN users on "
-                    . "users.user_id=user_theme.user_id "
-                    . "right join (select * from "
-                        . "(select * from user_theme where "
-                        . "((end_date is not null and end_date != 0) or theme_id = 0) "
-                        . "and active=1) ut1 where user_id not in "
-                        . "(select user_id from user_theme where "
-                        . "((end_date is null or end_date = 0) and theme_id != 0) and active=1) "
-                    . "order by user_id) ut2 on ut2.user_id=user_theme.user_id "
-                    . "where user_enabled = $status order by users.last_name";
-
-        } else {
-         if($theme_id > 0) {
-            $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and themes.theme_id='".$theme_id."' and user_theme.active=1";
-        } else {
-            // Only search themes the user has permissions for.
-            if(supervisor_id > 0 || ($user_id != null && !$this->is_admin($_SESSION['username']))) {
-                        $themelist = $this->get_permissions($user_id);
-                        $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and user_theme.active=1 and (";
-                        for($i=0; $i<count($themelist); $i++) {
-                            $theme_id = $themelist[$i]['theme_id'];
-                            $theme_query .= " ( themes.theme_id = '". $theme_id. "') ";
-                            if($i < count($themelist)-1) {
-                                $theme_query .= " OR ";
-                            }
-                        }
-                        $theme_query .= " ) ";
-
-
-            } else {
-                $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and user_theme.active=1 ";
-            }
-        }
-        if($types != null) {
-        $type_query = "RIGHT JOIN type on (";
-        for($i=0; $i<count($types); $i++) {
-            $type_id = $types[$i];
-            if($type_id != 0) {
-            $type_query .= " (user_theme.type_id=type.type_id and type.type_id='".$type_id."' ";
-             if($theme_id > 0) {
-                 $type_query .= " and user_theme.theme_id='".$theme_id."' ";
-             }
-             $type_query .= " and active=1 )";
-            } else {
-                $type_query .= " (user_theme.type_id=type.type_id and type.type_id='".$type_id."' and user_theme.theme_id='".$theme_id."' and active=1 )  ";
-            }
-            if($i < count($types)-1) {
-                $type_query .= " OR ";
-            }
-        }
-        $type_query .= ") ";
-        } else {
-            $type_query = " RIGHT JOIN type on user_theme.type_id=type.type_id and user_theme.active=1 ";
-        }
-        
-        
-        $search_query = "SELECT DISTINCT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
-
-			" type.name as type_name, ".
-                        " (SELECT GROUP_CONCAT(t.short_name) as theme_list from themes t, users u, user_theme ut where ut.user_id = u.user_id and ut.theme_id= t.theme_id and ut.active=1 and users.user_id=u.user_id group by users.user_id) as theme_name, ".
-                        " address.address2 as igb_room from user_theme 
-                        LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
-			LEFT JOIN phone ON user_theme.user_id=phone.user_id
-                        LEFT JOIN users on users.user_id=user_theme.user_id " .
-                        $theme_query . " ". $type_query;
-        
-        if($status) {
-            $search_query .=  " WHERE (users.user_enabled = ".$status.") ";
-        } else {
-            $search_query .=  ") WHERE (users.user_enabled = ".$status.") ";
-        }
-        if($supervisor > 0) {
-            $search_query .= " AND (users.supervisor_id=$supervisor) ";
-        }
-        $search_query.=  " ORDER BY users.last_name ";	
-        }
-        $result = $this->db->query($search_query);
-	return $result;
-    }
-    
     /** Gets all users of a specific type in a group
      * 
      * @param int $theme_id ID of the Theme to get users from
@@ -927,48 +716,6 @@ public function adv_search($active, $value, $user_id=null, $filters=0, $theme_id
 	return $result;
     }
 	
-/*
-alpha_search
-simple search query
-searches values inputed into generic text input and checks to see if those values exist in specified field
-*/
-	
-	public function alpha_search_orig($letter, $user_id=null, $isSupervisor=0) {
-
-            
-            $alpha_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
-			" themes.short_name as theme_name, type.name as type_name, ".
-                        " address.address2 as igb_room, t.theme_list as theme_list, t2.type_list as type_list from user_theme 
-                            
-                        LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
-			LEFT JOIN phone ON user_theme.user_id=phone.user_id
-                        LEFT JOIN users on users.user_id=user_theme.user_id " .
-                        " left join (select group_concat(themes.short_name) as theme_list, user_theme.* from user_theme left join themes on themes.theme_id=user_theme.theme_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t on t.user_id=users.user_id ".
-                        " left join (select group_concat(type.name) as type_list, user_theme.* from user_theme left join type on type.type_id=user_theme.type_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t2 on t2.user_id=users.user_id ".
-                        " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id )) RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') " .
-                        " WHERE SUBSTR(last_name,1,1) = '".$letter."'  and users.user_enabled=1 ";
-            
-            
-                
-                if($user_id != null && !$this->is_admin($_SESSION['username'])) {
-                    $themelist = $this->get_permissions($user_id);
-                    $theme_query = " ( ";
-                    for($i=0; $i<count($themelist); $i++) {
-                        $theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " user_theme.theme_id = '". $theme_id. "' ";
-                        if($i < count($themelist)-1) {
-                            $theme_query .= " OR ";
-                        }
-                    }
-                    $theme_query .= " ) ";
-                    $alpha_query .= " AND ". $theme_query;
-		
-                }
-		$alpha_query.=  " GROUP BY user_id ORDER BY users.last_name ";
-		$result = $this->db->query($alpha_query);
-		return $result;
-    }
-
     /** Find users alphabetically by last name
      * 
      * @param string $letter Letter to get users' last names
@@ -979,18 +726,44 @@ searches values inputed into generic text input and checks to see if those value
      */
 	public function alpha_search($letter, $user_id=null, $isSupervisor=0) {
 
+            $params = array("letter"=>$letter);
             
-            $alpha_query = "SELECT (users.user_id) as user_id, first_name, last_name, netid, uin, email, default_address, ".
-			" themes.short_name as theme_name, type.name as type_name, ".
-                        " address.address2 as igb_room, t.theme_list as theme_list, t2.type_list as type_list from user_theme 
+            $alpha_query = "SELECT (users.user_id) as user_id, "
+                    . "first_name, "
+                    . "last_name, "
+                    . "netid, "
+                    . "uin, "
+                    . "email,"
+                    . " default_address, ".
+		      " themes.short_name as theme_name, "
+                    . "type.name as type_name, ".
+                      " address.address2 as igb_room, 
+                          t.theme_list as theme_list, 
+                          t2.type_list as type_list 
+                          from user_theme 
                             
                         LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
 			LEFT JOIN phone ON user_theme.user_id=phone.user_id
                         LEFT JOIN users on users.user_id=user_theme.user_id " .
-                        " left join (select group_concat(themes.short_name) as theme_list, user_theme.* from user_theme left join themes on themes.theme_id=user_theme.theme_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t on t.user_id=users.user_id ".
-                        " left join (select group_concat(type.name) as type_list, user_theme.* from user_theme left join type on type.type_id=user_theme.type_id left join users on users.user_id = user_theme.user_id where user_theme.active=1 group by user_id order by users.last_name) as t2 on t2.user_id=users.user_id ".
-                        " RIGHT JOIN themes on ((user_theme.theme_id=themes.theme_id )) RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') " .
-                        " WHERE SUBSTR(last_name,1,1) = '".$letter."'  and users.user_enabled=1 ";
+                        " left join (select group_concat(themes.short_name) as theme_list, "
+                    . "user_theme.* from user_theme "
+                    . "left join themes on themes.theme_id=user_theme.theme_id "
+                    . "left join users on users.user_id = user_theme.user_id "
+                    . "where user_theme.active=1 "
+                    . "group by user_id "
+                    . "order by users.last_name) as t "
+                    . "on t.user_id=users.user_id ".
+                        " left join (select group_concat(type.name) as type_list, "
+                    . "user_theme.* from user_theme "
+                    . "left join type on type.type_id=user_theme.type_id "
+                    . "left join users on users.user_id = user_theme.user_id "
+                    . "where user_theme.active=1 group by user_id "
+                    . "order by users.last_name) as t2 "
+                    . "on t2.user_id=users.user_id ".
+                        " RIGHT JOIN themes on "
+                    . "((user_theme.theme_id=themes.theme_id )) "
+                    . "RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') " .
+                        " WHERE SUBSTR(last_name,1,1) = :letter  and users.user_enabled=1 ";
             
             
                 
@@ -998,8 +771,10 @@ searches values inputed into generic text input and checks to see if those value
                     $themelist = $this->get_permissions($user_id);
                     $theme_query = " ( ";
                     for($i=0; $i<count($themelist); $i++) {
+                        $theme_key = "theme_id_$i";
                         $theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " user_theme.theme_id = '". $theme_id. "' ";
+                        $params[$theme_key] = $theme_id;
+                        $theme_query .= " user_theme.theme_id = :$theme_key and user_theme.active=1 ";
                         if($i < count($themelist)-1) {
                             $theme_query .= " OR ";
                         }
@@ -1009,7 +784,7 @@ searches values inputed into generic text input and checks to see if those value
 		
                 }
 		$alpha_query.=  " GROUP BY user_id ORDER BY users.last_name ";
-		$result = $this->db->query($alpha_query);
+		$result = $this->db->get_query_result($alpha_query, $params);
 		return $result;
     }
     
@@ -1033,30 +808,39 @@ searches values inputed into generic text input and checks to see if those value
     }
 
 
-
-/*
-update
-update query
-updates given field (as param) with given value (param)
-*/
-	
-	public function update($user_id, $table, $field, $value, $conditional = NULL) {
-		$update_val = $this->edit($value);
-		$count = $this->num_rows('user_id', $user_id, $table, $conditional);
-		if ($count == 0){
-			  $add_query = "INSERT INTO ".$table."  (user_id, ".$field." )
-							VALUES ('".$user_id."','". $update_val."')";
-			  $result = $this->db->insert_query($add_query);
-		}
-		else{
-			$update_query = "UPDATE ".$table." SET ".$field." = '".$update_val."' WHERE user_id = '".$user_id."' ";
-			$update_query .= " " .$conditional;
-			$result = $this->db->non_select_query($update_query);
-		}
-		$load = $this->get_user($user_id);
-                $updateQuery = "UPDATE ". $table . " set ". $table ."_lastUpdateUser = '". $_SESSION['username']."' where user_id='".$user_id."'";
-            $this->db->non_select_query($updateQuery);
-		return $result;
+    /** Updates a field for a user
+     * 
+     * @param int $user_id ID of the user to update
+     * @param string $table Database table name to update
+     * @param string $field Field in the database to update
+     * @param string $value New value for the field
+     * @param string $conditional Additional conditions
+     * @param array $new_params Array of parameters, if any. In the form:
+     * array("fieldname"=>$value), where "fieldname" corresponds to a 
+     * ":fieldname" in the $conditional argument.
+     * @return type
+     */
+    public function update($user_id, $table, $field, $value, $conditional = NULL, $new_params = null) {
+            $params = array("user_id"=>$user_id, "value"=>$value);
+            if($new_params != null ) {
+                $params = array_merge($params, $new_params);
+            }
+            $count = $this->num_rows('user_id', $user_id, $table, $conditional, $new_params);
+            if ($count == 0){
+                      $add_query = "INSERT INTO $table (user_id, $field)
+                                                    VALUES (:user_id, :value)";
+                      $result = $this->db->get_insert_result($add_query, $params);
+            }
+            else{
+                    $update_query = "UPDATE $table SET $field = :value WHERE user_id = :user_id ";
+                    $update_query .= " " .$conditional;
+                    $result = $this->db->get_update_result($update_query, $params);
+            }
+            $load = $this->get_user($user_id);
+            $updateQuery = "UPDATE $table set ". $table ."_lastUpdateUser = '". $_SESSION['username']."' where user_id=:user_id";
+            $update_params = array("user_id"=>$user_id);
+            $this->db->get_update_result($updateQuery, $update_params);
+            return $result;
     }
 
     
@@ -1084,48 +868,120 @@ updates given field (as param) with given value (param)
      * @param type $admin True if the user is a database admin
      * @return type ID of the newly created user
      */
-        public function add_user($first_name, $last_name, $netid, $uin, $email, 
-							 $theme_drop, $theme_1_drop, $theme_2_drop, $type_drop, $type_1_drop, $type_2_drop,
-							 $dept_drop, $default_address,
-							 $start_date, $key_deposit, $prox_card, $safety_training, $gender, $supervisor_id, $admin) {
+        public function add_user($first_name, 
+                                    $last_name, 
+                                    $netid, 
+                                    $uin, 
+                                    $email, 				
+                                    $theme_drop, 
+                                    $theme_1_drop, 
+                                    $theme_2_drop, 
+                                    $type_drop, 
+                                    $type_1_drop, 
+                                    $type_2_drop,				 
+                                    $dept_drop, 
+                                    $default_address,
+                                    $start_date, 
+                                    $key_deposit, 
+                                    $prox_card, 
+                                    $safety_training, 
+                                    $gender, 
+                                    $supervisor_id, 
+                                    $admin) {
             
-            $key = $this->is_checked($key_deposit);
+                $key = $this->is_checked($key_deposit);
 		$prox = $this->is_checked($prox_card);
 		$safety = $this->is_checked($safety_training);
 		$isAdmin = $this->is_checked($admin);
                 
-            	$add_user_query = "INSERT INTO users (first_name, last_name, netid, uin, email,
-							dept_id, default_address, start_date, 
-							key_deposit, prox_card, safety_training, gender, supervisor_id, admin, user_time_created)
-							VALUES ('".$this->edit($first_name)."','". $this->edit($last_name)."','". $this->edit($netid)."',
-									'". $this->edit($uin)."','". $this->edit($email)."',
-									'". $this->edit($dept_drop)."',
-									'".$this->edit($default_address)."','".$this->edit($start_date)."',	
-									'".$key."',	'".$prox."','".$safety."','".$gender."','".$this->edit($supervisor_id)."','".$isAdmin."', NOW()
-									)";
+                $params = array(
+                    "first_name"=>$first_name,
+                    "last_name"=>$last_name,
+                    "netid"=>$netid,
+                    "uin"=>$uin,
+                    "email"=>$email,
+                    "dept"=>$dept_drop,
+                    "default_address"=>$default_address,
+                    "start_date"=>$start_date,
+                    "key"=>$key,
+                    "prox"=>$prox,
+                    "safety"=>$safety,
+                    "gender"=>$gender,
+                    "supervisor_id"=>$supervisor_id,
+                    "admin"=>$isAdmin);
                 
                 
-		$result = $this->db->insert_query($add_user_query);
+            	$add_user_query = "INSERT INTO users 
+                    (first_name, 
+                    last_name, 
+                    netid, 
+                    uin, 
+                    email,
+                    dept_id, 
+                    default_address, 
+                    start_date, 
+                    key_deposit, 
+                    prox_card, 
+                    safety_training, 
+                    gender, 
+                    supervisor_id, 
+                    admin, 
+                    user_time_created)
+                    VALUES (
+                        :first_name,
+                        :last_name,
+                        :netid,
+                        :uin,
+                        :email,
+                        :dept,
+                        :default_address,
+                        :start_date,
+                        :key,
+                        :prox,
+                        :safety,
+                        :gender,
+                        :supervisor_id,
+                        :admin,
+                        NOW())";
+   
+		$result = $this->db->get_insert_result($add_user_query, $params);
                 
+
                 // Insert into user_theme
                 // 'result' should be the id of the new user
-                $user_theme_query = "INSERT INTO user_theme(user_id, theme_id, type_id, active, start_date) VALUES ('".
-                                            $result. "', '".$this->edit($theme_drop). "', '". $this->edit($type_drop)."', '1', NOW())";
+                $params = array("result"=>$result,
+                    "theme_id"=>$theme_drop,
+                    "type_id"=>$type_drop);
+                $user_theme_query = "INSERT INTO user_theme "
+                        . "(user_id, "
+                        . "theme_id, "
+                        . "type_id, "
+                        . "active, "
+                        . "start_date) "
+                        . "VALUES (".
+                        ":result,"
+                        . ":theme_id,"
+                        . ":type_id,"
+                        . "1,"
+                        . "NOW())";
+                        
                                             
-                $theme_result = $this->db->insert_query($user_theme_query);
+                $theme_result = $this->db->get_insert_result($user_theme_query, $params);
                 
                 if($theme_1_drop != NULL && $theme_1_drop != 0) {
-                    $user_theme_query = "INSERT INTO user_theme(user_id, theme_id, type_id, active, start_date) VALUES ('".
-                                            $result. "', '".$this->edit($theme_1_drop). "', '". $this->edit($type_1_drop)."', '1', NOW())";
+                    $params = array("result"=>$result,
+                    "theme_id"=>$theme_1_drop,
+                    "type_id"=>$type_1_drop);
                                             
-                    $theme_1_result = $this->db->insert_query($user_theme_query);
+                    $theme_1_result = $this->db->get_insert_result($user_theme_query, $params);
                 }
-                
-                if($theme_2_drop != NULL && $theme_1_drop != 0) {
-                    $user_theme_query = "INSERT INTO user_theme(user_id, theme_id, type_id, active, start_date) VALUES ('".
-                                            $result. "', '".$this->edit($theme_2_drop). "', '". $this->edit($type_2_drop)."', '1', NOW())";
-                                            
-                    $theme_2_result = $this->db->insert_query($user_theme_query);
+
+                if($theme_2_drop != NULL && $theme_2_drop != 0) {
+                    $params = array("result"=>$result,
+                    "theme_id"=>$theme_2_drop,
+                    "type_id"=>$type_2_drop);
+
+                    $theme_2_result = $this->db->get_insert_result($user_theme_query, $params);
                 }
 
 		return $result;
@@ -1169,12 +1025,13 @@ updates given field (as param) with given value (param)
             $query = "SELECT user_theme.*, "
                     . "themes.short_name as theme_name, "
                     . "type.name as type_name from user_theme, themes, type "
-                    . "where user_theme.user_id=$user_id "
-                    . "and user_theme.active=$active and "
+                    . "where user_theme.user_id=:user_id "
+                    . "and user_theme.active=:active and "
                     . "user_theme.theme_id=themes.theme_id "
                     . "and user_theme.type_id=type.type_id";
 
-            $result = $this->db->query($query);
+            $params = array("user_id"=>$user_id, "active"=>$active);
+            $result = $this->db->get_query_result($query, $params);
             return $result;
         }
         
@@ -1281,14 +1138,14 @@ updates given field (as param) with given value (param)
          */
 	public function add_phone($user_id, $igb_phone, $dept_phone, $cell_phone, $fax, $other_phone = 0) 
 	{
-            echo("adding phone<BR>");
+
 		$params = array("user_id"=>$user_id, 
                     "igb_phone"=>$igb_phone, 
                     "dept_phone"=>$dept_phone,
                     "cell_phone"=>$cell_phone,
                     "fax"=>$fax,
                     "other_phone"=>$other_phone);
-                print_r($params);
+
 		$add_phone_query = "INSERT INTO phone 
                     (user_id, 
                     igb, 
@@ -1303,7 +1160,7 @@ updates given field (as param) with given value (param)
                         :cell_phone,
                         :fax,
                         :other_phone)";
-                echo("phone_query = $add_phone_query");
+
                 try {
 		$result = $this->db->get_insert_result($add_phone_query, $params);
                 } catch(Exception $e) {
@@ -1424,12 +1281,13 @@ public function is_valid_email($email)
          * 
          * @param string $username The username of the user to check
          * 
-         * @return boolean True if this user is a database admin, else false
+         * @return Id of the user if it exists and is an admin, else false
          */
 	public function is_admin($username) 
 	{
-		$admin_query = "SELECT user_id FROM users WHERE netid = '".$username."' AND admin = '1' ";
-		$result = $this->db->query($admin_query);
+                $params = array("netid"=>$username);
+		$admin_query = "SELECT user_id FROM users WHERE netid = :netid AND admin = '1' ";
+		$result = $this->db->get_query_result($admin_query, $params);
                 if(count($result) > 0) {
                     return $result[0]['user_id'];
                 } else {
@@ -1444,11 +1302,11 @@ public function is_valid_email($email)
         * 
         * @return boolean True if this user is a database superadmin, else false
         */
-	public function is_superadmin($username, $password= NULL) 
+	public function is_superadmin($username) 
 	{
-		$admin_query = "SELECT user_id FROM users WHERE netid = '".$username."' AND superadmin = '1' ";
-
-		$result = $this->db->query($admin_query);
+		$admin_query = "SELECT user_id FROM users WHERE netid = :username AND superadmin = '1' ";
+                $params = array("username"=>$username);
+		$result = $this->db->get_query_result($admin_query, $params);
 
 		return $result[0]['user_id'];
 
@@ -1463,34 +1321,27 @@ public function is_valid_email($email)
 	}
 
 
-/////////////////Private Functions///////////////////
-
-
-
-
-
-/*
-edit()
-takes in a string and edits to a format suitable to enter into database
-*/
-	private function edit($string)
-	{
-		  $result = trim(rtrim($string));
-                  $result =  mysqli_real_escape_string($this->get_db()->get_link(), $result);
-		  return $result;
-	
-	}
-
-
-
+        /** Gets a list of theme ids a user has permissions for
+         * 
+         * @param int $user_id The user to get permissions for
+         * @return array An array of theme ids this user has permsssions to edit
+         */
         public function get_permissions($user_id) {
             
-            $query = "SELECT theme_id from permissions where user_id='".$user_id."'";
-            $result = $this->db->query($query);
+            $query = "SELECT theme_id from permissions where user_id=:user_id";
+            $params = array("user_id"=>$user_id);
+            $result = $this->db->get_query_result($query, $params);
             return $result;
 
         }
         
+        /** Determines if a user has permission to edit a theme
+         * 
+         * @param int $user_id The ID of the user to check
+         * @param int $theme_id The ID of the theme
+         * @return boolean True if the user has permissions to edit the theme
+         * (or is admin or superadmin)
+         */
         public function has_permission($user_id, $theme_id) {
             
             if($this->get_admin()) {
@@ -1507,43 +1358,83 @@ takes in a string and edits to a format suitable to enter into database
             return false;
         }
         
+        /** Adds permission for a user to edit a theme
+         * 
+         * @param int $user_id The user ID to add permissions to
+         * @param int $theme_id The theme ID to add permissions for
+         */
         public function add_permission($user_id, $theme_id) {
-            $query = "INSERT INTO permissions (user_id, theme_id) VALUES ('". $user_id. "', '". $theme_id. "')";
-            $result = $this->db->insert_query($query);
-            $lastUpdateQuery = "UPDATE permissions set permissions_lastUpdateUser='".$_SESSION['username'] ."' where user_id='".$user_id. "' AND theme_id='".$theme_id."'";
+            $params = array("user_id"=>$user_id, "theme_id"=>$theme_id);
+            $query = "INSERT INTO permissions (user_id, theme_id) VALUES (:user_id, :theme_id)";
+            $result = $this->db->get_insert_result($query);
+            $update_params = array("user_id"=>$user_id, "theme_id"=>$theme_id, "lastUpdateUser"=>$_SESSION['username'] );
+            $lastUpdateQuery = "UPDATE permissions set permissions_lastUpdateUser=:lastUpdateUser where user_id=:user_id AND theme_id=:theme_id";
+            $update_result = $this->db->get_update_result($lastUpdateQuery, $update_params);
         }
         
+        /** Removes permission for a user to edit a theme
+         * 
+         * @param int $user_id The user ID to add permissions to
+         * @param int $theme_id The theme ID to add permissions for
+         */
         public function remove_permission($user_id, $theme_id) {
-            $query = "DELETE from permissions where user_id='".$user_id. "' AND theme_id='".$theme_id."'";
-            $result = $this->db->insert_query($query);
+            $params = array("user_id"=>$user_id, "theme_id"=>$theme_id);
+            $query = "DELETE from permissions where user_id=:user_id AND theme_id=:theme_id";
+            $result = $this->db->get_insert_result($query, $params);
         }
 
+        /** Gets the ID of the currently logged-in user
+         * 
+         * @return int The ID of the currently logged-in user
+         */
         public function get_current_user_id() {
-            $query = "SELECT user_id from users where netid='".$_SESSION['username']."'";
-
-            $result = $this->db->query($query);
+            $query = "SELECT user_id from users where netid=:netid";
+            $params = array("netid"=>$_SESSION['username']);
+            $result = $this->db->get_query_result($query, $params);
 
             $id = $result[0]['user_id'];
             return $id;
         }
 
-
+        /** Deletes a user's image file
+         * 
+         */
         public function delete_current_image() {
             if($this->get_image() != DEFAULT_IMAGE ) {
-                $current_image_file = IMAGE_DIR . $this->get_image();
-                $current_large_image_file = IMAGE_DIR . $this->get_large_image();
+                $current_image_file = LOCAL_IMAGE_DIR . $this->get_image();
+                $current_large_image_file = LOCAL_IMAGE_DIR . $this->get_large_image();
                 $orig_image_filename = $filename_orig= str_replace(".", "_orig.", $this->get_image());
-                $current_orig_image_file = IMAGE_DIR . $orig_image_filename;
-                unlink($current_image_file);
-                unlink($current_large_image_file);
-                unlink($current_orig_image_file);
+                $current_orig_image_file = LOCAL_IMAGE_DIR . $orig_image_filename;
+                if(file_exists($current_image_file)) {
+                    unlink($current_image_file);
+                }
+                if(file_exists($current_large_image_file)) {
+                    unlink($current_large_image_file);
+                }
+                if(file_exists($current_orig_image_file)) {
+                    unlink($current_orig_image_file);
+                }
                 $result = $this->update($this->get_user_id(), 'users', 'image_location', NULL);
             }
         }
         
         // Static functions
         
-        public static function search_2($db, $active, $value, $user_id=null, $filters, $theme_id=0, $type_id=0, $start_date=0, $end_date=0, $supervisor="") {
+        /**
+         * 
+         * @param db $db Database object
+         * @param int $active 0 = Inactive, 1 = Active, 2 = Both
+         * @param string $value Value in the search field
+         * @param int $user_id User ID of the currently logged in user
+         * @param array $filters Array of fields to check ("phone", "department", etc.)
+         * @param int $theme_id Theme ID to limit search to
+         * @param int $type_id User Type ID to limit search to
+         * @param string $start_date Start date to limit search to
+         * @param string $end_date End date to limit search to
+         * @param string $supervisor Search for users under this supervisor
+         * @return \user Array of users that fit the search criteria
+         */
+        public static function search($db, $active, $value, $user_id=null, $filters, $theme_id=0, $type_id=0, $start_date=0, $end_date=0, $supervisor="") {
             
 
             $query = "";
@@ -1598,8 +1489,10 @@ takes in a string and edits to a format suitable to enter into database
                     $theme_query = " RIGHT JOIN user_theme on ((user_theme.user_id = users.user_id) AND (";
                     
                     for($i=0; $i<count($themelist); $i++) {
+                        $theme_key = "theme_key_".$i;
                         $my_theme_id = $themelist[$i]['theme_id'];
-                        $theme_query .= " ( user_theme.theme_id = '". $my_theme_id. "') ";
+                        $params[$theme_key] = $my_theme_id;
+                        $theme_query .= " ( user_theme.theme_id = :$theme_key and user_theme.active=1) ";
                         if($i < count($themelist)-1) {
                             $theme_query .= " OR ";
                         }
@@ -1612,6 +1505,7 @@ takes in a string and edits to a format suitable to enter into database
             $query = $start_query . $theme_query . " WHERE " . $search_query;
 
                  $query .= " ORDER BY last_name";
+                 
                  $result = $db->get_query_result($query, $params);
 
                  $users = array();
@@ -1673,7 +1567,6 @@ takes in a string and edits to a format suitable to enter into database
                     }
                 
                 }
-                
             
                 }
                 return $users;

@@ -38,7 +38,7 @@
  *
  * @return: The HTML text for the drop down menu
  */
-function dropdown( $name, $options, $selected=null )
+function dropdown( $name, $options, $selected=null, $name_id=-1)
 {
     /*** begin the select ***/
     $dropdown = '<select name="'.$name.'" id="'.$name.'">'."\n";
@@ -50,7 +50,12 @@ function dropdown( $name, $options, $selected=null )
     {
 		$array_keys = array_keys($option);
 		$id = $array_keys[0]; 
-		$param = $array_keys[1];
+                if($name_id == -1) {
+                    $param = $array_keys[1];
+                } else {
+                    $param = $array_keys[$name_id];
+                }
+                
         /*** assign a selected value ***/
         $select = $selected==$option[$id] ? ' selected' : null;
 

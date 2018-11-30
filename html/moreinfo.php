@@ -177,10 +177,10 @@ if (isset($_POST['submit_return_key'])){
 	$key_condition = $_POST['key_condition'];
 	
 	if (!empty($keyinfo_id)){  
-		$result = $user->update($user_id, 'key_info', 'payment_returned', $payment_status, "AND keyinfo_id = '".$keyinfo_id."'");
-		$result = $user->update($user_id, 'key_info', 'date_returned', $date_returned, "AND keyinfo_id = '".$keyinfo_id."'");
-		$result = $user->update($user_id, 'key_info', 'return_condition', $key_condition, "AND keyinfo_id = '".$keyinfo_id."'");
-		$result = $user->update($user_id, 'key_info', 'key_active', '0', "AND keyinfo_id = '".$keyinfo_id."'");
+            $result = $user->update($user_id, 'key_info', 'payment_returned', $payment_status, "AND keyinfo_id = :keyinfo_id ", array("keyinfo_id"=>$keyinfo_id));
+		$result = $user->update($user_id, 'key_info', 'date_returned', $date_returned, "AND keyinfo_id = :keyinfo_id ", array("keyinfo_id"=>$keyinfo_id));
+		$result = $user->update($user_id, 'key_info', 'return_condition', $key_condition, "AND keyinfo_id = :keyinfo_id ", array("keyinfo_id"=>$keyinfo_id));
+		$result = $user->update($user_id, 'key_info', 'key_active', '0', "AND keyinfo_id = :keyinfo_id ", array("keyinfo_id"=>$keyinfo_id));
 		
 	}
 	
@@ -208,7 +208,7 @@ $return_key_html = " <div id='return_key_html'>
 					<tr >
 					  <td class='small'><label>Key to be Returned </label><br> </td>
 					  <td class='noborder'>".
-					  	dropdown( "key_room", $active_key)."</td>
+					  	dropdown( "key_room", $active_key, null, 2)."</td>
 					</tr>
 					<tr >
 					  <td class='small'><label>Deposit</label><br> </td>

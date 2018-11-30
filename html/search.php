@@ -85,7 +85,7 @@ $other_filters["phone"] = $igb_phone;
 $other_filters["dept"] = $dept_drop;
 $other_filters["room"] =  $igb_room;
         
-        $userlist = user::search_2($db, $user_enabled, $search_value, $current_user_id, $other_filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
+        $userlist = user::search($db, $user_enabled, $search_value, $current_user_id, $other_filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
         
         $table_html .= html::write_user_table("search_results", $userlist);
 
