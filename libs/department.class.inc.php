@@ -18,7 +18,7 @@ class department {
     
     public function __construct($db, $dept_id = 0) {
         $this->db = $db;
-        if ($theme_id != 0) {
+        if ($dept_id != 0) {
             $this->load($dept_id);
         }
 
@@ -42,12 +42,12 @@ class department {
             $query = "UPDATE department set"
                     . " dept_code=:dept_code, "
                     . " name=:name where "
-                    . " dept_id = :dept_id";
+                    . " dept_id = :dept_id ";
             
             $params = array("dept_code"=>$dept_code,
                             "name"=>$name,
-                            "dept_id"=>($this->dept_id));
-            
+                            "dept_id"=>($this->get_id()));
+
             $this->db->get_update_result($query, $params);
             
             $this->dept_code = $dept_code;
