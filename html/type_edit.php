@@ -14,7 +14,7 @@ TYPE INFO TABLE HTML
 $type_table = "<div class='left sixty'>
 			<div class='noborder'>
 				".
-					type_list_table("type_list_table",$type_list)
+					html::type_list_table("type_list_table",$type_list)
 					."
 				
 			</div>
@@ -62,7 +62,7 @@ if (!empty($_POST['add_type']) && !empty($_POST['type_name'])){
 
             unset($_POST['add_type']);
             $redirectpage= "/type_edit.php?success=true&type_name=".  htmlentities($type_name);
-            header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+            header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
             exit(); 
 	}
 
@@ -81,7 +81,7 @@ if (isset($_POST['edit_type'])){
 
         unset($_POST['edit_type']);
         $redirectpage= "/type_edit.php";
-        header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+        header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
         exit(); 
 }	
 
@@ -130,33 +130,33 @@ $type_edit_table = "
 
 <form method='post' action='type_edit.php' name='edit_type' id='edit_type'>
 <br>
-		<div class='right forty bordered'>
-			<div class='profile_header'>
-				<p class='alignleft'>[ Change type status ]</p>
-			</div>
-			<div class='noborder'>
-			 	<label class='errormsg'></label><br>
-				
-				<table class = 'profile'>
-					<tr >
-					  <td class='xs'><label>Type:  </label><br> </td>
-					  <td class='xs'>
-					  	".dropdown('type_id', $type_list )."
-					  </td>
-					</tr>
-					<tr >
-					  <td class='xs'><label>Set to:  </label><br> </td>
-					  <td class='xs'>
-					  	".simple_drop('type_status', $status_arr )."
-					  </td>
-					</tr>
-				</table>
-			</div>
-			<div class='alignright'>
-					<input type='submit' name='edit_type' id='edit_type' value='Update'  >
-			</div >
-			</div><br></form>
-			";
+    <div class='right forty bordered'>
+            <div class='profile_header'>
+                    <p class='alignleft'>[ Change type status ]</p>
+            </div>
+            <div class='noborder'>
+                    <label class='errormsg'></label><br>
+
+                    <table class = 'profile'>
+                            <tr >
+                              <td class='xs'><label>Type:  </label><br> </td>
+                              <td class='xs'>
+                                    ".html::dropdown('type_id', $type_list )."
+                              </td>
+                            </tr>
+                            <tr >
+                              <td class='xs'><label>Set to:  </label><br> </td>
+                              <td class='xs'>
+                                    ".html::simple_drop('type_status', $status_arr )."
+                              </td>
+                            </tr>
+                    </table>
+            </div>
+            <div class='alignright'>
+                            <input type='submit' name='edit_type' id='edit_type' value='Update'  >
+            </div >
+            </div><br></form>
+            ";
 		
 
 

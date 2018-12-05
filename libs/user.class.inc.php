@@ -412,62 +412,21 @@ returns values of specific user
         
         public function get_db() { return $this->db; }
 	
-	
-	
-        /**
-         * Returns result of keys in posession of given user
-         *
-         * @param type $key_room Room to get the key for
-         * @return int The ID of the key
-         */
-        public function get_key_id($key_room) { 
-            $key_query = "SELECT key_id
-                            FROM key_list
-                            WHERE key_room = :key_room";
-            $params = array("key_room"=>$key_room);
-            $result = $this->db->get_query_result($key_query, $params);	
-            return $result;	
-        }
 		
-        /**
-         * Returns result of keys in posession of given user
-         * 
-         * @param int $user_id ID of the user to get keys for
-         * @param boolean $active True if getting active keys, else false
-         * @return type array of key data
-         */
-        public function get_keys($user_id, $active) { 
-		$key_query = "SELECT keyinfo_id, key_room, key_name, date_issued, date_returned, return_condition,
-				paid, payment_returned
-                                FROM key_info LEFT JOIN key_list
-                                ON key_info.key_id = key_list.key_id 
-                                WHERE user_id = :user_id 
-                                AND key_info.key_active = :active
-                                ORDER BY date_issued";
-                $params = array("user_id"=>$user_id, "active"=>$active);
-		$result = $this->db->get_query_result($key_query, $params);	
-		return $result;
+        
+        public function get_keys($active) { 
+		return key_info::get_keys($this->db, $this->id, $active);
 
         }
 
-
-
-        /** Determines if a user has a specfic key
+        /** Determines if this user has a specfic key
          * 
          * @param type $user_id
          * @param type $key_id
          * @return type
          */
-        public function key_exists($user_id, $key_id) { 
-		$key_query = "SELECT keyinfo_id
-						FROM key_info 
-					    WHERE user_id = :user_id 
-					    AND key_active = '1' 
-					    AND key_id = :key_id";
-                $params = array("user_id"=>$user_id, "key_id"=>$key_id);
-		$result = $this->db->get_query_result($key_query, $params);
-                
-		return $result;
+        public function key_exists($key_id) { 
+            return key_info::key_exists($this->db, $this->id, $key_id);
         }
 	
 	
@@ -488,11 +447,7 @@ returns number of rows where $field = $value in $table
     }
 	
 	
-/*
-user_exists
-searches to see if exact value already exists in specified field in user table
-returns user_id in which it exists
-*/		
+	
     /** Determines if a specified user exists
      * 
      * @param string $field Database field to check
@@ -787,7 +742,12 @@ returns user_id in which it exists
                 }
 		$alpha_query.=  " GROUP BY user_id ORDER BY users.last_name ";
 		$result = $this->db->get_query_result($alpha_query, $params);
-		return $result;
+                
+                $user_list = array();
+                foreach($result as $user) {
+                    $user_list[] = new user($this->db, $user['user_id']);
+                }
+		return $user_list;
     }
     
         /* get list of people a user is supervisor for */

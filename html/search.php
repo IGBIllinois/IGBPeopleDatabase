@@ -1,5 +1,4 @@
 <?php #search people
-//error_reporting(E_ALL);
 
 $page_title = "IGB People Database Search"; 
 
@@ -23,16 +22,16 @@ $selected = "selected";
 $page = 1;
 
 $status_drop = "<select name='user_enabled' id='user_enabled'>
-				<option value='0' ";
-				if ($user_enabled == '0'){ $status_drop .= $selected; }
-				$status_drop .= ">Inactive</option>
-				<option value='1' ";
-				if ($user_enabled == '1'){ $status_drop .= $selected; }
-				$status_drop .= ">Active</option>
-				<option value='2' ";
-				if($user_enabled == '2') { $status_drop .= $selected; }
-				$status_drop .= ">All</option>
-				</select>";
+    <option value='0' ";
+    if ($user_enabled == '0'){ $status_drop .= $selected; }
+    $status_drop .= ">Inactive</option>
+    <option value='1' ";
+    if ($user_enabled == '1'){ $status_drop .= $selected; }
+    $status_drop .= ">Active</option>
+    <option value='2' ";
+    if($user_enabled == '2') { $status_drop .= $selected; }
+    $status_drop .= ">All</option>
+    </select>";
 
 
 echo "<body onLoad=\"document.search.search_value.focus()\">"; 
@@ -75,17 +74,21 @@ $filters["phone.igb"] = array($igb_phone, "AND");
 
 $current_user_id = $user->get_current_user_id();
 
-
-	//$search_results = $user->adv_search($user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
-
-	//$table_html = result_table( "search_results", $search_results );
-
 $other_filters = array();
 $other_filters["phone"] = $igb_phone;
 $other_filters["dept"] = $dept_drop;
 $other_filters["room"] =  $igb_room;
         
-        $userlist = user::search($db, $user_enabled, $search_value, $current_user_id, $other_filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
+        $userlist = user::search($db, 
+                $user_enabled, 
+                $search_value, 
+                $current_user_id, 
+                $other_filters, 
+                $theme_drop, 
+                $type_drop, 
+                $start_date, 
+                $end_date, 
+                $supervisor);
         
         $table_html .= html::write_user_table("search_results", $userlist);
 
@@ -142,7 +145,7 @@ $other_filters["room"] =  $igb_room;
         <td  class="noborder"><input type="small" name="igb_room" class="space" maxlength="12"  
             value="<?php if (isset($igb_room)){echo "$igb_room";}else{echo "";} ?>" >
         </td>
-        <td class="noborder" colspan='3'><?php echo dropdown( "dept_drop", $dept_list , $dept_drop );  ?>
+        <td class="noborder" colspan='3'><?php echo html::dropdown( "dept_drop", $dept_list , $dept_drop );  ?>
         </td>
   </tr>
   <tr>
@@ -161,10 +164,10 @@ $other_filters["room"] =  $igb_room;
             value="<?php if (isset($igb_phone)){echo "$igb_phone";}else{echo "";} ?>" >
         </td>
     	<td class="noborder">
-	  	<?php echo dropdown( "theme_drop", $theme_list , $theme_drop  ); ?> 
+	  	<?php echo html::dropdown( "theme_drop", $theme_list , $theme_drop  ); ?> 
       	</td>            
       	<td class="noborder">
-      		<?php echo dropdown( "type_drop", $type_list , $type_drop  );?>
+      		<?php echo html::dropdown( "type_drop", $type_list , $type_drop  );?>
       	</td>
         <td class="noborder"><input type="small" name="supervisor" class="space" maxlength="8" 
         value="<?php if (isset($supervisor)){echo "$supervisor";}else{echo "";} ?>" >
@@ -184,10 +187,10 @@ $other_filters["room"] =  $igb_room;
       		<?php echo $status_drop;?>
       	</td>
         <td class='noborder'><input type='date' name='start_date'   
-					value="<?php if (isset($start_date)){echo "$start_date";}else{echo "";} ?>" >     
+            value="<?php if (isset($start_date)){echo "$start_date";}else{echo "";} ?>" >     
 		</td>
         <td class='noborder'><input type='date' name='end_date'   
-					value="<?php if (isset($end_date)){echo "$end_date";}else{echo "";} ?>" >     
+            value="<?php if (isset($end_date)){echo "$end_date";}else{echo "";} ?>" >     
 		</td>  
               
               
@@ -213,11 +216,6 @@ $other_filters["room"] =  $igb_room;
 <br />
 </div>
 <br />
-<div>
-
-<?php  //echo $page_list; ?>
-
-</div>
 
 <?php  
 echo("</form>");

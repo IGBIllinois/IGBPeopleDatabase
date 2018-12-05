@@ -157,7 +157,7 @@ returns number of rows where $field = $value in $table
      */
 	public function update($theme_id, $table, $field, $value) {
 
-		$count = $this->num_rows('theme_id', $theme_id, $table, $conditional);
+		$count = $this->num_rows('theme_id', $theme_id, $table);
                 $params = array("theme_id"=>$theme_id, $field=>$value);
 		if ($count == 0){
 

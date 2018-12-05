@@ -411,7 +411,7 @@ $add_form_html .= "'>        <tr>
 $add_form_html .="' > 
 					</td>
 					
-					<td class='noborder'>". simple_drop( 'igb_state', $states_arr, "IL" ).
+					<td class='noborder'>". html::simple_drop( 'igb_state', $states_arr, "IL" ).
 					"</td>
 					
 					
@@ -453,7 +453,7 @@ $add_form_html .="<div class='section'>
 				
 			  </tr>
 			  <tr>
-				<td class='noborder'>". dropdown( 'dept_drop', $dept_list, $dept_drop )."</td>
+				<td class='noborder'>". html::dropdown( 'dept_drop', $dept_list, $dept_drop )."</td>
 				
 							
 			  </tr>
@@ -499,7 +499,7 @@ $add_form_html .="' >
 $add_form_html .="' > 
 					</td>
 					
-					<td class='noborder'>". simple_drop( 'dept_state', $states_arr, $dept_state ).
+					<td class='noborder'>". html::simple_drop( 'dept_state', $states_arr, $dept_state ).
 					"</td>
 					
 					
@@ -582,7 +582,7 @@ $add_form_html .="' >
 			}
 $add_form_html .="' > 
 				</td>
-				<td class='noborder'>". simple_drop( 'home_state', $states_arr, $home_state ).
+				<td class='noborder'>". html::simple_drop( 'home_state', $states_arr, $home_state ).
 				"</td>
 				<td class='noborder'><input type='small' name='home_zip' maxlength='30'  
 					value='";
@@ -623,13 +623,13 @@ $add_form_html .="<div class = 'left sixty'>
 			</tr>
 			<tr>
 			  <td class='xs'>
-					". dropdown( 'theme_drop', $theme_list, $theme_drop )." 
+					". html::dropdown( 'theme_drop', $theme_list, $theme_drop )." 
 			  </td>
 			  <td class='xs'>
-					". dropdown( 'theme_1_drop', $theme_list, $theme_1_drop )."
+					". html::dropdown( 'theme_1_drop', $theme_list, $theme_1_drop )."
 			  </td>    
 			  <td class='noborder'>
-					". dropdown( "theme_2_drop", $theme_list, $theme_2_drop )."
+					". html::dropdown( "theme_2_drop", $theme_list, $theme_2_drop )."
 			  </td>  
 			</tr>
 			<tr>
@@ -642,13 +642,13 @@ $add_form_html .="<div class = 'left sixty'>
 			  </td>  
 			<tr>
 			  <td class='xs'>
-					". dropdown( 'type_drop', $type_list, $type_drop )." 
+					". html::dropdown( 'type_drop', $type_list, $type_drop )." 
 			  </td>
 			  <td class='xs'>
-					". dropdown( 'type_1_drop', $type_list, $type_1_drop )."
+					". html::dropdown( 'type_1_drop', $type_list, $type_1_drop )."
 			  </td>    
 			  <td class='noborder'>
-					". dropdown( "type_2_drop", $type_list, $type_2_drop )."
+					". html::dropdown( "type_2_drop", $type_list, $type_2_drop )."
 			  </td>  
 			</tr>
 		</table>
@@ -692,9 +692,9 @@ $add_form_html .="' >
 			</tr>
 			<tr> 
 			  <td class='xs'>
-					". drop( "grad_drop", $semester_arr, $grad_drop )."
+					". html::drop( "grad_drop", $semester_arr, $grad_drop )."
 			 
-					".drop( "year_drop", $year_arr, $year_drop )."
+					".html::drop( "year_drop", $year_arr, $year_drop )."
 			  </td>
 			</tr>
 		

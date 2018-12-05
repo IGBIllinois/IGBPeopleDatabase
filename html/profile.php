@@ -573,7 +573,7 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 			  
 			  
 			  <td class='xs'><label>city</label></td><td class='noborder'>	<input type='text' name='igb_city' maxlength='30'  value='". $user->get_igb_city()."'>"."</td></tr>".
-			 "<tr><td class='xs'><label>state</label></td><td class='noborder'>".	simple_drop( "igb_state", $states_arr, $user->get_igb_state() )."</td></tr>".
+			 "<tr><td class='xs'><label>state</label></td><td class='noborder'>".	html::simple_drop( "igb_state", $states_arr, $user->get_igb_state() )."</td></tr>".
 			  	"<tr><td class='xs'><label>zip</label></td><td class='noborder'><input type='small' name='igb_zip' maxlength='10'  value='".$user->get_igb_zip()."'>
 			  </td>
    			
@@ -594,23 +594,23 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 if($current_user->get_admin()) {
     $igb_info_edit .= "<tr>
 			  <td class='xs'><label>Add Theme </label></td>
-			  <td class='xs'>". dropdown( 'add_theme', $theme_list, 0 ). "</td>
+			  <td class='xs'>". html::dropdown( 'add_theme', $theme_list, 0 ). "</td>
 			</tr>
                         <tr >
                         <td colspan=3 class='noborder'><A HREF=theme_history.php?user_id=".$user->get_user_id(). ">(View theme history)</a></td>
                             </tr>
 			<tr >
 			  <td class='xs'><label>Add Type </label></td>
-			  <td class='noborder'>". dropdown( 'add_type', $type_list, 0 )."</td>
+			  <td class='noborder'>". html::dropdown( 'add_type', $type_list, 0 )."</td>
    			</tr>";
 }
     $igb_info_edit  .=      "<tr>
 			  <td class='xs'><label>Remove Theme </label></td>
-			  <td class='xs'>". dropdown( 'remove_theme', $user_theme_list, 0 ). "</td>
+			  <td class='xs'>". html::dropdown( 'remove_theme', $user_theme_list, 0 ). "</td>
 			</tr>
                         <tr>
 			  <td class='xs'><label>Change Type</label></td>
-			  <td class='xs'>". dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". dropdown( 'change_type', $type_list, 0 ) ."</td>
+			  <td class='xs'>". html::dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". html::dropdown( 'change_type', $type_list, 0 ) ."</td>
 			</tr>
 			<tr >
 			  <td class='xs'><label>supervisor (NetID)</label></td>
@@ -659,11 +659,11 @@ if($current_user->get_admin()) {
    			</tr>
                         <tr>
                             <td class='xs'><label>add permissions</label></td>
-                            <td class='noborder'>".dropdown( 'add_permission', $theme_list )."</td>
+                            <td class='noborder'>".html::dropdown( 'add_permission', $theme_list )."</td>
                         </tr>
                         <tr>
                             <td class='xs'><label>remove permissions</label></td>
-                            <td class='noborder'>".dropdown( 'remove_permission', $theme_list )."</td>
+                            <td class='noborder'>".html::dropdown( 'remove_permission', $theme_list )."</td>
                         </tr>
                         <tr>
                             <td class='xs'><label>thumbnail image</label></td>
@@ -734,7 +734,6 @@ if (isset($_POST['update_dept'])){
 			$result = $user->update($user_id, 'users', 'default_address', $default_address);
 		}
 	
-	
 }
 if (isset($_POST['cancel_dept'])){
 	
@@ -797,7 +796,7 @@ $dept_info_edit = " <div class='profile_header' id='dept'>
 			<table class = 'profile'>
 			<tr>
 			  <td class='xs'><label>department </label></td>
-			  <td class='noborder'>". dropdown( 'dept_drop', $dept_list, $dept_drop ). "</td>
+			  <td class='noborder'>". html::dropdown( 'dept_drop', $dept_list, $dept_drop ). "</td>
 
    			</tr>
     		<tr >
@@ -814,7 +813,7 @@ $dept_info_edit = " <div class='profile_header' id='dept'>
 			  <td class='xs'><label>city, state, zip</label><br> </td>
 			  <td class='noborder'>
 			  	<input type='text' name='dept_city' maxlength='30'  value='". $dept_city."'>".$tab.
-				simple_drop( "dept_state", $states_arr, $dept_state ).$tab. 
+				html::simple_drop( "dept_state", $states_arr, $dept_state ).$tab. 
 			  	"<input type='small' name='dept_zip' maxlength='10'  value='".$dept_zip."'>
 			  </td>
    			</tr>
@@ -932,7 +931,7 @@ $home_info_edit = " <div class='profile_header' id='home'>
 			  <td class='xs'><label>city, state, zip</label><br> </td>
 			  <td class='noborder'>
 			  	<input type='text' name='home_city' maxlength='30'  value='". $home_city."'>".$tab.
-				simple_drop( "home_state", $states_arr, $home_state ).$tab. 
+				html::simple_drop( "home_state", $states_arr, $home_state ).$tab. 
 			  	"<input type='small' name='home_zip' maxlength='10'  value='".$home_zip."'>
 			  </td>
    			</tr>
@@ -960,7 +959,6 @@ if (isset($_POST['remove_member'])){
 	
 	$fwd_address_type = $_POST['fwd_address_type'];
 	$fwd_address1 = $_POST['fwd_address1'];
-	//$fwd_address2 = $_POST['fwd_address2'];
 	$fwd_city = $_POST['fwd_city'];
 	$fwd_state = $_POST['fwd_state'];
 	$fwd_zip = $_POST['fwd_zip'];
@@ -1004,9 +1002,9 @@ if (isset($_POST['remove_member'])){
         $result = $user->update($user_id, 'users', 'type_id', $alum_id);
 	$result = $user->update($user_id, 'users', 'default_address', 'FWD');
 	unset($_POST['remove_member']);
-	//$redirectpage= "/profile.php?user_id=".$user_id;
+
 	$redirectpage= "/search.php";
-	header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+	header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
 	exit(); 
 	
 }
@@ -1017,7 +1015,7 @@ if(isset($_POST['reactivate'])) {
 	unset($_POST['reactivate']);
 	$redirectpage= "/profile.php?user_id=".$user_id;
 	$result = $user->update($user_id, 'users', 'user_enabled', '1');	
-	header ("Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+	header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
 	exit(); 
 }
 
@@ -1040,7 +1038,7 @@ $remove_html = " <div id='remove_member'>
 					<tr >
 					  <td class='small'><label>Reason For Leaving</label><br> </td>
 					  <td class='noborder'>".
-					  	simple_drop( "reason_leaving", $leave_arr).$tab."
+					  	html::simple_drop( "reason_leaving", $leave_arr).$tab."
 					  
 					  </td>
 					</tr>
@@ -1071,7 +1069,7 @@ $remove_html = " <div id='remove_member'>
 					  <td class='xs'><label>City/State/Zip</label><br> </td>
 					  <td class='noborder'>
 						<input type='small' name='fwd_city' maxlength='30'  value='". $fwd_city."'>".$tab.
-						simple_drop( "fwd_state", $states_arr, $fwd_state ).$tab. 
+						html::simple_drop( "fwd_state", $states_arr, $fwd_state ).$tab. 
 						"<input type='small' name='fwd_zip' maxlength='10'  value='".$fwd_zip."'>
 					  </td>
 					</tr>
@@ -1079,7 +1077,7 @@ $remove_html = " <div id='remove_member'>
 					<tr >
 					  <td class='xs'><label>Country </label><br> </td>
 					  <td class='noborder'>
-						".country_dropdown('fwd_country')."
+						".html::country_dropdown('fwd_country')."
 					  </td>
 					</tr>
 					<tr >
@@ -1109,18 +1107,6 @@ $remove_html = " <div id='remove_member'>
 			";
 ?> 
 
- 
-
-
-<script>
-$(document).ready(function(){
-
-
-
-
-});
-</script>
-	
 
 <h1> <?php echo $user->get_name();?> </h1>
  <?php 
@@ -1156,7 +1142,6 @@ $(document).ready(function(){
 	 ?> 
 <br>
 <?php 
-//if($status=='1'){
 
 	if ($personal_edit){ echo $personal_info_edit;	}
 		else {echo $personal_info;	}
@@ -1167,11 +1152,7 @@ $(document).ready(function(){
 	if ($home_edit){echo $home_info_edit;	}
 		else { echo $home_info;}
 	echo $html;
-//}
 
-if($status=='0') {
-	//echo("Reason for leaving: ". );
-}
 	
 ?>
 <label class='foot note'>* denotes preferred address</label>
@@ -1182,11 +1163,7 @@ if($status=='0') {
 			echo $remove_html;
 		?>
 		</div>
-        
-
-        
-        
-        
+     
 </div>
 <br>
 <?php 

@@ -26,7 +26,6 @@ function my_autoloader($class_name) {
 require_once '../vendor/autoload.php';
 
 require_once 'query.inc.php';
-require_once 'functions.inc.php';
 
 spl_autoload_register('my_autoloader');
 

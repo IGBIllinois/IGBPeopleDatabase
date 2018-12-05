@@ -14,8 +14,6 @@ $supervisor_id = $_GET['supervisor_id'];
 
 $table_html = "";
 
-
-	
 $user = new user($db);
 $user_tmp = new user($db);
 $user_id = $user->user_exists("netid", $_SESSION['username']);
@@ -31,33 +29,22 @@ $theme_html .= html::displayUsersBySupervisor($db, $user, $supervisor_id);
 
 ?> 
 
-
-
 <h1> IGB Theme Directory </h1>
 <br>
 <h3></h3>
 
 <div class="section">
 
-
-	<?php 
+<?php 
 	
-	echo $html;
-    ?> 
+    echo $html;
+?> 
+    
 </div>
 
-
-
-
-	<?php 
-    echo $theme_html; 
-	?> 
-
-
-
- 
 <?php 
+    echo $theme_html; 
 
-require_once ("includes/footer.inc.php"); 
+    require_once ("includes/footer.inc.php"); 
 
 ?> 

@@ -172,7 +172,7 @@ $dept_edit_table = "<form method='post' action='dept_edit.php' name='submit_edit
                                         <tr >
 					  <td class='noborder'><label>Department Name </label><br> </td>
 					  <td class='noborder'>"
-					  	. dropdown("edit_dept_drop", $dept_list)
+					  	. html::dropdown("edit_dept_drop", $dept_list)
 					  ."</td>
 					</tr>
 					  <td class='small'><label>Department Name</label><br> </td>
@@ -210,7 +210,7 @@ $dept_edit_html2 = "<div id='dept_edit_html'>
                                         <tr >
 					  <td class='noborder'><label>Department Name </label><br> </td>
 					  <td class='noborder'>"
-					  	. dropdown("edit_dept_drop", $dept_list)
+					  	. html::dropdown("edit_dept_drop", $dept_list)
 					  ."</td>
 					</tr>
 					  <td class='small'><label>Department Name</label><br> </td>
