@@ -1,6 +1,4 @@
-
- 
- <?php 
+<?php 
 
 $page_title = "IGB People Database"; 
 
@@ -47,18 +45,18 @@ if (isset($_POST['add_theme'])){
     $error_count=0;
 
     if (empty($theme_name)){  
-            $error_msg .= "<label class='errormsg'>Please enter a Theme name<br></label>";
-            $error_count++;
+        $error_msg .= "<label class='errormsg'>Please enter a Theme name<br></label>";
+        $error_count++;
 
     }
 
     if ($error_count == 0){
-            $result = $theme->add_theme($theme_name, $theme_short_name, $theme_leader_id, $theme_status); 
+        $result = $theme->add_theme($theme_name, $theme_short_name, $theme_leader_id, $theme_status); 
 
-            unset($_POST['add_theme']);
-            $redirectpage= "/theme_edit.php?add_theme_result=".$result;
-            header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
-            exit(); 
+        unset($_POST['add_theme']);
+        $redirectpage= "/theme_edit.php?add_theme_result=".$result;
+        header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+        exit(); 
     }
 
 }			
@@ -71,34 +69,34 @@ $theme_add_table = "<form method='post' action='theme_edit.php' name='add_theme'
     <label class='required'>Add New Theme</label>	
             <br>
     <div class='noborder'>
-            <br>
+        <br>
 
-            <table class = 'profile'>
-                    <tr >
-                      <td class='small'><label>Theme Name </label><br> </td>
-                      <td class='noborder'>
-                            <input type='large' name='theme_name' maxlength='50'  >
-                      </td>
-                    </tr>
-                    <tr >
-                      <td class='small'><label>Abbreviation </label><br> </td>
-                      <td class='noborder'>
-                            <input type='large' name='theme_short_name' maxlength='8'  >
-                      </td>
-                    </tr>
-                    <tr >
-                      <td class='small'><label>Theme Leader </label><br> </td>
-                      <td class='noborder'>
-                            ".html::dropdown( 'theme_leader_id', $theme_leader_list)."
-                      </td>
-                    </tr>
-                    <tr >
-                      <td class='small'><label>Status</label><br> </td>
-                      <td class='noborder'>
-                            ".html::simple_drop( 'theme_status', $status_arr, '1')."
-                      </td>
-                    </tr>
-            </table>
+        <table class = 'profile'>
+            <tr >
+              <td class='small'><label>Theme Name </label><br> </td>
+              <td class='noborder'>
+                    <input type='large' name='theme_name' maxlength='50'  >
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Abbreviation </label><br> </td>
+              <td class='noborder'>
+                    <input type='large' name='theme_short_name' maxlength='8'  >
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Theme Leader </label><br> </td>
+              <td class='noborder'>
+                    ".html::dropdown( 'theme_leader_id', $theme_leader_list)."
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Status</label><br> </td>
+              <td class='noborder'>
+                    ".html::simple_drop( 'theme_status', $status_arr, '1')."
+              </td>
+            </tr>
+        </table>
 
     </div>
     <div class='alignright'>
@@ -136,20 +134,20 @@ $theme_remove = "<form method='post' action='theme_edit.php' name='remove_theme'
     <label class='required'>Remove Theme </label>	
             <br>
     <div class='noborder'>
-            <br>
-            <table class = 'profile'>
-                    <tr >
-                      <td class='noborder'><label>Select Theme to Inactivate:</label><br> </td>
-                    </tr>
-                    <tr >
-                      <td class='noborder'>
-                            ".html::dropdown( 'theme_drop', $theme->get_theme_names())."
-                      </td>
-                      <td class='noborder'>
-                            <input type='submit' name='remove_theme' id='remove_theme' value='Remove'  >
-                      </td>
-                    </tr>
-            </table>
+        <br>
+        <table class = 'profile'>
+            <tr >
+              <td class='noborder'><label>Select Theme to Inactivate:</label><br> </td>
+            </tr>
+            <tr >
+              <td class='noborder'>
+                    ".html::dropdown( 'theme_drop', $theme->get_theme_names())."
+              </td>
+              <td class='noborder'>
+                    <input type='submit' name='remove_theme' id='remove_theme' value='Remove'  >
+              </td>
+            </tr>
+        </table>
     </div>
     <br>
     </form>
@@ -203,33 +201,33 @@ $theme_edit = "	<form method='post' action='theme_edit.php' name='select_edit' i
                     </tr>
             </table>
     <div class='noborder'>
-            <br>
-            <table class = 'profile'>
-                    <tr >
-                      <td class='small'><label>Theme Name </label><br> </td>
-                      <td class='noborder'>
-                            <input type='large' name='theme_name' id='theme_name' maxlength='50'  >
-                      </td>
-                    </tr>
-                    <tr >
-                      <td class='small'><label>Abbreviation </label><br> </td>
-                      <td class='noborder'>
-                            <input type='large' name='theme_short_name' id='theme_short_name' maxlength='8'  >
-                      </td>
-                    </tr>
-                    <tr >
-                      <td class='small'><label>Theme Leader </label><br> </td>
-                      <td class='noborder'>
-                            ".html::dropdown( 'theme_leader_id', $theme_leader_list)."
-                      </td>
-                    </tr>
-                    <tr >
-                      <td class='small'><label>Status</label><br> </td>
-                      <td class='noborder'>
-                            ".html::simple_drop( 'theme_status', $status_arr, '1')."
-                      </td>
-                    </tr>
-            </table>
+        <br>
+        <table class = 'profile'>
+            <tr >
+              <td class='small'><label>Theme Name </label><br> </td>
+              <td class='noborder'>
+                    <input type='large' name='theme_name' id='theme_name' maxlength='50'  >
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Abbreviation </label><br> </td>
+              <td class='noborder'>
+                    <input type='large' name='theme_short_name' id='theme_short_name' maxlength='8'  >
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Theme Leader </label><br> </td>
+              <td class='noborder'>
+                    ".html::dropdown( 'theme_leader_id', $theme_leader_list)."
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Status</label><br> </td>
+              <td class='noborder'>
+                    ".html::simple_drop( 'theme_status', $status_arr, '1')."
+              </td>
+            </tr>
+        </table>
     </div>
     <div class='alignright'>
                     <input type='submit' name='select_edit' id='select_edit' value='Update'  >
@@ -271,28 +269,24 @@ if(isset($_GET['edit_theme_result'])) {
 
 
 <div style='display:none'>
-		<div id='theme_add_table'>
-        <?php
-			echo $theme_add_table;
-		?>
-		</div>
-		<div id='theme_remove'>
-        <?php
-			echo $theme_remove;
-		?>
-		</div>
-		<div id='theme_edit'>
-        <?php
-			echo $theme_edit;
-		?>
-        <div id="result"></div>
-		</div>
-		<div id='theme_edit_form'>
-         
-        <?php
-
-		?>
-		</div>
+<div id='theme_add_table'>
+    
+<?php
+        echo $theme_add_table;
+?>
+</div>
+    
+<div id='theme_remove'>
+<?php
+        echo $theme_remove;
+?>
+</div>
+    
+<div id='theme_edit'>
+<?php
+        echo $theme_edit;
+?>
+</div>
  
 </div>
 <br>

@@ -156,8 +156,6 @@ if (isset($_POST['update_personal'])){
 		$result = $user->update($user_id, 'phone', 'cell', $cell_phone);
 		$result = $user->update($user_id, 'users', 'gender', $gender);			
 	}
-	
-	
 
 }
 if (isset($_POST['cancel_personal'])){
@@ -170,107 +168,107 @@ PERSONAL INFO TABLE HTML
 */
 $personal_info = "<div class='profile_header'>
 			
-			<p class='alignleft'>[ personal ]</p>
-			<p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&personal_edit=TRUE'> edit </a></p>
-			</div>
-			<div class='profile'>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>netid </label></td>
-			  <td class='noborder'>". $netid ."</td>
-   			</tr>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>email </label></td>
-			  <td class='noborder'>". $email ."</td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>uin </label></td>
-			  <td class='noborder'>". $uin ."</td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>gender </label></td>
-			  <td class='noborder'>". $gender."</td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>cell phone </label></td>
-			  <td class='noborder'>". $cell_phone."</td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>other phone </label></td>
-			  <td class='noborder'>". $other_phone."</td>
-   			</tr>
+    <p class='alignleft'>[ personal ]</p>
+    <p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&personal_edit=TRUE'> edit </a></p>
+    </div>
+    <div class='profile'>
+    <table class = 'profile'>
+<tr >
+      <td class='xs'><label>netid </label></td>
+      <td class='noborder'>". $netid ."</td>
+    </tr>
+    <table class = 'profile'>
+<tr >
+      <td class='xs'><label>email </label></td>
+      <td class='noborder'>". $email ."</td>
+    </tr>
+<tr >
+      <td class='xs'><label>uin </label></td>
+      <td class='noborder'>". $uin ."</td>
+    </tr>
+<tr >
+      <td class='xs'><label>gender </label></td>
+      <td class='noborder'>". $gender."</td>
+    </tr>
+<tr >
+      <td class='xs'><label>cell phone </label></td>
+      <td class='noborder'>". $cell_phone."</td>
+    </tr>
+<tr >
+      <td class='xs'><label>other phone </label></td>
+      <td class='noborder'>". $other_phone."</td>
+    </tr>
 
-			</table><br>
-			</div>
-			<br>
-			";
+    </table><br>
+    </div>
+    <br>
+    ";
 
 /*
 PERSONAL INFO EDIT TABLE HTML
 */
 $personal_info_edit = "<div class='profile_header' >
-	<form method='post' action='profile.php?user_id=".$user_id."' name='update_personal'>
-			<h2>[ personal ]</h2>
-			</div>
-			<div class='profile'>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>first name </label><br> </td>
-			  <td class='noborder'><input type='text' name='first_name' maxlength='30'  
-        		value=". $first_name ."></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>last name </label><br> </td>
-			  <td class='noborder'><input type='text' name='last_name' maxlength='30'  
-        		value=". $last_name ."></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>netid </label><br> </td>
-			  <td class='noborder'><input type='small' name='netid' maxlength='8'  
-        		value=". $netid ."><label class='errormsg'>".$netid_error."</label></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>email </label></td>
-			  <td class='noborder'><input type='large' name='email' maxlength='50'  
-        		value=". $email ."><label class='errormsg'>".$email_error."</label></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>uin </label></td>
-			  <td class='noborder'><input type='small' id='uin' name='uin' maxlength='9'  
-        		value=". $uin ."><label class='errormsg'>".$uin_error."</label></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>gender </label></td>
-			  <td class='noborder'>
-			  
-				<input type='radio' name='gender' value='M'" ;
-				  	if ($gender == 'M') {$personal_info_edit .=  $checked;} 
-		$personal_info_edit .= ">M
-				<input type='radio' name='gender' value='F' ";
-				   if ($gender == 'F') {$personal_info_edit .=  $checked;} 
-		$personal_info_edit .= ">F
-			  </td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>cell phone </label></td>
-			  <td class='noborder'><input type='text' class='phone' name='cell_phone' maxlength='14'  
-        		value='". $cell_phone."'></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>other phone </label></td>
-			  <td class='noborder'><input type='text' class='phone' name='other_phone' maxlength='14'  
-        		value='". $other_phone."'></td>
-   			</tr>
+<form method='post' action='profile.php?user_id=".$user_id."' name='update_personal'>
+    <h2>[ personal ]</h2>
+    </div>
+    <div class='profile'>
+    <table class = 'profile'>
+<tr >
+      <td class='xs'><label>first name </label><br> </td>
+      <td class='noborder'><input type='text' name='first_name' maxlength='30'  
+    value=". $first_name ."></td>
+    </tr>
+<tr >
+      <td class='xs'><label>last name </label><br> </td>
+      <td class='noborder'><input type='text' name='last_name' maxlength='30'  
+    value=". $last_name ."></td>
+    </tr>
+<tr >
+      <td class='xs'><label>netid </label><br> </td>
+      <td class='noborder'><input type='small' name='netid' maxlength='8'  
+    value=". $netid ."><label class='errormsg'>".$netid_error."</label></td>
+    </tr>
+<tr >
+      <td class='xs'><label>email </label></td>
+      <td class='noborder'><input type='large' name='email' maxlength='50'  
+    value=". $email ."><label class='errormsg'>".$email_error."</label></td>
+    </tr>
+<tr >
+      <td class='xs'><label>uin </label></td>
+      <td class='noborder'><input type='small' id='uin' name='uin' maxlength='9'  
+    value=". $uin ."><label class='errormsg'>".$uin_error."</label></td>
+    </tr>
+<tr >
+      <td class='xs'><label>gender </label></td>
+      <td class='noborder'>
 
-			</table><br>
-			<div class='alignright'>
-				<input type='submit' name='update_personal' value='Update'>
-				<input type='submit' name='cancel_personal' value='Cancel'>
-			</div>
-			</div>
-			<br>
-			";
+            <input type='radio' name='gender' value='M'" ;
+                    if ($gender == 'M') {$personal_info_edit .=  $checked;} 
+$personal_info_edit .= ">M
+            <input type='radio' name='gender' value='F' ";
+               if ($gender == 'F') {$personal_info_edit .=  $checked;} 
+$personal_info_edit .= ">F
+      </td>
+    </tr>
+<tr >
+      <td class='xs'><label>cell phone </label></td>
+      <td class='noborder'><input type='text' class='phone' name='cell_phone' maxlength='14'  
+    value='". $cell_phone."'></td>
+    </tr>
+<tr >
+      <td class='xs'><label>other phone </label></td>
+      <td class='noborder'><input type='text' class='phone' name='other_phone' maxlength='14'  
+    value='". $other_phone."'></td>
+    </tr>
+
+    </table><br>
+    <div class='alignright'>
+            <input type='submit' name='update_personal' value='Update'>
+            <input type='submit' name='cancel_personal' value='Cancel'>
+    </div>
+    </div>
+    <br>
+    ";
 			
 			
 
@@ -294,15 +292,14 @@ if (isset($_POST['update_igb'])){
         $end_date = $_POST['end_date'];
         $reason_leaving = $_POST['reason_leaving'];
 	$supervisor = $_POST['supervisor'];
-			$safety_training = $user->is_checked($_POST['safety_training']);
-			$key_deposit = $user->is_checked($_POST['key_deposit']);
-			$prox_card = $user->is_checked($_POST['prox_card']);
-			$admin = $user->is_checked($_POST['admin']);
+        $safety_training = $user->is_checked($_POST['safety_training']);
+        $key_deposit = $user->is_checked($_POST['key_deposit']);
+        $prox_card = $user->is_checked($_POST['prox_card']);
+        $admin = $user->is_checked($_POST['admin']);
                         
         $add_permission = $_POST['add_permission'];
         $remove_permission = $_POST['remove_permission'];
-			
-	
+
 	$error_count = 0;
 	$supervisor_error= "";
 	
@@ -366,7 +363,7 @@ if (isset($_POST['update_igb'])){
                 $image = IMAGE_DIR_URL . $basename;
 
             } else {
-                //echo "Possible file upload attack!\n";
+
                 echo(html::error_message("FILE ERROR: #".$FILES['imageFile']['error']));
                 $error_count++;
             }
@@ -414,10 +411,10 @@ if (isset($_POST['update_igb'])){
 			$default_address = $_POST['default_address'];
 			$result = $user->update($user_id, 'users', 'default_address', $default_address);
 		}
-			$result = $user->update($user_id, 'users', 'safety_training', $safety_training);
-			$result = $user->update($user_id, 'users', 'key_deposit', $key_deposit);
-			$result = $user->update($user_id, 'users', 'prox_card', $prox_card);
-			$result = $user->update($user_id, 'users', 'admin', $admin);
+                $result = $user->update($user_id, 'users', 'safety_training', $safety_training);
+                $result = $user->update($user_id, 'users', 'key_deposit', $key_deposit);
+                $result = $user->update($user_id, 'users', 'prox_card', $prox_card);
+                $result = $user->update($user_id, 'users', 'admin', $admin);
 		
 	} else {
             echo("ERROR");
@@ -456,89 +453,89 @@ if($igb_address1 == null || $igb_address1 == "") {
         $igb_zip = "61801";
     }
 $igb_info .= "</p>
-			<p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&igb_edit=TRUE #igb'> edit </a></p>
-			
-			</div>
-			<div class='profile'>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'>". $igb_address . ", Room #". $igb_room ."
-			  	<br>". $igb_city . ", ". $igb_state . " " . $igb_zip . "
-			  </td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>phone </label></td>
-			  <td class='noborder'>". $igb_phone."</td>
-   			</tr>
-			<tr >
-    		<tr >
-			  <td class='xs'><label>fax </label></td>
-			  <td class='noborder'>". $fax."</td>
-   			</tr>
-    		<tr >";
+        <p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&igb_edit=TRUE #igb'> edit </a></p>
+
+        </div>
+        <div class='profile'>
+        <table class = 'profile'>
+<tr >
+          <td class='xs'><label>address </label><br> </td>
+          <td class='noborder'>". $igb_address . ", Room #". $igb_room ."
+                <br>". $igb_city . ", ". $igb_state . " " . $igb_zip . "
+          </td>
+        </tr>
+<tr >
+          <td class='xs'><label>phone </label></td>
+          <td class='noborder'>". $igb_phone."</td>
+        </tr>
+        <tr >
+<tr >
+          <td class='xs'><label>fax </label></td>
+          <td class='noborder'>". $fax."</td>
+        </tr>
+<tr >";
 
                     
-			  $igb_info .= "<td class='xs'><label>themes </label></td>";
-                          $igb_info .= "<td class='noborder'>";
-                          foreach($theme_info as $theme) {
-                              $igb_info .= $theme['theme_name'];
-                              $igb_info .= ", ";
-                          }
-                          $igb_info = rtrim($igb_info);
-                          $igb_info = rtrim($igb_info, ",");
-                          
+$igb_info .= "<td class='xs'><label>themes </label></td>";
+$igb_info .= "<td class='noborder'>";
+foreach($theme_info as $theme) {
+    $igb_info .= $theme['theme_name'];
+    $igb_info .= ", ";
+}
+$igb_info = rtrim($igb_info);
+$igb_info = rtrim($igb_info, ",");
+
 			  
 
 $igb_info .= "</td>
-   			  </tr>
-			  <tr >
-			  <td class='xs'><label>types </label></td>
-			  <td class='noborder'>";
+    </tr>
+    <tr >
+    <td class='xs'><label>types </label></td>
+    <td class='noborder'>";
 
-                          foreach($theme_info as $theme) {
-                              $igb_info .= $theme['type_name'];
-                              $igb_info .= ", ";
-                          }
-                          $igb_info = rtrim($igb_info);
-                          $igb_info = rtrim($igb_info, ",");
+    foreach($theme_info as $theme) {
+        $igb_info .= $theme['type_name'];
+        $igb_info .= ", ";
+    }
+    $igb_info = rtrim($igb_info);
+    $igb_info = rtrim($igb_info, ",");
 		  
 			  
 $igb_info .= "</td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>supervisor</label></td>
-			  <td class='noborder'>". $user->get_supervisor_name()."</td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>key deposit </label></td>
-			  <td class='noborder'>". $bool[$key_deposit]."</td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>prox card </label></td>
-			  <td class='noborder'>". $bool[$prox_card]."</td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>safety training </label></td>
-			  <td class='noborder'>". $bool[$safety_training]."</td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>admin </label></td>
-			  <td class='noborder'>". $bool[$admin]."</td>
-   			</tr>
-                        <tr>
-                            <td class='xs'><label>permissions</label></td>
-                            <td class='noborder'>". (($admin == 1) ? "ALL" : functions::list_permissions($db, $user_id)) . "</td>".
-                        "</tr>
-                          <td class='xs'><label>image </label></td>
-			  <td class='noborder'>". "<img src='".$image."'>"." <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
-                        </tr>
-                        	
-		</table>
-			<br>
-			</div>
-			<br>
-			";
+        </tr>
+        <tr >
+          <td class='xs'><label>supervisor</label></td>
+          <td class='noborder'>". $user->get_supervisor_name()."</td>
+        </tr>
+        <tr >
+          <td class='xs'><label>key deposit </label></td>
+          <td class='noborder'>". $bool[$key_deposit]."</td>
+        </tr>
+        <tr >
+          <td class='xs'><label>prox card </label></td>
+          <td class='noborder'>". $bool[$prox_card]."</td>
+        </tr>
+        <tr >
+          <td class='xs'><label>safety training </label></td>
+          <td class='noborder'>". $bool[$safety_training]."</td>
+        </tr>
+        <tr >
+          <td class='xs'><label>admin </label></td>
+          <td class='noborder'>". $bool[$admin]."</td>
+        </tr>
+        <tr>
+            <td class='xs'><label>permissions</label></td>
+            <td class='noborder'>". (($admin == 1) ? "ALL" : functions::list_permissions($db, $user_id)) . "</td>".
+        "</tr>
+          <td class='xs'><label>image </label></td>
+          <td class='noborder'>". "<img src='".$image."'>"." <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
+        </tr>
+
+</table>
+        <br>
+        </div>
+        <br>
+        ";
 
 
 $user_theme_list = array();
@@ -552,153 +549,161 @@ IGB INFO EDIT TABLE HTML
 
 */			
 $igb_info_edit = "<div class='profile_header' id='igb'>
-			<form method='post' enctype='multipart/form-data' action='profile.php?user_id=".$user_id."' name='update_igb'>
-			<p class='alignleft'>[ IGB ]</p>
-			<p class='alignright'></p>
-			
-			</div>
-			
-			<div class='profile'>
-			<table class = 'profile'>
-                        
-    		<tr >
-			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'><input type='large' name='igb_address' maxlength='50'  
-        		value=\"". $user->get_igb_address()."\"></td>
-                            
-                        <td class='noborder'>Room #<input type='small' name='igb_room' maxlength='13'  
-                            value='". $igb_room."'></td>
-   			</tr>
-    		<tr >
-			  
-			  
-			  <td class='xs'><label>city</label></td><td class='noborder'>	<input type='text' name='igb_city' maxlength='30'  value='". $user->get_igb_city()."'>"."</td></tr>".
-			 "<tr><td class='xs'><label>state</label></td><td class='noborder'>".	html::simple_drop( "igb_state", $states_arr, $user->get_igb_state() )."</td></tr>".
-			  	"<tr><td class='xs'><label>zip</label></td><td class='noborder'><input type='small' name='igb_zip' maxlength='10'  value='".$user->get_igb_zip()."'>
-			  </td>
-   			
+    <form method='post' enctype='multipart/form-data' action='profile.php?user_id=".$user_id."' name='update_igb'>
+    <p class='alignleft'>[ IGB ]</p>
+    <p class='alignright'></p>
 
-			  
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>phone </label></td>
-			  <td class='noborder'><input type='text' class='phone' name='igb_phone' maxlength='14'  
-        		value='". $igb_phone."'></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>fax </label></td>
-			  <td class='noborder'><input type='text' class='phone' name='fax' maxlength='14'  
-        		value='". $fax."'></td>
-   			</tr>
+    </div>
+
+    <div class='profile'>
+    <table class = 'profile'>
+
+<tr >
+      <td class='xs'><label>address </label><br> </td>
+      <td class='noborder'><input type='large' name='igb_address' maxlength='50'  
+    value=\"". $user->get_igb_address()."\"></td>
+
+    <td class='noborder'>Room #<input type='small' name='igb_room' maxlength='13'  
+        value='". $igb_room."'></td>
+    </tr>
+<tr >
+
+
+      <td class='xs'><label>city</label></td><td class='noborder'>	
+      <input type='text' name='igb_city' maxlength='30'  
+      value='". $user->get_igb_city()."'>"."</td></tr>".
+     "<tr><td class='xs'><label>state</label></td><td class='noborder'>".	
+        
+        html::simple_drop( "igb_state", $states_arr, $user->get_igb_state() )."</td></tr>".
+        
+      "<tr><td class='xs'><label>zip</label></td><td class='noborder'>"
+        . "<input type='small' name='igb_zip' maxlength='10'  "
+        . "value='".$user->get_igb_zip()."'>
+      </td>
+
+
+
+    </tr>
+<tr >
+      <td class='xs'><label>phone </label></td>
+      <td class='noborder'><input type='text' class='phone' name='igb_phone' maxlength='14'  
+    value='". $igb_phone."'></td>
+    </tr>
+<tr >
+      <td class='xs'><label>fax </label></td>
+      <td class='noborder'><input type='text' class='phone' name='fax' maxlength='14'  
+    value='". $fax."'></td>
+    </tr>
 ";
 if($current_user->get_admin()) {
     $igb_info_edit .= "<tr>
-			  <td class='xs'><label>Add Theme </label></td>
-			  <td class='xs'>". html::dropdown( 'add_theme', $theme_list, 0 ). "</td>
-			</tr>
-                        <tr >
-                        <td colspan=3 class='noborder'><A HREF=theme_history.php?user_id=".$user->get_user_id(). ">(View theme history)</a></td>
-                            </tr>
-			<tr >
-			  <td class='xs'><label>Add Type </label></td>
-			  <td class='noborder'>". html::dropdown( 'add_type', $type_list, 0 )."</td>
-   			</tr>";
+        <td class='xs'><label>Add Theme </label></td>
+        <td class='xs'>". html::dropdown( 'add_theme', $theme_list, 0 ). "</td>
+      </tr>
+      <tr >
+      <td colspan=3 class='noborder'><A HREF=theme_history.php?user_id=".$user->get_user_id(). ">(View theme history)</a></td>
+          </tr>
+      <tr >
+        <td class='xs'><label>Add Type </label></td>
+        <td class='noborder'>". html::dropdown( 'add_type', $type_list, 0 )."</td>
+      </tr>";
 }
-    $igb_info_edit  .=      "<tr>
-			  <td class='xs'><label>Remove Theme </label></td>
-			  <td class='xs'>". html::dropdown( 'remove_theme', $user_theme_list, 0 ). "</td>
-			</tr>
-                        <tr>
-			  <td class='xs'><label>Change Type</label></td>
-			  <td class='xs'>". html::dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". html::dropdown( 'change_type', $type_list, 0 ) ."</td>
-			</tr>
-			<tr >
-			  <td class='xs'><label>supervisor (NetID)</label></td>
-			  <td class='noborder'><input type='text' name='supervisor' maxlength='30'  
-        		value=". $user->get_supervisor_netid()."></td>
-				<td class='noborder'><label class='errormsg'>".$supervisor_error."</label></td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>key deposit </label></td>
-			  <td class='noborder'>
-			  	<input type='checkbox' name='key_deposit' value='checked' ".  $checked_bool[$key_deposit] .">
-			  </td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>prox card </label></td>
-			  <td class='noborder'>
-			  	<input type='checkbox' name='prox_card' value='checked' ".  $checked_bool[$prox_card] .">
-			  </td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>safety training </label></td>
-			  <td class='noborder'>
-			  	<input type='checkbox' name='safety_training' value='checked' ".  $checked_bool[$safety_training] .">
-			  </td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>admin </label></td>
-			  <td class='noborder'>
-			  	<input type='checkbox' name='admin' value='checked' ".  $checked_bool[$admin] .">
-			  </td>
-   			</tr>
-			<tr >
-			  <td class='xs'><label>start date </label></td>
-			  <td class='noborder'><input type='date' name='start_date' maxlength='12'  
-        		value=". $user->get_start_date()."></td>
-   			</tr>
-                        <tr >
-			  <td class='xs'><label>departure date </label></td>
-			  <td class='noborder'><input type='date' name='end_date' maxlength='12'  
-        		value=". $user->get_end_date()."></td>
-   			</tr>
-                        <tr >
-			  <td class='xs'><label>reason leaving </label></td>
-			  <td class='noborder'><input type='date' name='reason_leaving'  
-        		value='". $user->get_reason_leaving()."'></td>
-   			</tr>
-                        <tr>
-                            <td class='xs'><label>add permissions</label></td>
-                            <td class='noborder'>".html::dropdown( 'add_permission', $theme_list )."</td>
-                        </tr>
-                        <tr>
-                            <td class='xs'><label>remove permissions</label></td>
-                            <td class='noborder'>".html::dropdown( 'remove_permission', $theme_list )."</td>
-                        </tr>
-                        <tr>
-                            <td class='xs'><label>thumbnail image</label></td>
-                            <td colspan=3 class='noborder'><img src='".$user->get_image_location()."'> <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
-                        <tr>
-                        <tr>
-                            <td class='xs'><label>Image</label></td>
-                            <td colspan=3 class='noborder'><!-- The data encoding type, enctype, MUST be specified as below -->
-                               
-                                    <!-- MAX_FILE_SIZE must precede the file input field -->
-                                    <!-- <input type='hidden' name='MAX_FILE_SIZE' value='30000' /> -->
-                                    <!-- Name of input element determines name in \$_FILES array -->
-                                    <input name='imageFile' value='".$user->get_image()."' type='file' style='width:500px;height:25px' accept='image/jpeg, image/gif, image/png, image/pjpeg, image/tiff' />                             
-                            </td>
-                         </tr>
-                         <tr >
-			  <td class='xs'><label>Delete current image </label></td>
-			  <td class='noborder'>
-			  	<input type='checkbox' name='delete_image' value='checked'>
-			  </td>
-   			</tr>
-			</table>
-			
-			<div class='alignright'>
-			<input type='checkbox' name='default_address' value='IGB'>
-				<label>Set IGB as preferred address </label>
-			</div>
-			<div class='alignright'>
-				<input type='submit' name='update_igb' value='Update'>
-				<input type='submit' name='cancel_igb' value='Cancel'>
-			</div>
-			</div>
-			</form>
-			<br>
-			";
+
+$igb_info_edit  .="<tr>
+    <td class='xs'><label>Remove Theme </label></td>
+    <td class='xs'>". html::dropdown( 'remove_theme', $user_theme_list, 0 ). "</td>
+  </tr>
+  <tr>
+    <td class='xs'><label>Change Type</label></td>
+    <td class='xs'>". html::dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". html::dropdown( 'change_type', $type_list, 0 ) ."</td>
+  </tr>
+  <tr >
+    <td class='xs'><label>supervisor (NetID)</label></td>
+    <td class='noborder'><input type='text' name='supervisor' maxlength='30'  
+  value=". $user->get_supervisor_netid()."></td>
+          <td class='noborder'><label class='errormsg'>".$supervisor_error."</label></td>
+  </tr>
+  <tr >
+    <td class='xs'><label>key deposit </label></td>
+    <td class='noborder'>
+          <input type='checkbox' name='key_deposit' value='checked' ".  $checked_bool[$key_deposit] .">
+    </td>
+  </tr>
+  <tr >
+    <td class='xs'><label>prox card </label></td>
+    <td class='noborder'>
+          <input type='checkbox' name='prox_card' value='checked' ".  $checked_bool[$prox_card] .">
+    </td>
+  </tr>
+  <tr >
+    <td class='xs'><label>safety training </label></td>
+    <td class='noborder'>
+          <input type='checkbox' name='safety_training' value='checked' ".  $checked_bool[$safety_training] .">
+    </td>
+  </tr>
+  <tr >
+    <td class='xs'><label>admin </label></td>
+    <td class='noborder'>
+          <input type='checkbox' name='admin' value='checked' ".  $checked_bool[$admin] .">
+    </td>
+  </tr>
+  <tr >
+    <td class='xs'><label>start date </label></td>
+    <td class='noborder'><input type='date' name='start_date' maxlength='12'  
+  value=". $user->get_start_date()."></td>
+  </tr>
+  <tr >
+    <td class='xs'><label>departure date </label></td>
+    <td class='noborder'><input type='date' name='end_date' maxlength='12'  
+  value=". $user->get_end_date()."></td>
+  </tr>
+  <tr >
+    <td class='xs'><label>reason leaving </label></td>
+    <td class='noborder'><input type='date' name='reason_leaving'  
+  value='". $user->get_reason_leaving()."'></td>
+  </tr>
+  <tr>
+      <td class='xs'><label>add permissions</label></td>
+      <td class='noborder'>".html::dropdown( 'add_permission', $theme_list )."</td>
+  </tr>
+  <tr>
+      <td class='xs'><label>remove permissions</label></td>
+      <td class='noborder'>".html::dropdown( 'remove_permission', $theme_list )."</td>
+  </tr>
+  <tr>
+      <td class='xs'><label>thumbnail image</label></td>
+      <td colspan=3 class='noborder'><img src='".$user->get_image_location()."'> <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
+  <tr>
+  <tr>
+      <td class='xs'><label>Image</label></td>
+      <td colspan=3 class='noborder'><!-- The data encoding type, enctype, MUST be specified as below -->
+
+              <!-- MAX_FILE_SIZE must precede the file input field -->
+              <!-- <input type='hidden' name='MAX_FILE_SIZE' value='30000' /> -->
+              <!-- Name of input element determines name in \$_FILES array -->
+              <input name='imageFile' value='".$user->get_image()."' type='file' style='width:500px;height:25px' accept='image/jpeg, image/gif, image/png, image/pjpeg, image/tiff' />                             
+      </td>
+   </tr>
+   <tr >
+    <td class='xs'><label>Delete current image </label></td>
+    <td class='noborder'>
+          <input type='checkbox' name='delete_image' value='checked'>
+    </td>
+  </tr>
+  </table>
+
+  <div class='alignright'>
+  <input type='checkbox' name='default_address' value='IGB'>
+          <label>Set IGB as preferred address </label>
+  </div>
+  <div class='alignright'>
+          <input type='submit' name='update_igb' value='Update'>
+          <input type='submit' name='cancel_igb' value='Cancel'>
+  </div>
+  </div>
+  </form>
+  <br>
+  ";
 			
 			
 			
@@ -736,8 +741,7 @@ if (isset($_POST['update_dept'])){
 	
 }
 if (isset($_POST['cancel_dept'])){
-	
-		$dept_edit=FALSE;
+    $dept_edit=FALSE;
 }
 
 			
@@ -752,33 +756,34 @@ if ( $default_address == 'DEPT'){
 	$dept_info .= " * ";
 }		
 $dept_info .= "</p>
-			<p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&dept_edit=TRUE #dept'> edit </a></p>
-			</div>
-			<div class='profile'>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>department </label></td>
-			  <td class='noborder'>". $user->get_dept()."</td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'>"; 
-			if (!empty($dept_address1)){
-				$dept_info .=  $dept_address1." ".$dept_address2." <br>".
-							   $dept_city.", ".$dept_state." ".$dept_zip;
-			}
+    <p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&dept_edit=TRUE #dept'> edit </a></p>
+    </div>
+    <div class='profile'>
+    <table class = 'profile'>
+<tr >
+      <td class='xs'><label>department </label></td>
+      <td class='noborder'>". $user->get_dept()."</td>
+    </tr>
+<tr >
+      <td class='xs'><label>address </label><br> </td>
+      <td class='noborder'>"; 
+
+if (!empty($dept_address1)){
+        $dept_info .=  $dept_address1." ".$dept_address2." <br>".
+                                   $dept_city.", ".$dept_state." ".$dept_zip;
+}
 				
 $dept_info .= "</td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>phone </label></td>
-			  <td class='noborder'>". $user->get_dept_phone()."</td>
-   			</tr>
+    </tr>
+<tr >
+      <td class='xs'><label>phone </label></td>
+      <td class='noborder'>". $user->get_dept_phone()."</td>
+    </tr>
 
-			</table><br>
-			</div>
-			<br>
-			";
+    </table><br>
+    </div>
+    <br>
+    ";
 			
 
 /*
@@ -786,55 +791,55 @@ DEPT INFO EDIT TABLE HTML
 
 */			
 $dept_info_edit = " <div class='profile_header' id='dept'>
-			<form method='post' action='profile.php?user_id=".$user_id."' name='update_dept'>
-			<p class='alignleft'>[ department ]</p>
-			<p class='alignright'></p>
-			
-			</div>
-			
-			<div class='profile'>
-			<table class = 'profile'>
-			<tr>
-			  <td class='xs'><label>department </label></td>
-			  <td class='noborder'>". html::dropdown( 'dept_drop', $dept_list, $dept_drop ). "</td>
+    <form method='post' action='profile.php?user_id=".$user_id."' name='update_dept'>
+    <p class='alignleft'>[ department ]</p>
+    <p class='alignright'></p>
 
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'><input type='large' name='dept_address1' maxlength='50'  
-        		value=\"". $dept_address1."\"></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label></label><br> </td>
-			  <td class='noborder'><input type='large' name='dept_address2' maxlength='30'  
-        		value=\"". $dept_address2."\"></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>city, state, zip</label><br> </td>
-			  <td class='noborder'>
-			  	<input type='text' name='dept_city' maxlength='30'  value='". $dept_city."'>".$tab.
-				html::simple_drop( "dept_state", $states_arr, $dept_state ).$tab. 
-			  	"<input type='small' name='dept_zip' maxlength='10'  value='".$dept_zip."'>
-			  </td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>phone </label></td>
-			  <td class='noborder'><input type='text' class='phone' name='dept_phone' maxlength='14'  
-        		value='". $dept_phone."'></td>
-   			</tr>
-			</table>
-			<div class='alignright'>
-			<input type='checkbox' name='default_address' value='DEPT'>
-				<label>Set Department as preferred address </label>
-			</div>
-			<div class='alignright'>
-				<input type='submit' name='update_dept' value='Update'>
-				<input type='submit' name='cancel_dept' value='Cancel'>
-			</div>
-			</div>
-			</form>
-			<br>
-			";
+    </div>
+
+    <div class='profile'>
+    <table class = 'profile'>
+    <tr>
+      <td class='xs'><label>department </label></td>
+      <td class='noborder'>". html::dropdown( 'dept_drop', $dept_list, $dept_drop ). "</td>
+
+    </tr>
+<tr >
+      <td class='xs'><label>address </label><br> </td>
+      <td class='noborder'><input type='large' name='dept_address1' maxlength='50'  
+    value=\"". $dept_address1."\"></td>
+    </tr>
+<tr >
+      <td class='xs'><label></label><br> </td>
+      <td class='noborder'><input type='large' name='dept_address2' maxlength='30'  
+    value=\"". $dept_address2."\"></td>
+    </tr>
+<tr >
+      <td class='xs'><label>city, state, zip</label><br> </td>
+      <td class='noborder'>
+            <input type='text' name='dept_city' maxlength='30'  value='". $dept_city."'>".$tab.
+            html::simple_drop( "dept_state", $states_arr, $dept_state ).$tab. 
+            "<input type='small' name='dept_zip' maxlength='10'  value='".$dept_zip."'>
+      </td>
+    </tr>
+<tr >
+      <td class='xs'><label>phone </label></td>
+      <td class='noborder'><input type='text' class='phone' name='dept_phone' maxlength='14'  
+    value='". $dept_phone."'></td>
+    </tr>
+    </table>
+    <div class='alignright'>
+    <input type='checkbox' name='default_address' value='DEPT'>
+            <label>Set Department as preferred address </label>
+    </div>
+    <div class='alignright'>
+            <input type='submit' name='update_dept' value='Update'>
+            <input type='submit' name='cancel_dept' value='Cancel'>
+    </div>
+    </div>
+    </form>
+    <br>
+    ";
 
 
 
@@ -851,27 +856,24 @@ if (isset($_POST['update_home'])){
 	$home_zip = $_POST['home_zip'];
 	
 	$result = $user->update($user_id, 'address', 'type', 'HOME', "AND type = 'HOME'");
-		$result = $user->update($user_id, 'address', 'address1', $home_address1, "AND type = 'HOME'");
-		$result = $user->update($user_id, 'address', 'address2', $home_address2, "AND type = 'HOME'");	
-		$result = $user->update($user_id, 'address', 'city', $home_city, "AND type = 'HOME'");	
-		$result = $user->update($user_id, 'address', 'state', $home_state, "AND type = 'HOME'");
-		$result = $user->update($user_id, 'address', 'zip', $home_zip, "AND type = 'HOME'");
+        $result = $user->update($user_id, 'address', 'address1', $home_address1, "AND type = 'HOME'");
+        $result = $user->update($user_id, 'address', 'address2', $home_address2, "AND type = 'HOME'");	
+        $result = $user->update($user_id, 'address', 'city', $home_city, "AND type = 'HOME'");	
+        $result = $user->update($user_id, 'address', 'state', $home_state, "AND type = 'HOME'");
+        $result = $user->update($user_id, 'address', 'zip', $home_zip, "AND type = 'HOME'");
 	
-		if(isset($_POST['default_address'])){
-			$default_address = $_POST['default_address'];
-			$result = $user->update($user_id, 'users', 'default_address', $default_address);
-		}
+        if(isset($_POST['default_address'])){
+            $default_address = $_POST['default_address'];
+            $result = $user->update($user_id, 'users', 'default_address', $default_address);
+        }
 	
 }
-
 
 
 if (isset($_POST['cancel_home'])){
 	
 		$home_edit=FALSE;
 }
-
-
 
 /*
 HOME INFO TABLE HTML
@@ -882,26 +884,27 @@ if ( $default_address == 'HOME'){
 	$home_info .= " * ";
 }			
 $home_info .= "</p>
-			<p class='alignright'><a class='edit' onclick='return:false;' 
-					href='profile.php?user_id=".$user_id."&home_edit=TRUE #home'> edit </a></p>
-			</div>
-			<div class='profile'>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'>";
-			if (!empty($home_address1)){
-				$home_info .=  $home_address1." ".$home_address2." <br>".
-							   $home_city.", ".$home_state." ".$home_zip;
-			}
+    <p class='alignright'><a class='edit' onclick='return:false;' 
+        href='profile.php?user_id=".$user_id."&home_edit=TRUE #home'> edit </a></p>
+    </div>
+    <div class='profile'>
+    <table class = 'profile'>
+<tr >
+      <td class='xs'><label>address </label><br> </td>
+      <td class='noborder'>";
+
+if (!empty($home_address1)){
+        $home_info .=  $home_address1." ".$home_address2." <br>".
+            $home_city.", ".$home_state." ".$home_zip;
+}
 			  
 $home_info .=  "</td>
-   			</tr>
+    </tr>
 
-			</table><br>
-			</div>
-			<br>
-			";
+    </table><br>
+    </div>
+    <br>
+    ";
 	
 
 /*
@@ -909,45 +912,45 @@ HOME INFO EDIT TABLE HTML
 
 */			
 $home_info_edit = " <div class='profile_header' id='home'>
-			<form method='post' action='profile.php?user_id=".$user_id."' name='update_home'>
-			<p class='alignleft'>[ home ]</p>
-			<p class='alignright'></p>
-			
-			</div>
-			
-			<div class='profile'>
-			<table class = 'profile'>
-    		<tr >
-			  <td class='xs'><label>address </label><br> </td>
-			  <td class='noborder'><input type='large' name='home_address1' maxlength='50'  
-        		value=\"". $home_address1."\"></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label></label><br> </td>
-			  <td class='noborder'><input type='large' name='home_address2' maxlength='30'  
-        		value=\"". $home_address2."\"></td>
-   			</tr>
-    		<tr >
-			  <td class='xs'><label>city, state, zip</label><br> </td>
-			  <td class='noborder'>
-			  	<input type='text' name='home_city' maxlength='30'  value='". $home_city."'>".$tab.
-				html::simple_drop( "home_state", $states_arr, $home_state ).$tab. 
-			  	"<input type='small' name='home_zip' maxlength='10'  value='".$home_zip."'>
-			  </td>
-   			</tr>
-			</table>
-			<div class='alignright'>
-			<input type='checkbox' name='default_address' value='HOME'>
-				<label>Set Home as preferred address </label>
-			</div>
-			<div class='alignright'>
-				<input type='submit' name='update_home' value='Update'>
-				<input type='submit' name='cancel_home' value='Cancel'>
-			</div>
-			</div>
-			</form>
-			<br>
-			";
+    <form method='post' action='profile.php?user_id=".$user_id."' name='update_home'>
+    <p class='alignleft'>[ home ]</p>
+    <p class='alignright'></p>
+
+    </div>
+
+    <div class='profile'>
+    <table class = 'profile'>
+<tr >
+      <td class='xs'><label>address </label><br> </td>
+      <td class='noborder'><input type='large' name='home_address1' maxlength='50'  
+    value=\"". $home_address1."\"></td>
+    </tr>
+<tr >
+      <td class='xs'><label></label><br> </td>
+      <td class='noborder'><input type='large' name='home_address2' maxlength='30'  
+    value=\"". $home_address2."\"></td>
+    </tr>
+<tr >
+      <td class='xs'><label>city, state, zip</label><br> </td>
+      <td class='noborder'>
+            <input type='text' name='home_city' maxlength='30'  value='". $home_city."'>".$tab.
+            html::simple_drop( "home_state", $states_arr, $home_state ).$tab. 
+            "<input type='small' name='home_zip' maxlength='10'  value='".$home_zip."'>
+      </td>
+    </tr>
+    </table>
+    <div class='alignright'>
+    <input type='checkbox' name='default_address' value='HOME'>
+            <label>Set Home as preferred address </label>
+    </div>
+    <div class='alignright'>
+            <input type='submit' name='update_home' value='Update'>
+            <input type='submit' name='cancel_home' value='Cancel'>
+    </div>
+    </div>
+    </form>
+    <br>
+    ";
 
 
 
@@ -1024,87 +1027,87 @@ EXIT HTML
 
 */			
 $remove_html = " <div id='remove_member'>
-			<form method='post' action='profile.php?user_id=".$user_id."' name='remove_member'>
-			
-				<label class='required'>IGB Member Exit Info </label>	
-				<br>
-				<br>
-			
-				<table class = 'profile'>
-					<tr >
-					  <td class='small'><label>IGB Departure Date </label><br> </td>
-					  <td class='noborder'><input type='date' name='end_date' maxlength='12'  ></td>
-					</tr>
-					<tr >
-					  <td class='small'><label>Reason For Leaving</label><br> </td>
-					  <td class='noborder'>".
-					  	html::simple_drop( "reason_leaving", $leave_arr).$tab."
-					  
-					  </td>
-					</tr>
-					<tr >
-					  <td class='small'><label>If Other, please specify</label><br> </td>
-					  <td class='noborder'>
-						<input type='large' name='other_reason_leaving' maxlength='100'  >					  
-					  </td>
-					</tr>
-				</table>
-				<br>
-				<label class='required'>Contact Info for Future Correspondence	</label>	
-				<br>
-				<br>
-				<table class = 'profile'>
-					<tr >
-					  <td class='xs'><label>Address </label><br> </td>
-					  <td class='noborder'>
-					  	<input type='large' name='fwd_address1' maxlength='50'  
-							value=\"". $fwd_address1."\">".$tab."
-						<input type='radio' name='fwd_address_type' value='HOME'><label class='note'>Home</label>
-						<input type='radio' name='fwd_address_type' value='WORK'><label class='note'>Business</label>
-						
-						
-						</td>
-					</tr>
-					<tr >
-					  <td class='xs'><label>City/State/Zip</label><br> </td>
-					  <td class='noborder'>
-						<input type='small' name='fwd_city' maxlength='30'  value='". $fwd_city."'>".$tab.
-						html::simple_drop( "fwd_state", $states_arr, $fwd_state ).$tab. 
-						"<input type='small' name='fwd_zip' maxlength='10'  value='".$fwd_zip."'>
-					  </td>
-					</tr>
-					
-					<tr >
-					  <td class='xs'><label>Country </label><br> </td>
-					  <td class='noborder'>
-						".html::country_dropdown('fwd_country')."
-					  </td>
-					</tr>
-					<tr >
-					  <td class='xs'><label>Phone </label><br> </td>
-					  <td class='noborder'>
-					  	<input type='text' name='fwd_phone' maxlength='14'  value='".$fwd_phone."'>".$tab."
-						<input type='radio' name='fwd_phone_type' value='HOME'><label class='note'>Home</label>
-						<input type='radio' name='fwd_phone_type' value='WORK'><label class='note'>Business</label>
-						<input type='radio' name='fwd_phone_type' value='CELL'><label class='note'>Cell</label>
-						
-					  </td>
-					</tr>
-                                        <tr>
-                                            <td class='xs'><label>Email</label><BR></td>
-                                            <td class='noborder'>
-                                                <input type='small' name='fwd_email' maxlength='50'>
-					    </td>
-					</tr>
-				</table>
-			<br>
-			</div>
-			<div class='alignright'>
-				<input type='submit' style='width:150px;' name='remove_member' id='remove_member' value='Remove Member'>
-			</div>
-			</form>
-			<br>
-			";
+    <form method='post' action='profile.php?user_id=".$user_id."' name='remove_member'>
+
+            <label class='required'>IGB Member Exit Info </label>	
+            <br>
+            <br>
+
+            <table class = 'profile'>
+                    <tr >
+                      <td class='small'><label>IGB Departure Date </label><br> </td>
+                      <td class='noborder'><input type='date' name='end_date' maxlength='12'  ></td>
+                    </tr>
+                    <tr >
+                      <td class='small'><label>Reason For Leaving</label><br> </td>
+                      <td class='noborder'>".
+                            html::simple_drop( "reason_leaving", $leave_arr).$tab."
+
+                      </td>
+                    </tr>
+                    <tr >
+                      <td class='small'><label>If Other, please specify</label><br> </td>
+                      <td class='noborder'>
+                            <input type='large' name='other_reason_leaving' maxlength='100'  >					  
+                      </td>
+                    </tr>
+            </table>
+            <br>
+            <label class='required'>Contact Info for Future Correspondence	</label>	
+            <br>
+            <br>
+            <table class = 'profile'>
+                <tr >
+                  <td class='xs'><label>Address </label><br> </td>
+                  <td class='noborder'>
+                        <input type='large' name='fwd_address1' maxlength='50'  
+                                value=\"". $fwd_address1."\">".$tab."
+                        <input type='radio' name='fwd_address_type' value='HOME'><label class='note'>Home</label>
+                        <input type='radio' name='fwd_address_type' value='WORK'><label class='note'>Business</label>
+
+
+                        </td>
+                </tr>
+                <tr >
+                  <td class='xs'><label>City/State/Zip</label><br> </td>
+                  <td class='noborder'>
+                        <input type='small' name='fwd_city' maxlength='30'  value='". $fwd_city."'>".$tab.
+                        html::simple_drop( "fwd_state", $states_arr, $fwd_state ).$tab. 
+                        "<input type='small' name='fwd_zip' maxlength='10'  value='".$fwd_zip."'>
+                  </td>
+                </tr>
+
+                <tr >
+                  <td class='xs'><label>Country </label><br> </td>
+                  <td class='noborder'>
+                        ".html::country_dropdown('fwd_country')."
+                  </td>
+                </tr>
+                <tr >
+                  <td class='xs'><label>Phone </label><br> </td>
+                  <td class='noborder'>
+                        <input type='text' name='fwd_phone' maxlength='14'  value='".$fwd_phone."'>".$tab."
+                        <input type='radio' name='fwd_phone_type' value='HOME'><label class='note'>Home</label>
+                        <input type='radio' name='fwd_phone_type' value='WORK'><label class='note'>Business</label>
+                        <input type='radio' name='fwd_phone_type' value='CELL'><label class='note'>Cell</label>
+
+                  </td>
+                </tr>
+                <tr>
+                    <td class='xs'><label>Email</label><BR></td>
+                    <td class='noborder'>
+                        <input type='small' name='fwd_email' maxlength='50'>
+                    </td>
+                </tr>
+            </table>
+    <br>
+    </div>
+    <div class='alignright'>
+            <input type='submit' style='width:150px;' name='remove_member' id='remove_member' value='Remove Member'>
+    </div>
+    </form>
+    <br>
+    ";
 ?> 
 
 

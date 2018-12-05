@@ -25,23 +25,24 @@ $user->get_user($user_id);
 
 
 $html = "";
-	foreach( $theme_list as $key=>$option )
-    {
-		if($user->get_admin()==1 || $user->has_permission($user_id, $option['theme_id'])) {
 
-                    $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$option['theme_id']. "' and active = 1";
+foreach( $theme_list as $key=>$option ) {
+    
+    if($user->get_admin()==1 || $user->has_permission($user_id, $option['theme_id'])) {
 
-                    $search_results = $db->query($query);
+        $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$option['theme_id']. "' and active = 1";
 
-                    if (count($search_results) == 0) { 
-                            $html .= "<input type='button' name='".$option['theme_id']."' id='".$option['short_name']."' value='".$option['short_name']."' 
-                                            class='themebutton disabled' > ";
+        $search_results = $db->query($query);
 
-                    } else {	
-                        $html .= "<a href='themedir.php?theme=".$option['theme_id']."' class='themelink' >".$option['short_name']."</a> ";
-                    }
-                }
+        if (count($search_results) == 0) { 
+                $html .= "<input type='button' name='".$option['theme_id']."' id='".$option['short_name']."' value='".$option['short_name']."' 
+                                class='themebutton disabled' > ";
+
+        } else {	
+            $html .= "<a href='themedir.php?theme=".$option['theme_id']."' class='themelink' >".$option['short_name']."</a> ";
+        }
     }
+}
 
     // select users who are stil enabled, but not active in any theme.
     $null_query = "select * from users where user_id NOT IN (select user_id from user_theme where active=1) and user_enabled = 1";
@@ -70,18 +71,15 @@ $theme_name = $theme->get_short_name();
 <div class="section">
 
 
-	<?php 
-	
-	echo $html;
-    ?> 
+<?php 
+    echo $html;
+?> 
+    
 </div>
 
-
-
-
-	<?php 
+<?php 
     echo $theme_html; 
-	?> 
+?> 
 
 
 

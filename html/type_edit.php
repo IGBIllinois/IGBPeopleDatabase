@@ -12,15 +12,15 @@ TYPE INFO TABLE HTML
 */
 
 $type_table = "<div class='left sixty'>
-			<div class='noborder'>
-				".
-					html::type_list_table("type_list_table",$type_list)
-					."
-				
-			</div>
-			</div>
-			<br>
-			";
+    <div class='noborder'>
+            ".
+                    html::type_list_table("type_list_table",$type_list)
+                    ."
+
+    </div>
+    </div>
+    <br>
+    ";
 	
 
 /*
@@ -38,33 +38,32 @@ if(!empty($_GET['success'])) {
  */
 if (!empty($_POST['add_type']) && !empty($_POST['type_name'])){
 
-	$type_name = $_POST['type_name'];
-	$error_msg = "";
-	echo("type name = $type_name<BR>");
-	
-	if (empty($type_name)){  
-		$error_msg .= "Please enter type name<br>";
-		$error_count++;
-		
-	}
-        
-        $tmp_type = new type($db);
-        if($tmp_type->type_name_exists($type_name) !== false) {
-            $error_msg .= "A type with the name $type_name already exists.<br>";
+    $type_name = $_POST['type_name'];
+    $error_msg = "";
+    echo("type name = $type_name<BR>");
+
+    if (empty($type_name)){  
+            $error_msg .= "Please enter type name<br>";
             $error_count++;
-		
-        }
 
-	
-	if ($error_count == 0){
-            
-            type::add_type($db, $type_name, 1);
+    }
 
-            unset($_POST['add_type']);
-            $redirectpage= "/type_edit.php?success=true&type_name=".  htmlentities($type_name);
-            header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
-            exit(); 
-	}
+    $tmp_type = new type($db);
+    if($tmp_type->type_name_exists($type_name) !== false) {
+        $error_msg .= "A type with the name $type_name already exists.<br>";
+        $error_count++;
+
+    }
+
+    if ($error_count == 0){
+
+        type::add_type($db, $type_name, 1);
+
+        unset($_POST['add_type']);
+        $redirectpage= "/type_edit.php?success=true&type_name=".  htmlentities($type_name);
+        header ("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . $redirectpage); 	
+        exit(); 
+    }
 
 }
 
@@ -91,35 +90,33 @@ TYPE ADD FORM HTML
 */
 
 $type_add_table = "<form method='POST' action='type_edit.php' name='add_type'>
+    <div class='right forty bordered'>
+            <div class='profile_header'>
+                    <p class='alignleft'>[ Add type ]</p>
+            </div>
+            <div class='noborder'>
+                    <label class='errormsg'>".$error_msg."</label><br>
 
-		<div class='right forty bordered'>
-			<div class='profile_header'>
-				<p class='alignleft'>[ Add type ]</p>
-			</div>
-			<div class='noborder'>
-			 	<label class='errormsg'>".$error_msg."</label><br>
-				
-				<table class = 'profile'>
-					<tr >
-					  <td class='noborder'><label>Name </label><br> </td>
-					  <td class='noborder'>
-					  	<input type='medium' name='type_name' maxlength='50'  >
-					  </td>
-					</tr>
-				</table>
-				
-			</div>
-			<div class='alignright'>
-					<input type='submit' name='add_type' id='add_type' value='Add'  >
-					
-				</div >
-			
-			<br></div>
-			</form>
-			";		
+                    <table class = 'profile'>
+                            <tr >
+                              <td class='noborder'><label>Name </label><br> </td>
+                              <td class='noborder'>
+                                    <input type='medium' name='type_name' maxlength='50'  >
+                              </td>
+                            </tr>
+                    </table>
 
-		
-			
+            </div>
+            <div class='alignright'>
+                            <input type='submit' name='add_type' id='add_type' value='Add'  >
+
+                    </div >
+
+            <br></div>
+            </form>
+            ";		
+
+	
 /*
 TYPE STATUS FORM HTML
 */
@@ -131,32 +128,32 @@ $type_edit_table = "
 <form method='post' action='type_edit.php' name='edit_type' id='edit_type'>
 <br>
     <div class='right forty bordered'>
-            <div class='profile_header'>
-                    <p class='alignleft'>[ Change type status ]</p>
-            </div>
-            <div class='noborder'>
-                    <label class='errormsg'></label><br>
+        <div class='profile_header'>
+                <p class='alignleft'>[ Change type status ]</p>
+        </div>
+        <div class='noborder'>
+                <label class='errormsg'></label><br>
 
-                    <table class = 'profile'>
-                            <tr >
-                              <td class='xs'><label>Type:  </label><br> </td>
-                              <td class='xs'>
-                                    ".html::dropdown('type_id', $type_list )."
-                              </td>
-                            </tr>
-                            <tr >
-                              <td class='xs'><label>Set to:  </label><br> </td>
-                              <td class='xs'>
-                                    ".html::simple_drop('type_status', $status_arr )."
-                              </td>
-                            </tr>
-                    </table>
-            </div>
-            <div class='alignright'>
-                            <input type='submit' name='edit_type' id='edit_type' value='Update'  >
-            </div >
-            </div><br></form>
-            ";
+            <table class = 'profile'>
+                <tr >
+                  <td class='xs'><label>Type:  </label><br> </td>
+                  <td class='xs'>
+                        ".html::dropdown('type_id', $type_list )."
+                  </td>
+                </tr>
+                <tr >
+                  <td class='xs'><label>Set to:  </label><br> </td>
+                  <td class='xs'>
+                        ".html::simple_drop('type_status', $status_arr )."
+                  </td>
+                </tr>
+            </table>
+        </div>
+        <div class='alignright'>
+            <input type='submit' name='edit_type' id='edit_type' value='Update'  >
+        </div >
+        </div><br></form>
+        ";
 		
 
 

@@ -1380,6 +1380,30 @@ public function is_valid_email($email)
             }
         }
         
+        public function get_theme_history($all_users = false) {
+            $query = "SELECT users.first_name as first_name, 
+                users.last_name as last_name, 
+                themes.name as theme_name,
+                user_theme.start_date as start_date, 
+                user_theme.end_date as end_date 
+                from       
+                (users LEFT JOIN 
+                    user_theme on users.user_id = user_theme.user_id)
+                LEFT JOIN themes on 
+                user_theme.theme_id=themes.theme_id 
+                where (user_theme.theme_id is not null and user_theme.theme_id != 0) 
+                and ". 
+                    (($all_users == true) ? " " : " users.user_id=:user_id and") . 
+                    " (user_theme.start_date is not null "
+                    . "or user_theme.end_date is not null) "
+                    . "order by active, user_theme.start_date";
+            
+            $params = array("user_id"=>$this->id);
+            
+            return $this->db->get_query_result($query, $params);
+
+        }
+        
         // Static functions
         
         /**

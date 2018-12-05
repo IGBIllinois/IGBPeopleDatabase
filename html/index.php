@@ -7,15 +7,11 @@ require_once 'includes/header.inc.php';
 
 $success_html = "<br><h4>
 					
-					<br>
-					
-					</h4>
-					
-					"	;
+    <br>
 
+    </h4>
 
-
-
+    "	;
 
 
 ?>

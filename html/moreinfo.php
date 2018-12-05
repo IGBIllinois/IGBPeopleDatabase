@@ -135,26 +135,26 @@ $add_key_html = " <div id='add_key_html'>
         <br>
 
         <table class = 'profile'>
-                <tr >
-                  <td class='small'><label>Room # / Key Name </label><br> </td>
-                  <td class='noborder'>"
-                        .html::dropdown( "key_drop", $key_list, $key_drop ) ."
+            <tr >
+              <td class='small'><label>Room # / Key Name </label><br> </td>
+              <td class='noborder'>"
+                    .html::dropdown( "key_drop", $key_list, $key_drop ) ."
 
-                        </td>
-                </tr>
-                <tr >
-                  <td class='small'><label>Key Deposit</label><br> </td>
-                  <td class='noborder'>
-                        <input type='radio' name='payment_status' value='1' checked><label class='note'>Paid</label>
-                        <input type='radio' name='payment_status' value='0'><label class='note'>Unpaid</label>
-                  </td>
-                </tr>
-                <tr >
-                  <td class='small'><label>Date Issued</label><br> </td>
-                  <td class='noborder'>
-                        <input type='date' name='date_issued' value='".date('Y-m-d')."' >					  
-                  </td>
-                </tr>
+                    </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Key Deposit</label><br> </td>
+              <td class='noborder'>
+                    <input type='radio' name='payment_status' value='1' checked><label class='note'>Paid</label>
+                    <input type='radio' name='payment_status' value='0'><label class='note'>Unpaid</label>
+              </td>
+            </tr>
+            <tr >
+              <td class='small'><label>Date Issued</label><br> </td>
+              <td class='noborder'>
+                    <input type='date' name='date_issued' value='".date('Y-m-d')."' >					  
+              </td>
+            </tr>
         </table>
 
         <br>

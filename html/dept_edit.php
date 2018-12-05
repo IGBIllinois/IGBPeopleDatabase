@@ -105,135 +105,129 @@ DEPT INFO TABLE HTML
 */
 
 $dept_table = "<div class='left sixty'>
+	
+    <div class='noborder'>
+            ".
+                    dept_list_table("dept_list_table ",$dept_list)
+                    ."
 
-			
-			<div class='noborder'>
-				".
-					dept_list_table("dept_list_table ",$dept_list)
-					."
-				
-			</div>
-			</div>
-			<br>
-			";
-			
+    </div>
+    </div>
+    <br>
+    ";			
 
 /*
 DEPT ADD FORM HTML
-
-
-
 */
 $dept_add_table = "<form method='post' action='dept_edit.php' name='add_dept'>
 
-		<div class='right forty bordered'>
-			<div class='profile_header'>
-				<p class='alignleft'>[ Add department ]</p>
-			</div>
-			<div class='noborder'>
-			 	<label class='errormsg'>".$error_msg."</label><br>
-				
-				<table class = 'profile'>
-					<tr >
-					  <td class='noborder'><label>Name </label><br> </td>
-					  <td class='noborder'>
-					  	<input type='medium' name='dept_name' maxlength='50'  >
-					  </td>
-					</tr>
-					<tr >
-					  <td class='noborder'><label>Code</label><br> </td>
-					  <td class='noborder'>
-					  	<input type='medium' name='dept_code' maxlength='12'  >
-					  </td>
-					</tr>
-				</table>
-				
-			</div>
-			<div class='alignright'>
-					<input type='submit' name='add_dept' id='add_dept' value='Add'  >
-					
-				</div >
-			
-			<br></div>
-                        
-			</form>
-			";
+    <div class='right forty bordered'>
+            <div class='profile_header'>
+                    <p class='alignleft'>[ Add department ]</p>
+            </div>
+            <div class='noborder'>
+                <label class='errormsg'>".$error_msg."</label><br>
+
+                <table class = 'profile'>
+                    <tr >
+                      <td class='noborder'><label>Name </label><br> </td>
+                      <td class='noborder'>
+                            <input type='medium' name='dept_name' maxlength='50'  >
+                      </td>
+                    </tr>
+                    <tr >
+                      <td class='noborder'><label>Code</label><br> </td>
+                      <td class='noborder'>
+                            <input type='medium' name='dept_code' maxlength='12'  >
+                      </td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class='alignright'>
+                <input type='submit' name='add_dept' id='add_dept' value='Add'  >
+            </div >
+
+            <br></div>
+
+            </form>
+            ";
 
 	
 $dept_edit_table = "<form method='post' action='dept_edit.php' name='submit_edit_dept' id='submit_edit_dept'>
 
-		<div class='right forty bordered'>
-			<div class='profile_header'>
-				<p class='alignleft'>[ Edit department ]</p>
-			</div>
-			<table class = 'profile'>
-                        <label class='errormsg'>".$edit_error_msg."</label><br>
-					<tr >
-                                        <tr >
-					  <td class='noborder'><label>Department Name </label><br> </td>
-					  <td class='noborder'>"
-					  	. html::dropdown("edit_dept_drop", $dept_list)
-					  ."</td>
-					</tr>
-					  <td class='small'><label>Department Name</label><br> </td>
-					  <td class = 'noborder'>
-                                            <input name='name' id='name'>
-                                          </td>
-					</tr>
-                                        <tr >
-					  <td class='small'><label>Code</label><br> </td>
-					  <td class = 'noborder'>
-                                            <input name='dept_code' id='dept_code'>
-                                          </td>
-					</tr>
-					
-				</table>
-				
-			<br>
-			
-			<div class='alignright'>
-				<input type='submit' name='submit_edit_dept' id='submit_edit_dept' value='Edit Department'>
-			</div>
-                        </div>
-			</form>
-			";
+    <div class='right forty bordered'>
+            <div class='profile_header'>
+                    <p class='alignleft'>[ Edit department ]</p>
+            </div>
+            <table class = 'profile'>
+            <label class='errormsg'>".$edit_error_msg."</label><br>
+                <tr >
+                <tr >
+                  <td class='noborder'><label>Department Name </label><br> </td>
+                  <td class='noborder'>"
+                        . html::dropdown("edit_dept_drop", $dept_list)
+                  ."</td>
+                </tr>
+                  <td class='small'><label>Department Name</label><br> </td>
+                  <td class = 'noborder'>
+                    <input name='name' id='name'>
+                  </td>
+                </tr>
+                <tr >
+                  <td class='small'><label>Code</label><br> </td>
+                  <td class = 'noborder'>
+                    <input name='dept_code' id='dept_code'>
+                  </td>
+                </tr>
+
+            </table>
+
+            <br>
+
+            <div class='alignright'>
+                    <input type='submit' name='submit_edit_dept' id='submit_edit_dept' value='Edit Department'>
+            </div>
+            </div>
+            </form>
+            ";
 
 $dept_edit_html2 = "<div id='dept_edit_html'>
-		<div>
-			<form method='post' action='dept_edit.php' name='dept_edit' id='dept_edit'>
-                        <label class='required'>Edit Department</label>	
-				<br>
-				<br>
-			
-				<table class = 'profile'>
-					<tr >
-                                        <tr >
-					  <td class='noborder'><label>Department Name </label><br> </td>
-					  <td class='noborder'>"
-					  	. html::dropdown("edit_dept_drop", $dept_list)
-					  ."</td>
-					</tr>
-					  <td class='small'><label>Department Name</label><br> </td>
-					  <td class = 'noborder'>
-                                            <input name='name' id='name'>
-                                          </td>
-					</tr>
-                                        <tr >
-					  <td class='small'><label>Code</label><br> </td>
-					  <td class = 'noborder'>
-                                            <input name='dept_code' id='dept_code'>
-                                          </td>
-					</tr>
-					
-				</table>
-				
-			<br>
-			</div>
-			<div class='alignright'>
-				<input type='submit' name='submit_edit_dept' id='submit_edit_dept' value='Edit Department'>
-			</div>
-			</form>
-			</div>";
+    <div>
+            <form method='post' action='dept_edit.php' name='dept_edit' id='dept_edit'>
+            <label class='required'>Edit Department</label>	
+                <br>
+                <br>
+
+                <table class = 'profile'>
+                    <tr >
+                    <tr >
+                      <td class='noborder'><label>Department Name </label><br> </td>
+                      <td class='noborder'>"
+                            . html::dropdown("edit_dept_drop", $dept_list)
+                      ."</td>
+                    </tr>
+                      <td class='small'><label>Department Name</label><br> </td>
+                      <td class = 'noborder'>
+                        <input name='name' id='name'>
+                      </td>
+                    </tr>
+                    <tr >
+                      <td class='small'><label>Code</label><br> </td>
+                      <td class = 'noborder'>
+                        <input name='dept_code' id='dept_code'>
+                      </td>
+                    </tr>
+
+                </table>
+
+            <br>
+            </div>
+            <div class='alignright'>
+                    <input type='submit' name='submit_edit_dept' id='submit_edit_dept' value='Edit Department'>
+            </div>
+            </form>
+            </div>";
         
         
 ?> 
