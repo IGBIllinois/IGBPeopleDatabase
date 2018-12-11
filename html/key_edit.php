@@ -224,6 +224,14 @@ for ($i = 0; $i < count($active_key); $i++) {
 	
 
 ?> 
+<script>
+$(document).ready(function(){
+
+ $("ul#admin").show();
+ $("ul#directory").hide();
+
+});
+</script>
 
 <h1> Key management </h1>
 

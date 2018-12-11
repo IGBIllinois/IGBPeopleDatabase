@@ -168,6 +168,14 @@ $type_edit_table = "
 
 <h3>
 
+    <script>
+$(document).ready(function(){
+
+ $("ul#admin").show();
+ $("ul#directory").hide();
+
+});
+</script>
 
 </h3>
 <?php 

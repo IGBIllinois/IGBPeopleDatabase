@@ -63,7 +63,14 @@ $theme_name = $theme->get_short_name();
 <h1> <?php echo $theme_name; ?> Directory </h1>
 <br>
 <h3></h3>
+<script>
+$(document).ready(function(){
 
+ $("ul#admin").hide();
+ $("ul#directory").show();
+
+});
+</script>
 <div class="section">
 
 

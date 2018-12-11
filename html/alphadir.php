@@ -41,6 +41,14 @@ if($curr_letter != null && $curr_letter != "") {
 <h1> IGB Alpha Directory </h1>
 <br>
 <h3></h3>
+<script>
+$(document).ready(function(){
+
+ $("ul#admin").hide();
+ $("ul#directory").show();
+
+});
+</script>
 
 <div class="section">
 

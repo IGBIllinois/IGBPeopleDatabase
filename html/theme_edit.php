@@ -294,6 +294,14 @@ if(isset($_GET['edit_theme_result'])) {
  
 </div>
 <br>
+<script>
+$(document).ready(function(){
+
+ $("ul#admin").show();
+ $("ul#directory").hide();
+
+});
+</script>
 <?php 
 
 require_once("includes/footer.inc.php"); 

@@ -547,7 +547,6 @@ public static function key_list_table($db)
             for ($i = 0; $i < count($key_list); $i++) {
                 $x = $i % 2;
                 $key = $key_list[$i];
-                echo("key = ".$key->get_key_id());
                 $table_html .= "<tr >"; 
                 $table_html .= "<td>" . $key->get_key_name() . "</td>";
                 $table_html .= "<td>" . $key->get_key_room() . "</td>";
