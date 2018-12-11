@@ -252,8 +252,7 @@ $return_key_html = " <div id='return_key_html'>
 
 	
 <?php 
-
-	$profile_link = "<a href='profile.php?user_id=".$user_id."'>".$user->get_name()."</a>"; 
+    $profile_link = "<a href='profile.php?user_id=".$user_id."'>".$user->get_name()."</a>"; 
 ?>
 
 

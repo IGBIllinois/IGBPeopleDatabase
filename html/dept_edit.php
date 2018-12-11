@@ -7,15 +7,15 @@ require_once 'includes/header.inc.php';
 
 if(isset($_GET['dept_id'])){$user_id = $_GET['dept_id'];}
 
-$dept_list = $db->query($select_dept);
+$dept_list = department::get_all_departments($db);
 $error_msg = "";
 
 echo "<script>";
 
 echo "var deptArr = [];\n"; 
-foreach($dept_list as $id=>$t)
+foreach($dept_list as $dept) 
 {
-        echo "deptArr[\"".$t['dept_id']."\"] = new Array(\"".$t['name']."\",\"".$t['dept_code']."\");\n";
+    echo "deptArr[\"".$dept->get_id()."\"] = new Array(\"".$dept->get_name()."\",\"".$dept->get_code()."\");\n";
 }
 echo "</script>"; 
 
@@ -61,7 +61,7 @@ if (isset($_POST['add_dept'])){
 		echo("<h3>Department added.</h3><BR>");
 		unset($_POST['add_dept']);
                 
-                $dept_list = $db->query($select_dept);
+                $dept_list = department::get_all_departments($db);
 
 	}
 
@@ -95,7 +95,7 @@ if (isset($_POST['submit_edit_dept'])){
 
                 echo("<h3>Department information updated.</h3><BR>");
                 
-                $dept_list = $db->query($select_dept);
+                $dept_list = department::get_all_departments($db);
             }
         }	
 }			
@@ -108,7 +108,7 @@ $dept_table = "<div class='left sixty'>
 	
     <div class='noborder'>
             ".
-                    dept_list_table("dept_list_table ",$dept_list)
+                    html::dept_list_table($db)
                     ."
 
     </div>
@@ -153,7 +153,10 @@ $dept_add_table = "<form method='post' action='dept_edit.php' name='add_dept'>
             </form>
             ";
 
-	
+$dropdown_list = array();
+foreach($dept_list as $dept) {
+    $dropdown_list[] = array($dept->get_id(), $dept->get_name());
+}
 $dept_edit_table = "<form method='post' action='dept_edit.php' name='submit_edit_dept' id='submit_edit_dept'>
 
     <div class='right forty bordered'>
@@ -166,7 +169,7 @@ $dept_edit_table = "<form method='post' action='dept_edit.php' name='submit_edit
                 <tr >
                   <td class='noborder'><label>Department Name </label><br> </td>
                   <td class='noborder'>"
-                        . html::dropdown("edit_dept_drop", $dept_list)
+                        . html::dropdown("edit_dept_drop", $dropdown_list)
                   ."</td>
                 </tr>
                   <td class='small'><label>Department Name</label><br> </td>
@@ -204,7 +207,7 @@ $dept_edit_html2 = "<div id='dept_edit_html'>
                     <tr >
                       <td class='noborder'><label>Department Name </label><br> </td>
                       <td class='noborder'>"
-                            . html::dropdown("edit_dept_drop", $dept_list)
+                            . html::dropdown("edit_dept_drop", $dropdown_list)
                       ."</td>
                     </tr>
                       <td class='small'><label>Department Name</label><br> </td>

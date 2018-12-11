@@ -114,6 +114,22 @@ class department {
                 
         }
         
+        /** Gets a list of all departments in the database
+         * 
+         * @param db $db Database object
+         * @return \department Array of all departments in the database
+         */
+        public static function get_all_departments($db) {
+            $query = "SELECT dept_id, name, dept_code FROM department ORDER BY name";
+            $results = $db->get_query_result($query, null);
+            $dept_list = array();
+            foreach($results as $dept) {
+                $dept = new department($db, $dept['dept_id']);
+                $dept_list[] = $dept;
+            }
+            return $dept_list;
+        }
+        
         
         // Private functions
         

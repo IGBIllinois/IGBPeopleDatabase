@@ -597,6 +597,38 @@ public static function type_list_table( $id, $type_list)
 	return $table_html;
 }
 
+public static function dept_list_table($db)
+{
+    $dept_list = department::get_all_departments($db);
+    $id = "dept_list_table ";
+    
+	$status_arr = array(0=>"Inactive", 1=>"Active");
+	$table_html = "<div><table name='".$id."' id='".$id."' >
+                <thead>
+                <tr>
+                    <th >Department Name</th>
+                    <th >Code</th>
+                </tr>
+                </thead>";
+	if (count($dept_list) == 0) { 
+			  
+	}
+	else {
+		$table_html .= "";
+		for ($i = 0; $i < count($dept_list); $i++) {
+                    $x = $i % 2;
+                    $dept = $dept_list[$i];
+                    $table_html .= "<tr >"; 
+                    $table_html .= "<td>" . $dept->get_name() . "</td>";
+                    $table_html .= "<td>" . $dept->get_code() . "</td>";
+                    $table_html .= "</tr>";
+
+            }
+	}
+	$table_html .= "</table></div>"; 
+	return $table_html;
+}
+
 /*
 returns dropdown of country names
 

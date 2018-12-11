@@ -169,7 +169,7 @@ class key {
             $this->key_room = $key['key_room'];
             $this->key_active = $key['key_active'];
             $this->key_name = $key['key_name'];
-        }
-        
+        } 
+       
     }
 }
