@@ -1,5 +1,7 @@
 <?php #alpha
-
+/** View a user and all people that user is supervisor for
+ * 
+ */
 $page_title = "IGB People Database Search"; 
 
 require_once 'includes/header.inc.php'; 

@@ -91,6 +91,22 @@ class type{
         return $result;
 
     }
+    
+    /** Returns an array of all types in the database
+     * 
+     * @param db $db Database object
+     * @return \type Array of all types in the database
+     */
+    public static function get_all_types($db) {
+        $select_all_types = "SELECT type_id, name, type_active FROM type "; 
+        $result = $db->get_query_result($select_all_types);
+        $type_list = array();
+        foreach($result as $type) {
+            $type = new type($db, $type['type_id']);
+            $type_list[] = $type;
+        }
+        return $type_list;
+    }
         
     // Private functions
     private function load($type_id) {

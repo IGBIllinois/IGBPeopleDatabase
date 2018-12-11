@@ -133,7 +133,13 @@ class html {
     return $html;
 }
 
-
+/** Write a table of users
+ * 
+ * @param string $id Name of the table
+ * @param array $user_list Array of user objects
+ * @param string $class css class for table
+ * @return string
+ */
 public static function write_user_table( $id, $user_list, $class = 0)
 {
 $tr = array(0=>"rowodd", 1=>"roweven");
@@ -199,113 +205,114 @@ public static function success_message($message){
             }
         }
         
-        /**
-        * Creates an HTML input based on the parameters given
-        * 
-        * @param string $type Type of input to create. They include:
-        *      "select": a drop-down selection box
-        *      "date": a date selection input
-        *      "begin": Text input for the start of a range of values
-        *      "end": Text input for the end for a range of values
-        *      "default": Text input
-        * @param string $name Name of the input
-        * @param string $default Default value, if any
-        * @param array $array Array of values, used for options in the "select" input
-        * @param int $id optional ID number for this input
-        * @param string $onChange javascript for "onChange" method (optional)
-        * @param type $id_name 
-        */
-       public static function createInput($type, $name, $default, $array=array(), $id="", $onChange="", $id_name="id") {
-         $formName = $name;
-           if($id != "") {
-               $formName = $name . "_" . $id;
-           }
-
-           switch ($type) {
-
-           case "select":
-             print "<select id='{$formName}' name='{$formName}' ". ($onChange != "" ? " onChange='$onChange' " : "") . (($id != "") ? " id='{$name}_{$id}' ": "") .">";
-             print "<option value=''>None</option>";
-             $i=0;
-             foreach ($array as $value) {
-               print "<option value={$value[$id_name]}";
-               if ($value['id'] == $default)
-                 print " selected";
-
-               print ">{$value['name']}</option>";
-             }
-             print "</select>";
-             break;
-           case "date":
-             print "<input type=text id=datepicker class={$name} name={$formName} value={$default}>";
-             break;
-           case "begin":
-             print "<input type=text id=from class={$name} name={$formName} value={$default}>";
-             break;
-           case "end":
-             print "<input type=text id=to class={$name} name={$formName} value={$default}>";
-             break;
-           default:
-               print "<input class='{$name}' name='{$formName}' ".(($id != "") ? " id='{$formName}' " : "" ) . " value=\"{$default}\">";
-         }
+    /**
+    * Creates an HTML input based on the parameters given
+    * 
+    * @param string $type Type of input to create. They include:
+    *      "select": a drop-down selection box
+    *      "date": a date selection input
+    *      "begin": Text input for the start of a range of values
+    *      "end": Text input for the end for a range of values
+    *      "default": Text input
+    * @param string $name Name of the input
+    * @param string $default Default value, if any
+    * @param array $array Array of values, used for options in the "select" input
+    * @param int $id optional ID number for this input
+    * @param string $onChange javascript for "onChange" method (optional)
+    * @param type $id_name 
+    */
+   public static function createInput($type, $name, $default, $array=array(), $id="", $onChange="", $id_name="id") {
+     $formName = $name;
+       if($id != "") {
+           $formName = $name . "_" . $id;
        }
 
+       switch ($type) {
 
-    /**
-     * Redirects to a new web page
-     * 
-     * @param string $url URL to redirect to
-     */
-    public static function redirect($url) {
-        ob_start();
-        header('Location: '.$url);
-        ob_end_flush();
-        die();
-    }
-    
-    
-    /** Writes an HTML table of Themes
-     * 
-     * @param string $id Table name
-     * @param array $theme_array Array of Theme objects
-     * @return string
-     */
-    public static function theme_list_table( $id, $theme_array)
+       case "select":
+         print "<select id='{$formName}' name='{$formName}' ". ($onChange != "" ? " onChange='$onChange' " : "") . (($id != "") ? " id='{$name}_{$id}' ": "") .">";
+         print "<option value=''>None</option>";
+         $i=0;
+         foreach ($array as $value) {
+           print "<option value={$value[$id_name]}";
+           if ($value['id'] == $default)
+             print " selected";
+
+           print ">{$value['name']}</option>";
+         }
+         print "</select>";
+         break;
+       case "date":
+         print "<input type=text id=datepicker class={$name} name={$formName} value={$default}>";
+         break;
+       case "begin":
+         print "<input type=text id=from class={$name} name={$formName} value={$default}>";
+         break;
+       case "end":
+         print "<input type=text id=to class={$name} name={$formName} value={$default}>";
+         break;
+       default:
+           print "<input class='{$name}' name='{$formName}' ".(($id != "") ? " id='{$formName}' " : "" ) . " value=\"{$default}\">";
+     }
+   }
+
+
+/**
+ * Redirects to a new web page
+ * 
+ * @param string $url URL to redirect to
+ */
+public static function redirect($url) {
+    ob_start();
+    header('Location: '.$url);
+    ob_end_flush();
+    die();
+}
+
+
+/** Writes an HTML table of Themes
+ * 
+ * @param string $id Table name
+ * @param array $theme_array Array of Theme objects
+ * @return string
+ */
+public static function theme_list_table( $id, $theme_array)
 {
-	$status_arr = array(0=>"Inactive", 1=>"Active");
-	$table_html = "<table name='".$id."' id='".$id."' >
-			<thead>
-			<tr>
-					<th >Theme Name</th>
-					<th >Abbrev.</th>	
-					<th >Leader</th>
-					<th >Status</th>
-					<th ></th>	
-			</tr>
-			</thead>";
-	if (count($theme_array) == 0) { 
-			  
-		  }
-	else {
-		$table_html .= "";
-		for ($i = 0; $i < count($theme_array); $i++) {
-                    $theme= $theme_array[$i];
-				$x = $i % 2;
-				
-					$table_html .= "<tr >"; 
-					$table_html .= "<td>" . $theme->get_name() . "</td>";
-					$table_html .= "<td>" . $theme->get_short_name() . "</td>";
-					$table_html .= "<td>
-							<a href='profile.php?user_id=" . $theme->get_leader_id() . "'>
-							" . $theme->get_leader_name() . "</a></td>";
-					$table_html .= "<td>" . $status_arr[$theme->get_status()] . "</td>";
-					$table_html .= "<td>view details</td>";
-					$table_html .= "</tr>";
-			
-			}
-	}
-	$table_html .= "</table>"; 
-	return $table_html;
+    $status_arr = array(0=>"Inactive", 1=>"Active");
+    $table_html = "<table name='".$id."' id='".$id."' >
+                    <thead>
+                    <tr>
+                                    <th >Theme Name</th>
+                                    <th >Abbrev.</th>	
+                                    <th >Leader</th>
+                                    <th >Status</th>
+                                    <th ></th>	
+                    </tr>
+                    </thead>";
+    if (count($theme_array) == 0) { 
+
+              }
+    else {
+        $table_html .= "";
+        for ($i = 0; $i < count($theme_array); $i++) {
+            $theme= $theme_array[$i];
+            $x = $i % 2;
+
+            $table_html .= "<tr >"; 
+            $table_html .= "<td>" . $theme->get_name() . "</td>";
+            $table_html .= "<td>" . $theme->get_short_name() . "</td>";
+            $table_html .= "<td>
+                        <a href='profile.php?user_id=" . 
+                        $theme->get_leader_id() . "'>
+                        " . $theme->get_leader_name() . "</a></td>";
+            $table_html .= "<td>" . $status_arr[$theme->get_status()] . "</td>";
+            $table_html .= "<td>view details</td>";
+            $table_html .= "</tr>";
+
+                }
+    }
+    $table_html .= "</table>"; 
+    return $table_html;
 }
 
 
@@ -420,63 +427,13 @@ public static function drop( $name, $options, $selected=null )
 }
 
 
-/*
- *
- * @create a  user table
- *
- * @param string $id Name of the table
- *
- * @param array $search_results Data to put in the table:
- * Name, Email, Themes, Type, Room
- *
+/** Writes a table of active keys
+ * 
+ * @param string $id Name of table
+ * @param array $search_results Array of key_info data
  * @return string
- *
  */
-
-public function result_table( $id, $search_results, $class = 0) {
-    $tr = array(0=>"rowodd", 1=>"roweven");
-    $table_html = "<table name='".$id."' id='".$id."' class='".$class."' >
-                    <thead>
-            <tr>				
-                    <th ></th>
-                    <th >Name</th>
-                    <th >Email</th>
-                    <th >Theme</th>
-                    <th >Type</th>
-                    <th >Room#</th>
-            </tr>
-                    </thead>";
-    if (count($search_results) == 0) { 
-
-    }
-    else {
-        $table_html .= "";
-        for ($i = 0; $i < count($search_results); $i++) {
-            
-            $x = $i % 2;
-
-            $table_html .= "<tr >"; 			
-            $table_html .= "<td><a id='profile' href='profile.php?user_id=" . $search_results[$i]["user_id"] . "'>>></a></td>";
-            $table_html .= "<td>" . $search_results[$i]["first_name"] ." ". $search_results[$i]["last_name"]."</td>";
-            $table_html .= "<td>" . $search_results[$i]["email"] . "</td>";
-            $table_html .= "<td>" . $search_results[$i]["theme_list"] . "</td>";
-            $table_html .= "<td>" . $search_results[$i]["type_list"] . "</td>";
-            $table_html .= "<td>" . $search_results[$i]["igb_room"] . "</td>";	
-            $table_html .= "</tr>";
-
-        }
-    }
-    $table_html .= "</table>"; 
-    return $table_html;
-}
-
-/*
- *
-active key table
- *
- */
-
-public function active_key_table( $id, $search_results)
+public static function active_key_table( $id, $search_results)
 {
 	$paid_arr = array(0=>"Unpaid", 1=>"Paid");
 	$table_html = "<table name='".$id."' id='".$id."' >
@@ -510,26 +467,28 @@ public function active_key_table( $id, $search_results)
 }
 
 
-/*
- *
-inactive key table
- *
- */
 
+/** Writes a table of inactive keys
+ * 
+ * @param string $id Nmae of table
+ * @param array $search_results Array of key data
+ * @return string
+ */
 public function inactive_key_table( $id, $search_results)
 {
 	
 	$dep_arr = array(0=>"Not Refunded", 1=>"Refunded");
-	$table_html = "<table name='".$id."' id='".$id."' >
-			<thead>
-			<tr>
-					<th >Room #</th>
-					<th >Deposit</th>
-					<th >Condition</th>	
-					<th >Date Issued</th>	
-					<th >Date Returned</th>	
-			</tr>
-			</thead>";
+	$table_html = 
+            "<table name='".$id."' id='".$id."' >
+            <thead>
+            <tr>
+                <th >Room #</th>
+                <th >Deposit</th>
+                <th >Condition</th>	
+                <th >Date Issued</th>	
+                <th >Date Returned</th>	
+            </tr>
+            </thead>";
 	if (!count($search_results) == 0) { 
             
             $table_html .= "";
@@ -559,31 +518,40 @@ key list table
  *
  */
 
-public function key_list_table( $id, $search_results)
+/** Writes a table of all keys
+ * 
+ * @param type $db Database object
+ * @return string HTML of key table
+ */
+public static function key_list_table($db)
 {
-	
+	$key_list = key::get_keys($db);
+        $id = "key_list_table";
+
 	$status_arr = array(0=>"Inactive", 1=>"Active");
-	$table_html = "<div><table name='".$id."' id='".$id."' >
-			<thead>
-			<tr>
-					<th >Key Name</th>	
-					<th >Room #</th>	
-					<th >Status</th>
-					<th >(coming soon)</th>	
-			</tr>
-			</thead>";
-	if (count($search_results) == 0) { 
+	$table_html = 
+                "<div><table name='".$id."' id='".$id."' >
+                <thead>
+                <tr>
+                    <th >Key Name</th>	
+                    <th >Room #</th>	
+                    <th >Status</th>
+                    <th >(coming soon)</th>	
+                </tr>
+                </thead>";
+	if (count($key_list) == 0) { 
 
         }
 	else {
             $table_html .= "";
-            for ($i = 0; $i < count($search_results); $i++) {
+            for ($i = 0; $i < count($key_list); $i++) {
                 $x = $i % 2;
-
+                $key = $key_list[$i];
+                echo("key = ".$key->get_key_id());
                 $table_html .= "<tr >"; 
-                $table_html .= "<td>" . $search_results[$i]["key_name"] . "</td>";
-                $table_html .= "<td>" . $search_results[$i]["key_room"] . "</td>";
-                $table_html .= "<td>" . $status_arr[$search_results[$i]["key_active"]] . "</td>";
+                $table_html .= "<td>" . $key->get_key_name() . "</td>";
+                $table_html .= "<td>" . $key->get_key_room() . "</td>";
+                $table_html .= "<td>" . $status_arr[$key->get_key_active()] . "</td>";
                 $table_html .= "<td>view details</td>";
                 $table_html .= "</tr>";
 
@@ -593,7 +561,13 @@ public function key_list_table( $id, $search_results)
 	return $table_html;
 }
 
-public function type_list_table( $id, $search_results)
+/** Writes a table of Types
+ * 
+ * @param type $id
+ * @param type $search_results
+ * @return string
+ */
+public static function type_list_table( $id, $type_list)
 {
 	$status_arr = array(0=>"Inactive", 1=>"Active");
 	$table_html = "<table name='".$id."' id='".$id."' >
@@ -603,18 +577,19 @@ public function type_list_table( $id, $search_results)
 					<th >Status</th>
 			</tr>
 			</thead>";
-	if (count($search_results) == 0) { 
+	if (count($type_list) == 0) { 
 			  
-		  }
+	}
 	else {
 		$table_html .= "";
-		for ($i = 0; $i < count($search_results); $i++) {
-				$x = $i % 2;
-				
-					$table_html .= "<tr >"; 
-					$table_html .= "<td>" . $search_results[$i]["name"] . "</td>";
-					$table_html .= "<td>" . $status_arr[$search_results[$i]["type_active"]] . "</td>";
-					$table_html .= "</tr>";
+		for ($i = 0; $i < count($type_list); $i++) {
+                    $type = $type_list[$i];
+                    $x = $i % 2;
+
+                    $table_html .= "<tr >"; 
+                    $table_html .= "<td>" . $type->get_name() . "</td>";
+                    $table_html .= "<td>" . $status_arr[$type->get_active()] . "</td>";
+                    $table_html .= "</tr>";
 			
 			}
 	}

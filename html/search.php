@@ -8,7 +8,6 @@ require_once 'includes/header.inc.php';
 ?>
 
 
-
 <?php
 
 //variables

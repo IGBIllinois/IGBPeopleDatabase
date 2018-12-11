@@ -13,6 +13,7 @@ class key {
     private $key_id;
     private $key_room;
     private $key_active;
+    private $key_name;
     
     public function __construct($db, $key_id = 0) {
         $this->db = $db;
@@ -28,6 +29,7 @@ class key {
     public function get_key_id() { return $this->key_id; }
     public function get_key_room() { return $this->key_room; }
     public function get_key_active() { return $this->key_active; }
+    public function get_key_name() { return $this->key_name; }
     
     /** Determines if a key already exists for a room
      * 
@@ -94,6 +96,60 @@ class key {
         
         return $result;
     }
+    
+    /** Returns a list of active keys in the database
+     * 
+     * @param db $db Databas object
+     * @return \key An array of active keys in the database
+     */
+    public static function get_active_keys($db) {
+        $query = "SELECT key_id, key_room, key_name FROM key_list WHERE key_active = '1' ORDER BY key_room ASC";
+        $search_results = $db->get_query_result($query, null);
+        $keys = array();
+        foreach($search_results as $key_info) {
+            $id = $key_info['key_id'];
+            $key = new key($db, $id);
+            $keys[] = $key;
+            
+        }
+        return $keys;
+    }
+    
+    /** Returns a list of inactive keys in the database
+     * 
+     * @param db $db Databas object
+     * @return \key An array of inactive keys in the database
+     */
+    public static function get_inactive_keys($db) {
+        $query = "SELECT key_id, key_room, key_name FROM key_list WHERE key_active = '0' ORDER BY key_room ASC";
+        $search_results = $db->get_query_result($query, null);
+        $keys = array();
+        foreach($search_results as $key_info) {
+            $id = $key_info['key_id'];
+            $key = new key($db, $id);
+            $keys[] = $key;
+            
+        }
+        return $keys;
+    }
+    
+    /** Returns a list of all keys in the database
+     * 
+     * @param db $db Databas object
+     * @return \key An array of keys in the database
+     */
+    public static function get_keys($db) {
+        $select_key = "SELECT key_id, key_room, key_name, key_active FROM key_list ORDER BY key_active DESC, key_room ASC";
+        $search_results = $db->get_query_result($select_key, null);
+        $keys = array();
+        foreach($search_results as $key_info) {
+            $id = $key_info['key_id'];
+            $key = new key($db, $id);
+            $keys[] = $key;
+            
+        }
+        return $keys;
+    }
             
     // Private functions
     
@@ -112,6 +168,7 @@ class key {
             $this->key_id = $key['key_id'];
             $this->key_room = $key['key_room'];
             $this->key_active = $key['key_active'];
+            $this->key_name = $key['key_name'];
         }
         
     }

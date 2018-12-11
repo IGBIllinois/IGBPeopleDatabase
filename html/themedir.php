@@ -44,10 +44,6 @@ foreach( $theme_list as $key=>$option ) {
     }
 }
 
-    // select users who are stil enabled, but not active in any theme.
-    $null_query = "select * from users where user_id NOT IN (select user_id from user_theme where active=1) and user_enabled = 1";
-
-    $null_search_results = $db->query($null_query);
 
     $html.="<a href='themedir.php?theme=0' class='themelink' >NO THEME</a> ";
     if($curr_theme != null && $curr_theme != "") {
@@ -90,8 +86,4 @@ require_once("includes/footer.inc.php");
 
 ?> 
 
-<?php
 
-    $html .= "<BR><a href='alumnus.php?theme=".$theme."'>View Alumni</a><BR>";
-    
-    return $html;

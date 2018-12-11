@@ -17,7 +17,7 @@ $key_table = "
     <div class='left sixty'>
         <div class='noborder'>
         ".
-            html::key_list_table("key_list_table",$key_list)
+            html::key_list_table($db)
         ."
         </div>
         <br></div>

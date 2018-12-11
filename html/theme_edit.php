@@ -16,8 +16,12 @@ $theme_array = "<script>";
 $theme_array .= "var themeArr = [];\n"; 
 foreach($all_themes as $theme)
 {
-    $theme_array .= "themeArr[\"".$theme->get_theme_id()."\"] = new Array(\"".$theme->get_name()."\",\"".$theme->get_short_name()."\",\"".
-            $theme->get_leader_id()."\",\"".$theme->get_status()."\");\n";
+    $theme_array .= "themeArr[\"".
+            $theme->get_theme_id()."\"] = new Array(\"".
+            $theme->get_name()."\",\"".
+            $theme->get_short_name()."\",\"".
+            $theme->get_leader_id()."\",\"".
+            $theme->get_status()."\");\n";
 }
 $theme_array .= "</script>"; 
 

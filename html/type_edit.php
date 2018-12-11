@@ -4,7 +4,7 @@ $page_title = "IGB People Database";
 
 require_once 'includes/header.inc.php';
 
-$type_list = $db->query($select_all_types);
+$type_list = type::get_all_types($db);
 $error_msg = "";
 
 /*
@@ -13,9 +13,9 @@ TYPE INFO TABLE HTML
 
 $type_table = "<div class='left sixty'>
     <div class='noborder'>
-            ".
-                    html::type_list_table("type_list_table",$type_list)
-                    ."
+        ".
+        html::type_list_table("type_list_table",$type_list)
+        ."
 
     </div>
     </div>
@@ -74,7 +74,7 @@ CHANGE TYPE STATUS
 if (isset($_POST['edit_type'])){
 	$type_id = $_POST['type_id'];
 	$type_status = $_POST['type_status'];
-	
+	echo("type_status = $type_status");
         $type = new type($db, $type_id);
         $type->edit_type($type->get_name(), $type_status);
 
@@ -91,36 +91,40 @@ TYPE ADD FORM HTML
 
 $type_add_table = "<form method='POST' action='type_edit.php' name='add_type'>
     <div class='right forty bordered'>
-            <div class='profile_header'>
-                    <p class='alignleft'>[ Add type ]</p>
-            </div>
-            <div class='noborder'>
-                    <label class='errormsg'>".$error_msg."</label><br>
+        <div class='profile_header'>
+                <p class='alignleft'>[ Add type ]</p>
+        </div>
+        <div class='noborder'>
+                <label class='errormsg'>".$error_msg."</label><br>
 
-                    <table class = 'profile'>
-                            <tr >
-                              <td class='noborder'><label>Name </label><br> </td>
-                              <td class='noborder'>
-                                    <input type='medium' name='type_name' maxlength='50'  >
-                              </td>
-                            </tr>
-                    </table>
+                <table class = 'profile'>
+                        <tr >
+                          <td class='noborder'><label>Name </label><br> </td>
+                          <td class='noborder'>
+                                <input type='medium' name='type_name' maxlength='50'  >
+                          </td>
+                        </tr>
+                </table>
 
-            </div>
-            <div class='alignright'>
-                            <input type='submit' name='add_type' id='add_type' value='Add'  >
+        </div>
+        <div class='alignright'>
+                        <input type='submit' name='add_type' id='add_type' value='Add'  >
 
-                    </div >
+                </div >
 
-            <br></div>
-            </form>
-            ";		
+        <br></div>
+        </form>
+        ";		
 
 	
 /*
 TYPE STATUS FORM HTML
 */
 
+$dropdown_list = array();
+foreach($type_list as $type) {
+    $dropdown_list[] = array($type->get_id(), $type->get_name());
+}
 $type_edit_table = "
 
 
@@ -138,7 +142,7 @@ $type_edit_table = "
                 <tr >
                   <td class='xs'><label>Type:  </label><br> </td>
                   <td class='xs'>
-                        ".html::dropdown('type_id', $type_list )."
+                        ".html::dropdown('type_id', $dropdown_list )."
                   </td>
                 </tr>
                 <tr >

@@ -30,7 +30,9 @@ foreach($user_theme_result as $user_theme) {
     echo($user_theme['first_name'] . " " . $user_theme['last_name'] . "</td>");
     echo("<td>". $user_theme['theme_name']. "</td>");
     echo("<td>". date("Y-m-d", strtotime($user_theme['start_date'])). "</td>");
-    echo("<td>". (($user_theme['end_date'] == null || $user_theme['end_date'] == 0) ? "present" : date("Y-m-d", strtotime($user_theme['end_date']))). "</td>");
+    echo("<td>". (($user_theme['end_date'] == null || $user_theme['end_date'] == 0) 
+            ? "present" 
+            : date("Y-m-d", strtotime($user_theme['end_date']))). "</td>");
     echo("</tr>");
 }
 echo("</table>");

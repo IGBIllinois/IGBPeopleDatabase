@@ -126,9 +126,10 @@ if (isset($_POST['update_personal'])){
 	$netid_error= "";
 	$uin_error= "";
 	
-	$netid_exists = $user->user_exists('netid', $netid, "AND user_id != '".$user_id."'");
-	$uin_exists = $user->user_exists('uin', $uin, "AND user_id != '".$user_id."'");
 	
+        $netid_exists = $user->user_exists('netid', $netid, " AND user_id != :user_id ", array("user_id"=>$user_id));
+	$uin_exists = $user->user_exists('uin', $uin, "AND user_id != :user_id", array("user_id"=>$user_id));
+        
 	if (!empty($netid_exists)){  
 		$netid_error= $tab . "* NetID already exists in database";
 		$error_count++;
@@ -672,7 +673,9 @@ $igb_info_edit  .="<tr>
   </tr>
   <tr>
       <td class='xs'><label>thumbnail image</label></td>
-      <td colspan=3 class='noborder'><img src='".$user->get_image_location()."'> <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
+      <td colspan=3 class='noborder'><img src='".$user->get_image_location()."'> "
+        . "<a href='".$user->get_large_image_location().
+        "' target='blank'>View larger image</a></td>
   <tr>
   <tr>
       <td class='xs'><label>Image</label></td>
@@ -681,7 +684,8 @@ $igb_info_edit  .="<tr>
               <!-- MAX_FILE_SIZE must precede the file input field -->
               <!-- <input type='hidden' name='MAX_FILE_SIZE' value='30000' /> -->
               <!-- Name of input element determines name in \$_FILES array -->
-              <input name='imageFile' value='".$user->get_image()."' type='file' style='width:500px;height:25px' accept='image/jpeg, image/gif, image/png, image/pjpeg, image/tiff' />                             
+              <input name='imageFile' value='".$user->get_image().
+        "' type='file' style='width:500px;height:25px' accept='image/jpeg, image/gif, image/png, image/pjpeg, image/tiff' />                             
       </td>
    </tr>
    <tr >
@@ -723,30 +727,28 @@ if (isset($_POST['update_dept'])){
 	
 	$result = $user->update($user_id, 'address', 'type', 'DEPT', "AND type = 'DEPT'");
 
-		$result = $user->update($user_id, 'address', 'address1', $dept_address1, "AND type = 'DEPT'");
-		$result = $user->update($user_id, 'address', 'address2', $dept_address2, "AND type = 'DEPT'");	
-		$result = $user->update($user_id, 'address', 'city', $dept_city, "AND type = 'DEPT'");	
-		$result = $user->update($user_id, 'address', 'state', $dept_state, "AND type = 'DEPT'");
-		$result = $user->update($user_id, 'address', 'zip', $dept_zip, "AND type = 'DEPT'");		
+        $result = $user->update($user_id, 'address', 'address1', $dept_address1, "AND type = 'DEPT'");
+        $result = $user->update($user_id, 'address', 'address2', $dept_address2, "AND type = 'DEPT'");	
+        $result = $user->update($user_id, 'address', 'city', $dept_city, "AND type = 'DEPT'");	
+        $result = $user->update($user_id, 'address', 'state', $dept_state, "AND type = 'DEPT'");
+        $result = $user->update($user_id, 'address', 'zip', $dept_zip, "AND type = 'DEPT'");		
 		
 		
 	$result = $user->update($user_id, 'users', 'dept_id', $dept_drop);
 	$result = $user->update($user_id, 'phone', 'dept', $dept_phone);
 	
 	
-		if(isset($_POST['default_address'])){
-			$default_address = $_POST['default_address'];
-			$result = $user->update($user_id, 'users', 'default_address', $default_address);
-		}
+        if(isset($_POST['default_address'])){
+                $default_address = $_POST['default_address'];
+                $result = $user->update($user_id, 'users', 'default_address', $default_address);
+        }
 	
 }
 if (isset($_POST['cancel_dept'])){
     $dept_edit=FALSE;
 }
 
-			
-			
-			
+		
 /*
 DEPT INFO TABLE HTML
 */
