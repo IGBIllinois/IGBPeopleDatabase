@@ -5,7 +5,7 @@ $page_title = "IGB People Database Search";
 require_once 'includes/header.inc.php';
 
 
-$key_list = $db->query($select_key);
+//$key_list = $db->query($select_key);
 $error_msg = "";
 $active_key = array();
 
@@ -32,6 +32,7 @@ if (isset($_POST['add_key_assign'])){
 	$key_room = $_POST['key_room'];
 	$key_name = $_POST['key_name'];
 	$error_msg = "";
+        $key_active = 1;
 	
 	$key_exists = NULL;
 	
@@ -48,7 +49,7 @@ if (isset($_POST['add_key_assign'])){
         
 	if ($error_count == 0){
 
-                $result = key::add_key($db, $key_room, $key_active);
+                $result = key::add_key($db, $key_room, $key_name, $key_active);
 
 		unset($_POST['add_key_assign']);
 		$redirectpage= "/key_edit.php";
@@ -123,6 +124,12 @@ if (isset($_POST['key_change'])){
 /*
 KEY DELETE FORM HTML
 */
+$all_keys = key::get_keys($db);
+$key_dropdown = array();
+foreach($all_keys as $key) {
+    $key_dropdown[] = array($key->get_key_id(), $key->get_key_name());
+}
+
 $key_delete_table = "
 
 <form method='post' action='key_edit.php' name='key_change' id='key_change'>
@@ -138,7 +145,7 @@ $key_delete_table = "
                 <tr >
                   <td class='noborder'><label>Select Key:  </label><br> </td>
                   <td class='noborder'>
-                        ".html::dropdown('key_id', $key_list )."
+                        ".html::dropdown('key_id', $key_dropdown )."
                   </td>
                 </tr>
                 <tr >

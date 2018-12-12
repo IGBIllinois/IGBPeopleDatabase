@@ -73,27 +73,26 @@ class key {
                         "key_id"=>$this->get_key_id());
         $result = $this->db->get_update_result($query, $params);
         
-        $this->set_key_room($key_room);
-        $this->set_key_active($key_active);
+        $this->key_room = $key_room;
+        $this->key_active = $key_active;
         
     }
     
     // static functions
     
     /**
+     * Add a new key to the database
      * 
      * @param db $db The Database object
      * @param string $key_room Room for the key
      * @param boolean $key_active True if the key is active, else false
      * @return int ID of the newly created key
      */
-    public static function add_key($db, $key_room, $key_active ) {
-        $query = "INSERT INTO key_info (key_room, key_active) "
-                . "VALUES(:key_info, :key_active)";
-        $params = array("key_room"=>$key_room, "key_active"=>$key_active);
-        
+    public static function add_key($db, $key_room, $key_name, $key_active ) {
+        $query = "INSERT INTO key_list (key_room, key_name, key_active) "
+                . "VALUES(:key_room, :key_name, :key_active)";
+        $params = array("key_room"=>$key_room, "key_name"=>$key_name, "key_active"=>$key_active);
         $result = $db->get_insert_result($query, $params);
-        
         return $result;
     }
     
