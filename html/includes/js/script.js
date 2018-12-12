@@ -44,6 +44,7 @@ $(document).ready(function(){
 
 	$('#key_list_table').dataTable( {
 		"bPaginate": true,
+                "sPaginationType": "full_numbers",
 		"bLengthChange": true,
 		"aLengthMenu": [[10, 15, 20], [10, 15, 20]],
 		"bFilter": true,
@@ -130,6 +131,7 @@ $(document).ready(function(){
 
      $('#type_list_table').dataTable( {
 		"bPaginate": false,
+                "sPaginationType": "full_numbers",
 		"bLengthChange": false,
 		"bFilter": false,
 		"bSort": false,
@@ -201,7 +203,7 @@ $(document).ready(function(){
         });
 
         $('#dept_list_table').dataTable( {
-                "bPaginate": true,
+                "bPaginate": false,
                 "bLengthChange": true,
                 "aLengthMenu": [[10, 15, 20], [10, 15, 20]],
                 "bFilter": true,

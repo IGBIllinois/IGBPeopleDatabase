@@ -599,7 +599,7 @@ public static function type_list_table( $id, $type_list)
 public static function dept_list_table($db)
 {
     $dept_list = department::get_all_departments($db);
-    $id = "dept_list_table ";
+    $id = "dept_list_table";
     
 	$status_arr = array(0=>"Inactive", 1=>"Active");
 	$table_html = "<div><table name='".$id."' id='".$id."' >
