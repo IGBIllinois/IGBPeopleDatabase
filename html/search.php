@@ -5,15 +5,31 @@ $page_title = "IGB People Database Search";
 require_once 'includes/header.inc.php';
 
 
-?>
+$dept_list = department::get_all_departments($db);
+$dept_dropdown = array();
+foreach($dept_list as $dept) {
+    $dept_dropdown[] = array(
+        "dept_id"=>$dept->get_id(),
+        "name"=>$dept->get_name());
+}
+
+$theme_list = theme::get_themes($db, 1);
+$theme_dropdown = array();
+foreach($theme_list as $new_theme) {
+    $theme_dropdown[] = array(
+        "theme_id"=>$new_theme->get_theme_id(), 
+        "short_name"=>$new_theme->get_short_name());
+}
+
+$type_list = type::get_types($db, 1);
+$type_dropdown = array();
+foreach($type_list as $type) {
+    $type_dropdown[] = array(
+        "type_id"=>$type->get_id(), 
+        "name"=>$type->get_name());
+}
 
 
-<?php
-
-//variables
-$dept_list = $db->get_query_result($select_dept);
-$theme_list = $db->get_query_result($select_theme);
-$type_list = $db->get_query_result($select_type);
 $user_enabled = '1';
 $selected = "selected";
 
@@ -36,68 +52,63 @@ $status_drop = "<select name='user_enabled' id='user_enabled'>
 echo "<body onLoad=\"document.search.search_value.focus()\">"; 
 
 
-if (isset($_POST['search']) or isset($_POST['excel']) or isset($_POST['det_excel'])){//or isset($_GET['page'])
+if (isset($_POST['search']) or isset($_POST['excel']) or isset($_POST['det_excel'])){
 	
-	$user_id = "";		
-	$igb_room = $_POST['igb_room']; 
-	$igb_phone = $_POST['igb_phone']; 	
-	$theme_drop = $_POST['theme_drop'];
-	$type_drop = $_POST['type_drop'];
-	$dept_drop = $_POST['dept_drop'];
-	$supervisor = $_POST['supervisor'];
-	$user_enabled = $_POST['user_enabled'];
-	$search_value = $_POST['search_value'];
-	$start_date = $_POST['start_date'];
-	$end_date = $_POST['end_date'];
+    $user_id = "";		
+    $igb_room = $_POST['igb_room']; 
+    $igb_phone = $_POST['igb_phone']; 	
+    $theme_drop = $_POST['theme_drop'];
+    $type_drop = $_POST['type_drop'];
+    $dept_drop = $_POST['dept_drop'];
+    $supervisor = $_POST['supervisor'];
+    $user_enabled = $_POST['user_enabled'];
+    $search_value = $_POST['search_value'];
+    $start_date = $_POST['start_date'];
+    $end_date = $_POST['end_date'];
 	
 
-	
-$error="";
-$error_count=0;
-$aster= array(1 => " * ");
-$checked = "checked";
-$search_field="any";
+    $error="";
+    $error_count=0;
+    $aster= array(1 => " * ");
+    $checked = "checked";
+    $search_field="any";
 
-$table_html = "";
+    $table_html = "";
 
-$filters = NULL;
+    $filters = NULL;
 
-$user = new user($db);
+    $user = new user($db);
 
-$filters = array();
+    $filters = array();
 
-$filters["users.dept_id"] = array($dept_drop, "AND");
-$filters["address.address2"] = array($igb_room, "AND");
-$filters["phone.igb"] = array($igb_phone, "AND");
+    $filters["users.dept_id"] = array($dept_drop, "AND");
+    $filters["address.address2"] = array($igb_room, "AND");
+    $filters["phone.igb"] = array($igb_phone, "AND");
 
 
-$current_user_id = $user->get_current_user_id();
+    $current_user_id = $user->get_current_user_id();
 
-$other_filters = array();
-$other_filters["phone"] = $igb_phone;
-$other_filters["dept"] = $dept_drop;
-$other_filters["room"] =  $igb_room;
-        
-        $userlist = user::search($db, 
-                $user_enabled, 
-                $search_value, 
-                $current_user_id, 
-                $other_filters, 
-                $theme_drop, 
-                $type_drop, 
-                $start_date, 
-                $end_date, 
-                $supervisor);
-        
-        $table_html .= html::write_user_table("search_results", $userlist);
+    $other_filters = array();
+    $other_filters["phone"] = $igb_phone;
+    $other_filters["dept"] = $dept_drop;
+    $other_filters["room"] =  $igb_room;
 
+    $userlist = user::search($db, 
+            $user_enabled, 
+            $search_value, 
+            $current_user_id, 
+            $other_filters, 
+            $theme_drop, 
+            $type_drop, 
+            $start_date, 
+            $end_date, 
+            $supervisor);
+
+    $table_html .= html::write_user_table("search_results", $userlist);
 
 }
 
-
-
 ?> 
-
 
 
 <h1> Search IGB Database</h1>
@@ -105,10 +116,7 @@ $other_filters["room"] =  $igb_room;
 <h3><a id="simple_search" href="search.php">[ simple search ]</a></h3>
 
 
-
-
 <form method="post" action="search.php" name="search">
-
 
 
 <div class="section">
@@ -122,10 +130,6 @@ $other_filters["room"] =  $igb_room;
 <br>
 
 <br>
-
-
-
-
 
 <h3>
 <a id="adv_search_text">[ advanced search options ]</a>
@@ -144,7 +148,7 @@ $other_filters["room"] =  $igb_room;
         <td  class="noborder"><input type="small" name="igb_room" class="space" maxlength="12"  
             value="<?php if (isset($igb_room)){echo "$igb_room";}else{echo "";} ?>" >
         </td>
-        <td class="noborder" colspan='3'><?php echo html::dropdown( "dept_drop", $dept_list , $dept_drop );  ?>
+        <td class="noborder" colspan='3'><?php echo html::dropdown( "dept_drop", $dept_dropdown , $dept_drop );  ?>
         </td>
   </tr>
   <tr>
@@ -163,10 +167,10 @@ $other_filters["room"] =  $igb_room;
             value="<?php if (isset($igb_phone)){echo "$igb_phone";}else{echo "";} ?>" >
         </td>
     	<td class="noborder">
-	  	<?php echo html::dropdown( "theme_drop", $theme_list , $theme_drop  ); ?> 
+	  	<?php echo html::dropdown( "theme_drop", $theme_dropdown , $theme_drop  ); ?> 
       	</td>            
       	<td class="noborder">
-      		<?php echo html::dropdown( "type_drop", $type_list , $type_drop  );?>
+      		<?php echo html::dropdown( "type_drop", $type_dropdown , $type_drop  );?>
       	</td>
         <td class="noborder"><input type="small" name="supervisor" class="space" maxlength="8" 
         value="<?php if (isset($supervisor)){echo "$supervisor";}else{echo "";} ?>" >
@@ -204,12 +208,6 @@ $other_filters["room"] =  $igb_room;
   </tr>
    
 </table>
-
-
-
-
-
-
 
 </div>
 <br />

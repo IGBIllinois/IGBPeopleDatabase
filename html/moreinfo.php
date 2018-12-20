@@ -22,8 +22,12 @@ $prox_card = $user->get_prox_card();
 $bool = array(0=>"No", 1=>"Yes");
 $checked_bool = array(0=>"", 1=>"checked");
 
-$key_list = $db->query($select_active_key);
-
+$key_list = $db->get_query_result($select_active_key);
+$key_list = key::get_active_keys($db);
+$key_dropdown = array();
+foreach($key_list as $key) {
+    $key_dropdown[] = array("key_id"=>$key->get_key_id(), "key_room"=>$key->get_key_room());
+}
 /*
 KEY INFO TABLE HTML
 */
@@ -138,7 +142,7 @@ $add_key_html = " <div id='add_key_html'>
             <tr >
               <td class='small'><label>Room # / Key Name </label><br> </td>
               <td class='noborder'>"
-                    .html::dropdown( "key_drop", $key_list, $key_drop ) ."
+                    .html::dropdown( "key_drop", $key_dropdown, $key_drop ) ."
 
                     </td>
             </tr>

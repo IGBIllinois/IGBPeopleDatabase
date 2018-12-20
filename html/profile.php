@@ -28,10 +28,29 @@ $array = $user->get_user($user_id);
 
 $current_user = new user($db, $user->get_current_user_id());
 
-$theme_list = $db->query($select_theme);
-$type_list = $db->query($select_type);
-$dept_list = $db->query($select_dept);
-$dept_array = array ();
+$dept_list = department::get_all_departments($db);
+$dept_dropdown = array();
+foreach($dept_list as $dept) {
+    $dept_dropdown[] = array(
+        "dept_id"=>$dept->get_id(),
+        "name"=>$dept->get_name());
+}
+
+$theme_list = theme::get_themes($db, 1);
+$theme_dropdown = array();
+foreach($theme_list as $new_theme) {
+    $theme_dropdown[] = array(
+        "theme_id"=>$new_theme->get_theme_id(), 
+        "short_name"=>$new_theme->get_short_name());
+}
+
+$type_list = type::get_types($db, 1);
+$type_dropdown = array();
+foreach($type_list as $type) {
+    $type_dropdown[] = array(
+        "type_id"=>$type->get_id(), 
+        "name"=>$type->get_name());
+}
 
 $checked = "checked";
 
@@ -599,14 +618,14 @@ $igb_info_edit = "<div class='profile_header' id='igb'>
 if($current_user->get_admin()) {
     $igb_info_edit .= "<tr>
         <td class='xs'><label>Add Theme </label></td>
-        <td class='xs'>". html::dropdown( 'add_theme', $theme_list, 0 ). "</td>
+        <td class='xs'>". html::dropdown( 'add_theme', $theme_dropdown, 0 ). "</td>
       </tr>
       <tr >
       <td colspan=3 class='noborder'><A HREF=theme_history.php?user_id=".$user->get_user_id(). ">(View theme history)</a></td>
           </tr>
       <tr >
         <td class='xs'><label>Add Type </label></td>
-        <td class='noborder'>". html::dropdown( 'add_type', $type_list, 0 )."</td>
+        <td class='noborder'>". html::dropdown( 'add_type', $type_dropdown, 0 )."</td>
       </tr>";
 }
 
@@ -616,7 +635,7 @@ $igb_info_edit  .="<tr>
   </tr>
   <tr>
     <td class='xs'><label>Change Type</label></td>
-    <td class='xs'>". html::dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". html::dropdown( 'change_type', $type_list, 0 ) ."</td>
+    <td class='xs'>". html::dropdown( 'change_type_theme', $user_theme_list, 0 ). " &nbsp; ". html::dropdown( 'change_type', $type_dropdown, 0 ) ."</td>
   </tr>
   <tr >
     <td class='xs'><label>supervisor (NetID)</label></td>
@@ -665,11 +684,11 @@ $igb_info_edit  .="<tr>
   </tr>
   <tr>
       <td class='xs'><label>add permissions</label></td>
-      <td class='noborder'>".html::dropdown( 'add_permission', $theme_list )."</td>
+      <td class='noborder'>".html::dropdown( 'add_permission', $theme_dropdown )."</td>
   </tr>
   <tr>
       <td class='xs'><label>remove permissions</label></td>
-      <td class='noborder'>".html::dropdown( 'remove_permission', $theme_list )."</td>
+      <td class='noborder'>".html::dropdown( 'remove_permission', $theme_dropdown )."</td>
   </tr>
   <tr>
       <td class='xs'><label>thumbnail image</label></td>
@@ -803,7 +822,7 @@ $dept_info_edit = " <div class='profile_header' id='dept'>
     <table class = 'profile'>
     <tr>
       <td class='xs'><label>department </label></td>
-      <td class='noborder'>". html::dropdown( 'dept_drop', $dept_list, $dept_drop ). "</td>
+      <td class='noborder'>". html::dropdown( 'dept_drop', $dept_dropdown, $dept_drop ). "</td>
 
     </tr>
 <tr >
@@ -1002,7 +1021,7 @@ if (isset($_POST['remove_member'])){
 	
 
 	$result = $user->update($user_id, 'users', 'user_enabled', '0');	
-        $alum_result = $db->query("select type_id from type where name='Alumnus'");
+        $alum_result = $db->get_query_result("select type_id from type where name='Alumnus'");
         $alum_id = $alum_result[0]['type_id'];
         $result = $user->update($user_id, 'users', 'type_id', $alum_id);
 	$result = $user->update($user_id, 'users', 'default_address', 'FWD');

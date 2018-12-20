@@ -11,13 +11,13 @@ $success = FALSE;
 $error="";
 $error_count=0;
 $empty_form=FALSE;
-$aster= array();
+$aster= array(1 => " * ");
 $checked = "checked";
 
 
 $home_state = ''; 
 $dept_state = ''; 
-$default_address = ''; 
+$default_address = 'IGB'; 
 
 
 if (isset($_POST['add'])){
@@ -204,21 +204,42 @@ if (!$empty_form){
   }
 }
 
-$dept_list = $db->query($select_dept);
-$theme_list = $db->query($select_theme);
-$type_list = $db->query($select_type);
+
+
+$dept_list = department::get_all_departments($db);
+$dept_dropdown = array();
+foreach($dept_list as $dept) {
+    $dept_dropdown[] = array(
+        "dept_id"=>$dept->get_id(),
+        "name"=>$dept->get_name());
+}
+
+$theme_list = theme::get_themes($db, 1);
+$theme_dropdown = array();
+foreach($theme_list as $new_theme) {
+    $theme_dropdown[] = array(
+        "theme_id"=>$new_theme->get_theme_id(), 
+        "short_name"=>$new_theme->get_short_name());
+}
+
+$type_list = type::get_types($db, 1);
+$type_dropdown = array();
+foreach($type_list as $type) {
+    $type_dropdown[] = array(
+        "type_id"=>$type->get_id(), 
+        "name"=>$type->get_name());
+}
 
 $success_html = "<br><br><h4> User successfully added into the database</h4>
-					
-					<br>
-					<a href='profile.php?user_id=" . $user_id . "'>View Profile >></a>
-					<br>
-					<a href='add.php'>Add another IGB member >></a>"	;
+        <br>
+        <a href='profile.php?user_id=" . $user_id . "'>View Profile >></a>
+        <br>
+        <a href='add.php'>Add another IGB member >></a>";
 
 /* Header */
 
 $add_header = "<h1> Add New IGB Member</h1>
-				  <h3>[ All fields in bold are required ]</h3>";
+		<h3>[ All fields in bold are required ]</h3>";
 $add_form_html = "";
 		
 		
@@ -313,17 +334,17 @@ $add_form_html .="' >
 </table>
 
 <table class = 'small'>
-        <tr >
+    <tr >
 
-              <td class='noborder'><label class='optional'>Dept Phone </label></td>
-              <td class='noborder'><label class='optional'>Cell Phone</label></td>
-              <td class='noborder'><label class='optional'>Fax</label></td>
-              <td class='noborder'><label class='optional'>Other Phone </label></td>
-        </tr>
-        <tr>
-              <td class='noborder'>
-                      <input type='text' class='phone' name='dept_phone' maxlength='14'  
-                      value='";
+          <td class='noborder'><label class='optional'>Dept Phone </label></td>
+          <td class='noborder'><label class='optional'>Cell Phone</label></td>
+          <td class='noborder'><label class='optional'>Fax</label></td>
+          <td class='noborder'><label class='optional'>Other Phone </label></td>
+    </tr>
+    <tr>
+          <td class='noborder'>
+                  <input type='text' class='phone' name='dept_phone' maxlength='14'  
+                  value='";
 
 if (isset($dept_phone)){
       $add_form_html .= $dept_phone;
@@ -464,8 +485,8 @@ if ($default_address == 'IGB') {
                   
 $add_form_html .="> Set IGB as preferred address
 			
-			</div>
-			</div>";
+    </div>
+    </div>";
 
 /*
 DEPARTMENT
@@ -475,24 +496,24 @@ $add_form_html .="<div class='section'>
 			 
     <table class='small'>
       <tr>
-            <td class='noborder'><label class='optional'><b /> Department </b>(if other than IGB)</label></td>
+        <td class='noborder'><label class='optional'><b /> Department </b>(if other than IGB)</label></td>
 
       </tr>
       <tr>
-            <td class='noborder'>". html::dropdown( 'dept_drop', $dept_list, $dept_drop )."</td>
+        <td class='noborder'>". html::dropdown( 'dept_drop', $dept_dropdown, $dept_drop )."</td>
 
 
       </tr>
     </table>  
     <table class='small'>
       <tr>
-            <td class='noborder'><label class='optional'>Department Address </label></td>
-            <td class='noborder'><label>Apt / Room/ Suite</label>
-            </td>
+        <td class='noborder'><label class='optional'>Department Address </label></td>
+        <td class='noborder'><label>Apt / Room/ Suite</label>
+        </td>
       </tr>
       <tr>
-            <td class='noborder'><input type='address' name='dept_address1' maxlength='150'  
-                    value='";
+        <td class='noborder'><input type='address' name='dept_address1' maxlength='150'  
+                value='";
 
 if (isset($dept_address1)){
         $add_form_html .= $dept_address1;
@@ -514,15 +535,15 @@ $add_form_html .="' >
     </tr>
   </table>
   <table class='small'>
-          <tr>
-                  <td class='noborder'><label class='optional'>City </label></td>
-                  <td class='noborder'><label class='optional'> State</label></td>
-                  <td class='noborder'><label class='optional'> Zip Code</label></td>
-          </tr>
+    <tr>
+      <td class='noborder'><label class='optional'>City </label></td>
+      <td class='noborder'><label class='optional'> State</label></td>
+      <td class='noborder'><label class='optional'> Zip Code</label></td>
+    </tr>
 
-          <tr>
-                  <td class='noborder'><input type='medium' name='dept_city' maxlength='30'  
-                          value='";
+    <tr>
+      <td class='noborder'><input type='medium' name='dept_city' maxlength='30'  
+              value='";
 
 if (isset($dept_city)){
         $add_form_html .= $dept_city;
@@ -550,15 +571,14 @@ $add_form_html .="' ></td>
   <div class='alignright'>
   <input type='radio' name='default_address' value='DEPT' "; 
 
-          if (empty($dept_address1))
-                  {/*echo "disabled"*/;}
-          if ($default_address == 'DEPT') {
-                  $add_form_html .= $checked;} 
+    if (empty($dept_address1))
+            {/*echo "disabled"*/;}
+    if ($default_address == 'DEPT') {
+            $add_form_html .= $checked;} 
 					
 $add_form_html .="> Set Dept as preferred address
-			
-			</div>
-			</div>";
+    </div>
+    </div>";
 		
 			
 $add_form_html .="<div class='section'>
@@ -566,15 +586,15 @@ $add_form_html .="<div class='section'>
 
     <table class='small'>
       <tr>
-            <td class='noborder'><label class='required'>Permanent Home Address</label>
-                    <label class='error'>" .$aster[empty($home_address1)]."</label>
-            </td>
-            <td class='noborder'><label>Apt / Room/ Suite</label>
-            </td>
+        <td class='noborder'><label class='required'>Permanent Home Address</label>
+                <label class='error'>" .$aster[empty($home_address1)]."</label>
+        </td>
+        <td class='noborder'><label>Apt / Room/ Suite</label>
+        </td>
       </tr>
       <tr>
-            <td class='noborder'><input type='address' name='home_address1' maxlength='150'  
-                    value='";
+        <td class='noborder'><input type='address' name='home_address1' maxlength='150'  
+                value='";
 
 if (isset($home_address1)){
         $add_form_html .= $home_address1;
@@ -595,15 +615,15 @@ $add_form_html .="' >
   </table>
   <table class='small'>
         <tr>
-                <td class='noborder'><label class='required'>City</label>
-                <label class='error'>". $aster[empty($home_city)]." </label>
-                </td>
-                <td class='noborder'><label class='required'>State</label>
-                <label class='error'>". $aster[empty($home_state)]."</label>
-                </td>
-                <td class='noborder'><label class='required'>Zip Code</label>
-                <label class='error'>". $aster[empty($home_zip)]." </label>
-                </td>
+            <td class='noborder'><label class='required'>City</label>
+            <label class='error'>". $aster[empty($home_city)]." </label>
+            </td>
+            <td class='noborder'><label class='required'>State</label>
+            <label class='error'>". $aster[empty($home_state)]."</label>
+            </td>
+            <td class='noborder'><label class='required'>Zip Code</label>
+            <label class='error'>". $aster[empty($home_zip)]." </label>
+            </td>
         </tr>
           <tr>
             <td class='noborder'><input type='medium' name='home_city' maxlength='30'  
@@ -638,9 +658,9 @@ if ($default_address == 'HOME') {
 } 
 		
 $add_form_html .="> Set Home as preferred address
-		
-		</div>
-		</div>";
+
+</div>
+</div>";
 			
 /*
 THEMES & TYPE
@@ -649,60 +669,60 @@ THEMES & TYPE
 $add_form_html .="<div class = 'left sixty'>
     <table>
 
-            <tr>
-                <td class='xs' colspan=3>(Additional themes can be added in the user's profile page once they have been added)</td>
-            </tr>
-            <tr>
-              <td class='xs'><label class='required'>Main Theme </label>
-                    <label class='error'>". $aster[empty($theme_drop)]." </label>
-              </td>          
-              <td class='xs'><label class='optional'>Theme 1</label></td>          
-              <td class='noborder'><label class='optional'>Theme 2</label> </td>
-            </tr>
-            <tr>
-              <td class='xs'>
-                            ". html::dropdown( 'theme_drop', $theme_list, $theme_drop )." 
-              </td>
-              <td class='xs'>
-                            ". html::dropdown( 'theme_1_drop', $theme_list, $theme_1_drop )."
-              </td>    
-              <td class='noborder'>
-                            ". html::dropdown( "theme_2_drop", $theme_list, $theme_2_drop )."
-              </td>  
-            </tr>
-            <tr>
-              <td class='noborder'><label class='required'>Main Type </label>
-                    <label class='error'>". $aster[empty($type_drop)]." </label>
-              </td>  
-              <td class='noborder'><label class='optional'>Type 1</label>
-              </td>  
-              <td class='noborder'><label class='optional'>Type 2</label>
-              </td>  
-            <tr>
-              <td class='xs'>
-                            ". html::dropdown( 'type_drop', $type_list, $type_drop )." 
-              </td>
-              <td class='xs'>
-                            ". html::dropdown( 'type_1_drop', $type_list, $type_1_drop )."
-              </td>    
-              <td class='noborder'>
-                            ". html::dropdown( "type_2_drop", $type_list, $type_2_drop )."
-              </td>  
-            </tr>
+        <tr>
+            <td class='xs' colspan=3>(Additional themes can be added in the user's profile page once they have been added)</td>
+        </tr>
+        <tr>
+          <td class='xs'><label class='required'>Main Theme </label>
+                <label class='error'>". $aster[empty($theme_drop)]." </label>
+          </td>          
+          <td class='xs'><label class='optional'>Theme 1</label></td>          
+          <td class='noborder'><label class='optional'>Theme 2</label> </td>
+        </tr>
+        <tr>
+          <td class='xs'>
+                        ". html::dropdown( 'theme_drop', $theme_dropdown, $theme_drop )." 
+          </td>
+          <td class='xs'>
+                        ". html::dropdown( 'theme_1_drop', $theme_dropdown, $theme_1_drop )."
+          </td>    
+          <td class='noborder'>
+                        ". html::dropdown( "theme_2_drop", $theme_dropdown, $theme_2_drop )."
+          </td>  
+        </tr>
+        <tr>
+          <td class='noborder'><label class='required'>Main Type </label>
+                <label class='error'>". $aster[empty($type_drop)]." </label>
+          </td>  
+          <td class='noborder'><label class='optional'>Type 1</label>
+          </td>  
+          <td class='noborder'><label class='optional'>Type 2</label>
+          </td>  
+        <tr>
+          <td class='xs'>
+                        ". html::dropdown( 'type_drop', $type_dropdown, $type_drop )." 
+          </td>
+          <td class='xs'>
+                        ". html::dropdown( 'type_1_drop', $type_dropdown, $type_1_drop )."
+          </td>    
+          <td class='noborder'>
+                        ". html::dropdown( "type_2_drop", $type_dropdown, $type_2_drop )."
+          </td>  
+        </tr>
     </table>
 
     <table>
-            <tr>     
-              <td  class='noborder'><label class='required'>Start Date</label> <label class='optional'>(YYYY-MM-DD)</label>
-                    <label class='error'>". $aster[empty($start_date)]." </label>
-              </td>
-              <td class='noborder'><label class='required'>Supervisor (NetID) </label>
-                    <label class='error'>". $aster[empty($supervisor)]." </label>
-              </td>   
-            </tr>
-            <tr>  
-              <td class='noborder'><input type='date' name='start_date'   
-                            value='";
+        <tr>     
+          <td  class='noborder'><label class='required'>Start Date</label> <label class='optional'>(YYYY-MM-DD)</label>
+                <label class='error'>". $aster[empty($start_date)]." </label>
+          </td>
+          <td class='noborder'><label class='required'>Supervisor (NetID) </label>
+                <label class='error'>". $aster[empty($supervisor)]." </label>
+          </td>   
+        </tr>
+        <tr>  
+          <td class='noborder'><input type='date' name='start_date'   
+                        value='";
 
 if (isset($start_date)){
         $add_form_html .= $start_date;
@@ -712,8 +732,8 @@ $add_form_html .="' >
     </td>    
 
     <td class='noborder' >
-                  <input type='small' name='supervisor' maxlength='8'  
-                  value='";
+        <input type='small' name='supervisor' maxlength='8'  
+        value='";
 
 if (isset($supervisor)){
         $add_form_html .= $supervisor;
@@ -733,9 +753,9 @@ $add_form_html .="' >
         </tr>
         <tr> 
           <td class='xs'>
-                        ". html::drop( "grad_drop", $semester_arr, $grad_drop )."
+                ". html::drop( "grad_drop", $semester_arr, $grad_drop )."
 
-                        ".html::drop( "year_drop", $year_arr, $year_drop )."
+                ".html::drop( "year_drop", $year_arr, $year_drop )."
           </td>
         </tr>
 
@@ -754,48 +774,45 @@ $add_form_html .="<div class = 'right forty'>
            if ($gender == 'F') {$add_form_html .= $checked;} 
            $add_form_html .=">F
         <br />
-                <input type='checkbox' name='key_deposit' value='checked' ". $key_deposit .">
-                <label class='required'>Key Deposit </label> 
+            <input type='checkbox' name='key_deposit' value='checked' ". $key_deposit .">
+            <label class='required'>Key Deposit </label> 
         <br />
-                <input type='checkbox' name='prox_card' value='checked' ". $prox_card .">
-                <label class='required'>Prox Card Payment </label>
+            <input type='checkbox' name='prox_card' value='checked' ". $prox_card .">
+            <label class='required'>Prox Card Payment </label>
 
         <br />
-                <input type='checkbox' name='safety_training' value='checked' ".  $safety_training .">
-                <label class='required'>Safety Training </label>
+            <input type='checkbox' name='safety_training' value='checked' ".  $safety_training .">
+            <label class='required'>Safety Training </label>
         <br />
-                <input type='checkbox' name='admin' value='checked' ".$admin .">
-                <label class='required'>Admin (can view and change all users) </label>
+            <input type='checkbox' name='admin' value='checked' ".$admin .">
+            <label class='required'>Admin (can view and change all users) </label>
 
         <br />
             <input type='checkbox' name='admin' value='checked' ".$superadmin .">
-                <label class='required'>Superadmin (can manage themes, types, keys, departments)</label>
+            <label class='required'>Superadmin (can manage themes, types, keys, departments)</label>
 
         <br />
         <br /><br />
         </div>
         <div class='alignright'>
-                <input type='submit' name='add' value='Create' class='btn'>
-                <input type='reset' name='clear' value='Clear' class='btn'>
+            <input type='submit' name='add' value='Create' class='btn'>
+            <input type='reset' name='clear' value='Clear' class='btn'>
         </div>
 
         </div> 
 </form>";
 
-
-
-
-
+//echo "<body onLoad=\"document.search.search_value.focus()\">";            
 $search = '
 SEARCH<BR>
 <form method="post" action="search.php" name="search">
 
-
+<input type="hidden" name="user_enabled" value="1">
 
 <div class="section">
 
-    	<input type="address" name="search_value" maxlength="50"
-    	value="" >
+    <input type="address" name="search_value" maxlength="50"
+    value="" >
 
     <input type="submit" name="search" value="Search" class="btn"> 
 	<input type="reset" name="clear" value="Clear" class="btn">
@@ -811,42 +828,30 @@ SEARCH<BR>
 
 echo $add_header;	
 if ($success){
-	echo $success_html;	
+    
+    echo $success_html;	
 }
 else{
-	echo $add_form_html; 
+    
+    echo $add_form_html; 
+    
 }
+
 require_once ("includes/footer.inc.php"); 
 
 ?> 
 
 
+<div style='display:none'>
+<div id='inline_example1' >
+
+<div id="display_search">
+    
 <?php
 
-
-echo "<body onLoad=\"document.search.search_value.focus()\">"; 
-
-
-$table_html = "";
-
-$filters = NULL;
-	
-$user = new user($db);
-$html = "";
-$htmltest = "";
-
-?> 
-	<div style='display:none'>
-		<div id='inline_example1' >
-        <?php
-			echo $html; 
-			echo $letter_html;
-		?>
-		</div>
-        
-        <div id="display_search">
-        <?php
-		   echo $search;
-		?>
-        </div>
-	</div>
+    echo $search;
+    
+ ?>
+    
+</div>
+</div>

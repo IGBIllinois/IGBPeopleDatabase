@@ -5,7 +5,6 @@ $page_title = "IGB People Database Search";
 require_once 'includes/header.inc.php';
 
 
-//$key_list = $db->query($select_key);
 $error_msg = "";
 $active_key = array();
 
