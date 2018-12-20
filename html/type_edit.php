@@ -4,7 +4,7 @@ $page_title = "IGB People Database";
 
 require_once 'includes/header.inc.php';
 
-$type_list = type::get_all_types($db);
+$type_list = type::get_types($db);
 $error_msg = "";
 
 /*
