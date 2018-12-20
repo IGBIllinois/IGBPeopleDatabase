@@ -28,14 +28,14 @@ $(document).ready(function(){
 
         //alphadir.php
 	$('.alphatable').dataTable( {
-					"bPaginate": true,
-					"sPaginationType": "full_numbers",
-					"bLengthChange": false,
-					"bFilter": false,
-					"bSort": false,
-					"bInfo": false,
-					"bRetrieve": true,
-					"bAutoWidth": false } );
+            "bPaginate": true,
+            "sPaginationType": "full_numbers",
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": false,
+            "bRetrieve": true,
+            "bAutoWidth": false } );
                                     
                                     
         // dept_edit.                            
@@ -78,6 +78,7 @@ $(document).ready(function(){
 
 	$('#active_key_data').dataTable( {
 		"bPaginate": true,
+                "sPaginationType": "full_numbers",
 		"bLengthChange": false,
 		"bFilter": false,
 		"bSort": false,
@@ -86,6 +87,7 @@ $(document).ready(function(){
 	
 	$('#inactive_key_data').dataTable( {
 		"bPaginate": true,
+                "sPaginationType": "full_numbers",
 		"bLengthChange": false,
 		"bFilter": false,
 		"bSort": false,
@@ -159,9 +161,9 @@ $(document).ready(function(){
 		r=confirm("Are you sure you want to remove this theme?");
 	}
 	
-	$('a#add_theme').colorbox({width:"40%", height:"35%", inline:true, href:"#theme_add_table"});
-	$('a#remove_theme').colorbox({width:"40%", height:"30%", inline:true, href:"#theme_remove"});
-	$('a#edit_theme').colorbox({width:"45%", height:"35%", inline:true, href:"#theme_edit"});
+	$('a#add_theme').colorbox({width:"40%", height:"55%", inline:true, href:"#theme_add_table"});
+	$('a#remove_theme').colorbox({width:"40%", height:"40%", inline:true, href:"#theme_remove"});
+	$('a#edit_theme').colorbox({width:"45%", height:"55%", inline:true, href:"#theme_edit"});
 				
 	$('#submit_remove_theme').submit(function(){ 
 			confirm_remove_theme();

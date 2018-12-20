@@ -750,8 +750,8 @@ table.display {
 
 table.display thead th {
 	
-	background-color: #93C9D2;
-	padding: 3px 18px 3px 10px;
+	//background-color: #93C9D2;
+	//padding: 3px 18px 3px 10px;
 	border-bottom: 1px solid black;
 	font-weight: bold;
 	cursor: pointer;
@@ -769,7 +769,7 @@ table.display tr.heading2 td {
 }
 
 table.display td {
-	padding: 3px 10px;
+	//padding: 3px 10px;
 }
 
 table.display td.center {
@@ -842,11 +842,11 @@ table.display tr.even.gradeU {
 }
 
  */
-tr.odd {
+table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
 	background-color: #DCEDEB;
 }
 
-tr.even {
+table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.even {
 	background-color: #fefefe;
 }
 
@@ -918,7 +918,7 @@ td.details {
 }
 
 .paging_full_numbers span.paginate_button,
- 	.paging_full_numbers span.paginate_active {
+ 	.paging_full_numbers span.current {
 	border: 1px solid #aaa;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -934,6 +934,29 @@ td.details {
 
 .paging_full_numbers span.paginate_button:hover {
 	background-color: #ccc;
+}
+
+.paging_full_numbers .paginate_button,
+ 	.paging_full_numbers .paginate_active {
+	border: 1px solid #aaa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding: 1px 3px;
+	margin: 0 3px;
+	cursor: pointer;
+	*cursor: hand;
+}
+
+.paging_full_numbers .paginate_button {
+	background-color: #ddd;
+}
+
+.paging_full_numbers .paginate_button:hover {
+	background-color: #ccc;
+}
+
+.paging_full_numbers .paginate_button.current {
+	background-color: #93C9D2; /*#99B3FF;*/
 }
 
 .paging_full_numbers span.paginate_active {
