@@ -13,7 +13,8 @@ if(isset($_GET['theme'])) {
     $curr_theme = $_GET['theme'];
 }
 
-$theme_list = $db->query($select_theme);
+
+$all_themes = theme::get_themes($db);
 
 $table_html = "";
 
@@ -26,20 +27,23 @@ $user->get_user($user_id);
 
 $html = "";
 
-foreach( $theme_list as $key=>$option ) {
+foreach( $all_themes as $this_theme ) {
     
-    if($user->get_admin()==1 || $user->has_permission($user_id, $option['theme_id'])) {
+    if($user->get_admin()==1 || $user->has_permission($user_id, $this_theme->get_theme_id())) {
 
-        $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$option['theme_id']. "' and active = 1";
+        // Only show themes for which this user has permission
+        $theme_id = $this_theme->get_theme_id();
+        $short_name = $this_theme->get_short_name();
+        $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$theme_id. "' and active = 1";
 
         $search_results = $db->query($query);
 
         if (count($search_results) == 0) { 
-                $html .= "<input type='button' name='".$option['theme_id']."' id='".$option['short_name']."' value='".$option['short_name']."' 
+                $html .= "<input type='button' name='".$theme_id."' id='".$short_name."' value='".$short_name."' 
                                 class='themebutton disabled' > ";
 
         } else {	
-            $html .= "<a href='themedir.php?theme=".$option['theme_id']."' class='themelink' >".$option['short_name']."</a> ";
+            $html .= "<a href='themedir.php?theme=".$theme_id."' class='themelink' >".$short_name."</a> ";
         }
     }
 }
