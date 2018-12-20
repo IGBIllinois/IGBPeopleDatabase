@@ -29,11 +29,6 @@ $states_arr = array('AK'=>"AK - Alaska",'AL'=>"AL - Alabama",'AR'=>"AR - Arkansa
 
 
 
-$select_theme = "SELECT theme_id, short_name FROM themes WHERE theme_active = '1' ORDER BY short_name ASC "; 
-$select_theme_leaders = "SELECT user_id, CONCAT(first_name, ' ', last_name) AS full_name, netid FROM users where type_id = '11' "; 
-$select_type = "SELECT type_id, name, type_active FROM type where type_active = '1'"; 
-$select_all_types = "SELECT type_id, name, type_active FROM type "; 
-$select_dept = "SELECT dept_id, name, dept_code FROM department ORDER BY name"; 
 $select_key = "SELECT key_id, key_room, key_name, key_active FROM key_list ORDER BY key_active DESC, key_room ASC";
 $select_active_key = "SELECT key_id, key_room, key_name FROM key_list WHERE key_active = '1' ORDER BY key_room ASC";
 
