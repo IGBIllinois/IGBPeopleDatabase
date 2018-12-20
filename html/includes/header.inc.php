@@ -8,10 +8,12 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
-<script type='text/javascript' language='javascript' src='includes/js/jquery-1.6.1.min.js'></script>
-<script type='text/javascript' language='javascript' src='includes/js/jquery.dataTables.min.js'></script>
-<script type='text/javascript' language='javascript' src='includes/js/jquery.maskedinput-1.3.min.js'></script>
-<script type='text/javascript' language='javascript' src='includes/js/jquery.colorbox.js'></script>
+
+<script type='text/javascript' language='javascript' src='vendor/components/jquery/jquery.min.js'></script>
+<script type='text/javascript' language='javascript' src='vendor/datatables/media/js/jquery.dataTables.min.js'></script>
+
+<script type='text/javascript' language='javascript' src='vendor/components/jquery.maskedinput/jquery.maskedinput.min.js'></script>
+<script type='text/javascript' language='javascript' src='vendor/components/colorbox/jquery.colorbox.js'></script>
 
 <script type='text/javascript' language='javascript' src='includes/js/script.js'></script>
 
