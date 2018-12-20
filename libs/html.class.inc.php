@@ -26,11 +26,14 @@ class html {
         if($user_info['image_location'] != null &&  $user_info['image_location'] != "") {
             $image_location = $user_info['image_location'];
         }
-        // do not show supervisor for admin (type id=12)
         
-      $html = "<a href='profile.php?user_id=".$user_info['user_id']."'><img src='"."http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/". $image_location ."'><BR>".
+      $html = "<a href='profile.php?user_id=".$user_info['user_id']."'>".
+              "<img src='"."http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/". $image_location ."'><BR>".
               $user_info['first_name'] . " ".$user_info['last_name']. "<BR>".
-              ((( $user->count_users_for_supervisor($user_info['user_id']) > 0)) ? "<a href=supervisordir.php?supervisor_id=".$user_id.">[Show Group]</a>" : "").
+              // If this user is a supervisor, add link to show page of users for whom they are a supervisor
+              ((( $user->count_users_for_supervisor($user_info['user_id']) > 0)) 
+                      ? "<a href=supervisordir.php?supervisor_id=".$user_id.">[Show Group]</a>" 
+                      : "").
               "</a>";
 
       return $html;
@@ -63,7 +66,7 @@ class html {
        if($theme == 0) {
            $type_query = "Select 0";
        }
-       $type_result = $db->query($type_query);
+       $type_result = $db->get_query_result($type_query, null);
 
        foreach($type_result as $type) {
            
@@ -90,120 +93,120 @@ class html {
        return $html;
    }
    
-   public static function displayUsersBySupervisor($db, $user, $supervisor_id) {
-    //We'd like the 
-    //PI first, 
-    //then research specialists/post-docs, 
-    //technicians, 
-    //graduate students, 
-    //undergraduate students. 
-    //We also want to have the administrative personnel listed after the research groups.  
+    public static function displayUsersBySupervisor($db, $user, $supervisor_id) {
+        //We'd like the 
+        //PI first, 
+        //then research specialists/post-docs, 
+        //technicians, 
+        //graduate students, 
+        //undergraduate students. 
+        //We also want to have the administrative personnel listed after the research groups.  
 
-    $max = 5;
-    
-    $html = "<BR><table>".
-            "<tr>";
-    
-    $i=0;
-    
-    $type_query = "SELECT * from type order by field(name, 'Theme Leader') desc, type_id";
-    $type_result = $db->query($type_query);
-    
-    foreach($type_result as $type) {
+        $max = 5;
+
+        $html = "<BR><table>".
+                "<tr>";
+
         $i=0;
-        $user_results = $user->get_users_for_supervisor($supervisor_id, array($type['type_id']));
-        //print_r($user_results);
-        if(count($user_results[0]) > 0) {
-            $html .= "<table><th colspan='5'>".$type['name'] ."</th></tr><tr>";
-            foreach($user_results as $userRecord) {
-                if($i >= $max) {
-                    $html .="</tr><tr>";
-                    $i=0;
+
+        $type_query = "SELECT * from type order by field(name, 'Theme Leader') desc, type_id";
+        $type_result = $db->get_query_result($type_query);
+
+        foreach($type_result as $type) {
+            $i=0;
+            $user_results = $user->get_users_for_supervisor($supervisor_id, array($type['type_id']));
+            //print_r($user_results);
+            if(count($user_results[0]) > 0) {
+                $html .= "<table><th colspan='5'>".$type['name'] ."</th></tr><tr>";
+                foreach($user_results as $userRecord) {
+                    if($i >= $max) {
+                        $html .="</tr><tr>";
+                        $i=0;
+                    }
+                    $user_id = $userRecord['user_id'];
+                    $html .= "<td>";
+                    $html .= self::displayUser($user, $user_id);
+                    $html .= "</td>";    
+                    $i++;
                 }
-                $user_id = $userRecord['user_id'];
-                $html .= "<td>";
-                $html .= self::displayUser($user, $user_id);
-                $html .= "</td>";    
+                $html.= "</tr></table><BR>";
+                }
+        }
+
+        return $html;
+    }
+
+    /** Write a table of users
+     * 
+     * @param string $id Name of the table
+     * @param array $user_list Array of user objects
+     * @param string $class css class for table
+     * @return string
+     */
+    public static function write_user_table( $id, $user_list, $class = 0)
+    {
+    $tr = array(0=>"rowodd", 1=>"roweven");
+    $table_html = "<table name='".$id."' id='".$id."' class='".$class." display table-striped' >
+                    <thead>
+            <tr>				
+                    <th ></th>
+                    <th >Name</th>
+                    <th >Email</th>
+                    <th >Theme</th>
+                    <th >Type</th>
+                    <th >Room#</th>
+            </tr>
+                    </thead>";
+
+            $table_html .= "";
+            $i=0;
+
+            foreach($user_list as $u) {
+
+                $x = $i % 2;
+
+                $table_html .= "<tr >"; 			
+                $table_html .= "<td><a id='profile' href='profile.php?user_id=" . $u->get_user_id() . "'>>></a></td>";
+                $table_html .= "<td>" . $u->get_first_name() ." ". $u->get_last_name()."</td>";
+                $table_html .= "<td>" . $u->get_email() . "</td>";
+                $table_html .= "<td>" . implode(",",$u->get_theme_short_names()) . "</td>";
+                $table_html .= "<td>" . implode(",",$u->get_type_names()) . "</td>";
+                $table_html .= "<td>" . $u->get_igb_room() . "</td>";	
+                $table_html .= "</tr>";
+
                 $i++;
             }
-            $html.= "</tr></table><BR>";
-            }
+
+        $table_html .= "</table>"; 
+        return $table_html;
     }
-    
-    return $html;
-}
 
-/** Write a table of users
- * 
- * @param string $id Name of the table
- * @param array $user_list Array of user objects
- * @param string $class css class for table
- * @return string
- */
-public static function write_user_table( $id, $user_list, $class = 0)
-{
-$tr = array(0=>"rowodd", 1=>"roweven");
-$table_html = "<table name='".$id."' id='".$id."' class='".$class."' >
-		<thead>
-        <tr>				
-                <th ></th>
-                <th >Name</th>
-                <th >Email</th>
-                <th >Theme</th>
-                <th >Type</th>
-                <th >Room#</th>
-        </tr>
-		</thead>";
+    public static function success_message($message){
+            return "<div class='success'>".$message."</div>";
+    }
+    public static function error_message($message){
+            return "<div class='error'>".$message."</div>";
+    }
+    public static function warning_message($message){
+            return "<div class='alert alert-warning'>".$message."</div>";
+    }
 
-	$table_html .= "";
-        $i=0;
-
-        foreach($user_list as $u) {
-
-            $x = $i % 2;
-
-            $table_html .= "<tr >"; 			
-            $table_html .= "<td><a id='profile' href='profile.php?user_id=" . $u->get_user_id() . "'>>></a></td>";
-            $table_html .= "<td>" . $u->get_first_name() ." ". $u->get_last_name()."</td>";
-            $table_html .= "<td>" . $u->get_email() . "</td>";
-            $table_html .= "<td>" . implode(",",$u->get_theme_short_names()) . "</td>";
-            $table_html .= "<td>" . implode(",",$u->get_type_names()) . "</td>";
-            $table_html .= "<td>" . $u->get_igb_room() . "</td>";	
-            $table_html .= "</tr>";
-            
-            $i++;
+    /** 
+     * Writes a message based on a result array
+     *
+     * @param array $result An array of the format: 
+     *  ("RESULT"=>TRUE | FALSE,
+     *   "MESSAGE"=>[string])
+     *       If "RESULT" is FALSE it will display "MESSAGE" as an error message, 
+     *      else it will display it as a success message.
+     */
+    public static function write_message($result) {
+        if($result['RESULT']) {
+            echo(self::success_message($result['MESSAGE']));
+        } else {
+            echo(self::error_message($result['MESSAGE']));
         }
-
-$table_html .= "</table>"; 
-return $table_html;
-}
-
-public static function success_message($message){
-		return "<div class='success'>".$message."</div>";
-	}
-	public static function error_message($message){
-		return "<div class='error'>".$message."</div>";
-	}
-	public static function warning_message($message){
-		return "<div class='alert alert-warning'>".$message."</div>";
-	}
-        
-        /** 
-         * Writes a message based on a result array
-         *
-         * @param array $result An array of the format: 
-         *  ("RESULT"=>TRUE | FALSE,
-         *   "MESSAGE"=>[string])
-         *       If "RESULT" is FALSE it will display "MESSAGE" as an error message, 
-         *      else it will display it as a success message.
-         */
-        public static function write_message($result) {
-            if($result['RESULT']) {
-                echo(self::success_message($result['MESSAGE']));
-            } else {
-                echo(self::error_message($result['MESSAGE']));
-            }
-        }
+    }
         
     /**
     * Creates an HTML input based on the parameters given
@@ -230,7 +233,9 @@ public static function success_message($message){
        switch ($type) {
 
        case "select":
-         print "<select id='{$formName}' name='{$formName}' ". ($onChange != "" ? " onChange='$onChange' " : "") . (($id != "") ? " id='{$name}_{$id}' ": "") .">";
+         print "<select id='{$formName}' name='{$formName}' ". 
+                 ($onChange != "" ? " onChange='$onChange' " : "") . 
+                 (($id != "") ? " id='{$name}_{$id}' ": "") .">";
          print "<option value=''>None</option>";
          $i=0;
          foreach ($array as $value) {
@@ -279,16 +284,16 @@ public static function redirect($url) {
 public static function theme_list_table( $id, $theme_array)
 {
     $status_arr = array(0=>"Inactive", 1=>"Active");
-    $table_html = "<table name='".$id."' id='".$id."' >
-                    <thead>
-                    <tr>
-                                    <th >Theme Name</th>
-                                    <th >Abbrev.</th>	
-                                    <th >Leader</th>
-                                    <th >Status</th>
-                                    <th ></th>	
-                    </tr>
-                    </thead>";
+    $table_html = "<table name='".$id."' id='".$id."' class='display table-striped'>
+        <thead>
+        <tr>
+            <th >Theme Name</th>
+            <th >Abbrev.</th>	
+            <th >Leader</th>
+            <th >Status</th>
+            <th ></th>	
+        </tr>
+        </thead>";
     if (count($theme_array) == 0) { 
 
               }
@@ -335,13 +340,13 @@ public static function dropdown( $name, $options, $selected=null, $name_id=-1)
     /*** loop over the options ***/
     foreach( $options as $key=>$option )
     {
-		$array_keys = array_keys($option);
-		$id = $array_keys[0]; 
-                if($name_id == -1) {
-                    $param = $array_keys[1];
-                } else {
-                    $param = $array_keys[$name_id];
-                }
+        $array_keys = array_keys($option);
+        $id = $array_keys[0]; 
+        if($name_id == -1) {
+            $param = $array_keys[1];
+        } else {
+            $param = $array_keys[$name_id];
+        }
                 
         /*** assign a selected value ***/
         $select = $selected==$option[$id] ? ' selected' : null;
@@ -430,22 +435,22 @@ public static function drop( $name, $options, $selected=null )
 /** Writes a table of active keys
  * 
  * @param string $id Name of table
- * @param array $search_results Array of key_info data
- * @return string
+ * @param array $search_results Array of key_info objects
+ * @return string HTML for the table
  */
 public static function active_key_table( $id, $search_results)
 {
 	$paid_arr = array(0=>"Unpaid", 1=>"Paid");
-	$table_html = "<table name='".$id."' id='".$id."' >
-			<thead>
-			<tr>
-					
-                            <th >Room #</th>
-                            <th >Deposit</th>	
-                            <th >Date Issued</th>	
-					
-			</tr>
-			</thead>";
+	$table_html = "<table name='".$id."' id='".$id."' class='display table-striped'>
+                <thead>
+                <tr>
+
+                    <th >Room #</th>
+                    <th >Deposit</th>	
+                    <th >Date Issued</th>	
+
+                </tr>
+                </thead>";
 	if (!count($search_results) == 0) { 
             $table_html .= "";
             for ($i = 0; $i < count($search_results); $i++) {
@@ -471,15 +476,15 @@ public static function active_key_table( $id, $search_results)
 /** Writes a table of inactive keys
  * 
  * @param string $id Nmae of table
- * @param array $search_results Array of key data
- * @return string
+ * @param array $search_results Array of key_info objects
+ * @return string HTML for the table
  */
 public function inactive_key_table( $id, $search_results)
 {
 	
 	$dep_arr = array(0=>"Not Refunded", 1=>"Refunded");
 	$table_html = 
-            "<table name='".$id."' id='".$id."' >
+            "<table name='".$id."' id='".$id."' class='display table-striped' >
             <thead>
             <tr>
                 <th >Room #</th>
@@ -512,12 +517,6 @@ public function inactive_key_table( $id, $search_results)
 }
 
 
-/*
- *
-key list table
- *
- */
-
 /** Writes a table of all keys
  * 
  * @param type $db Database object
@@ -530,7 +529,7 @@ public static function key_list_table($db)
 
 	$status_arr = array(0=>"Inactive", 1=>"Active");
 	$table_html = 
-                "<div><table name='".$id."' id='".$id."' >
+                "<div><table name='".$id."' id='".$id."' class='display table-striped' >
                 <thead>
                 <tr>
                     <th >Key Name</th>	
@@ -568,34 +567,39 @@ public static function key_list_table($db)
  */
 public static function type_list_table( $id, $type_list)
 {
-	$status_arr = array(0=>"Inactive", 1=>"Active");
-	$table_html = "<table name='".$id."' id='".$id."' >
-			<thead>
-			<tr>
-					<th >Type Name</th>
-					<th >Status</th>
-			</tr>
-			</thead>";
-	if (count($type_list) == 0) { 
-			  
-	}
-	else {
-		$table_html .= "";
-		for ($i = 0; $i < count($type_list); $i++) {
-                    $type = $type_list[$i];
-                    $x = $i % 2;
+    $status_arr = array(0=>"Inactive", 1=>"Active");
+    $table_html = "<table name='".$id."' id='".$id."' class='display table-striped'>
+        <thead>
+        <tr>
+            <th >Type Name</th>
+            <th >Status</th>
+        </tr>
+        </thead>";
+    if (count($type_list) == 0) { 
 
-                    $table_html .= "<tr >"; 
-                    $table_html .= "<td>" . $type->get_name() . "</td>";
-                    $table_html .= "<td>" . $status_arr[$type->get_active()] . "</td>";
-                    $table_html .= "</tr>";
-			
-			}
-	}
-	$table_html .= "</table>"; 
-	return $table_html;
+    }
+    else {
+        $table_html .= "";
+        for ($i = 0; $i < count($type_list); $i++) {
+            $type = $type_list[$i];
+            $x = $i % 2;
+
+            $table_html .= "<tr >"; 
+            $table_html .= "<td>" . $type->get_name() . "</td>";
+            $table_html .= "<td>" . $status_arr[$type->get_active()] . "</td>";
+            $table_html .= "</tr>";
+
+        }
+    }
+    $table_html .= "</table>"; 
+    return $table_html;
 }
 
+/** 
+ * Returns a table of departments
+ * @param db $db Dababase objcect
+ * @return string HTML of a table of departments
+ */
 public static function dept_list_table($db)
 {
     $dept_list = department::get_all_departments($db);
@@ -628,9 +632,10 @@ public static function dept_list_table($db)
 	return $table_html;
 }
 
-/*
-returns dropdown of country names
-
+/**
+ * Returns a dropdown of country names
+ * @param sstring $name Dropdown box name & id
+ * @return string HTML for a dropdown list of country names
 */
 public function country_dropdown( $name )
 {
