@@ -668,7 +668,7 @@ returns number of rows where $field = $value in $table
             $search_query .= " AND (users.supervisor_id=:supervisor) ";
         }
         $search_query.=  " ORDER BY users.last_name ";	
-        }
+        }          
         $result = $this->db->get_query_result($search_query, $params);
 	return $result;
     }
@@ -749,8 +749,14 @@ returns number of rows where $field = $value in $table
                 }
 		return $user_list;
     }
+   
+    /** Get list of people a user is supervisor for
+     * 
+     * @param int $supervisor_id ID of the supervisor
+     * @param array $types Array of integers that are the type ids to get
+     * @return array Array of users for the given supervisor
+     */
     
-        /* get list of people a user is supervisor for */
     public function get_users_for_supervisor($supervisor_id, $types=null) {
         return $this->get_users_by_type(-1, $types, 1, $supervisor_id);
     
@@ -763,7 +769,7 @@ returns number of rows where $field = $value in $table
      * listed as their supervisor
      */
     public function count_users_for_supervisor($supervisor_id) {
-        $query = "select * from users where supervisor_id=:supervisor_id";
+        $query = "select * from users where supervisor_id=:supervisor_id and user_enabled=1";
         $params = array("supervisor_id"=>$supervisor_id);
         $result = $this->db->get_query_result($query, $params);
         return count($result);
@@ -975,7 +981,8 @@ returns number of rows where $field = $value in $table
          */
         public function remove_theme($user_id, $theme_id) {
             $params = array("user_id"=>$user_id, "theme_id"=>$theme_id);
-            $user_theme_query = "UPDATE user_theme set active='0', end_date=NOW() where user_id=:user_id AND theme_id=:theme_id AND active='1'";
+            $user_theme_query = "UPDATE user_theme set active='0', end_date=NOW() "
+                    . "where user_id=:user_id AND theme_id=:theme_id AND active='1'";
             $this->db->get_update_result($user_theme_query, $params);
         }
         
@@ -1005,7 +1012,8 @@ returns number of rows where $field = $value in $table
          */
         public function change_type($user_id, $theme_id, $type_id) {
             $params = array("user_id"=>$user_id, "theme_id"=>$theme_id, "type_id"=>$type_id);
-            $query = "UPDATE user_theme set type_id = :type_id where user_id=:user_id and theme_id=:theme_id and active=1";
+            $query = "UPDATE user_theme set type_id = :type_id where user_id=:user_id "
+                    . "and theme_id=:theme_id and active=1";
             $this->db->get_update_result($query, $params);
             
         }
@@ -1329,8 +1337,11 @@ public function is_valid_email($email)
             $params = array("user_id"=>$user_id, "theme_id"=>$theme_id);
             $query = "INSERT INTO permissions (user_id, theme_id) VALUES (:user_id, :theme_id)";
             $result = $this->db->get_insert_result($query);
-            $update_params = array("user_id"=>$user_id, "theme_id"=>$theme_id, "lastUpdateUser"=>$_SESSION['username'] );
-            $lastUpdateQuery = "UPDATE permissions set permissions_lastUpdateUser=:lastUpdateUser where user_id=:user_id AND theme_id=:theme_id";
+            $update_params = array("user_id"=>$user_id, 
+                                    "theme_id"=>$theme_id, 
+                                    "lastUpdateUser"=>$_SESSION['username'] );
+            $lastUpdateQuery = "UPDATE permissions set permissions_lastUpdateUser=:lastUpdateUser "
+                    . "where user_id=:user_id AND theme_id=:theme_id";
             $update_result = $this->db->get_update_result($lastUpdateQuery, $update_params);
         }
         
@@ -1420,7 +1431,16 @@ public function is_valid_email($email)
          * @param string $supervisor Search for users under this supervisor
          * @return \user Array of users that fit the search criteria
          */
-        public static function search($db, $active, $value, $user_id=null, $filters, $theme_id=0, $type_id=0, $start_date=0, $end_date=0, $supervisor="") {
+        public static function search(  $db, 
+                                        $active, 
+                                        $value, 
+                                        $user_id=null, 
+                                        $filters, 
+                                        $theme_id=0, 
+                                        $type_id=0, 
+                                        $start_date=0, 
+                                        $end_date=0, 
+                                        $supervisor="") {
             
 
             $query = "";
@@ -1556,8 +1576,32 @@ public function is_valid_email($email)
             
                 }
                 return $users;
-                 
-                 
+
+        }
+        
+        /** Returns a list of Theme Leaders
+         * 
+         * @param db $db Database object
+         * @return \user An array of users who are Theme Leaders
+         */
+        public static function get_theme_leaders($db) {
+            $query = "SELECT DISTINCT users.user_id as user_id
+                FROM users 
+                LEFT JOIN user_theme on user_theme.user_id = users.user_id 
+                LEFT JOIN type on user_theme.type_id = type.type_id 
+                WHERE type.name='Theme Leader' order by users.last_name";
+            
+            $result = $db->get_query_result($query);
+
+            $leaders = array();
+            
+            foreach($result as $leader) {
+                
+                $new_leader = new user($db, $leader['user_id']);
+                $leaders[] = $new_leader;
+            }
+            
+            return $leaders;
         }
 
 }
