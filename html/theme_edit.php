@@ -5,10 +5,14 @@ $page_title = "IGB People Database";
 require_once 'includes/header.inc.php'; 
 
 
-$theme = new theme($db);
-$theme_leader_list  = $db->query($select_theme_leaders);
-$theme_list = $db->query($select_theme);
-$all_themes = $theme->get_all_themes();
+$theme_leader_list  = user::get_theme_leaders($db);
+$leader_dropdown = array();
+foreach($theme_leader_list as $leader) {
+    $leader_dropdown[] = array("user_id"=>$leader->get_user_id(), 
+        "full_name"=>($leader->get_first_name() . " " . $leader->get_last_name()));
+}
+
+$all_themes = theme::get_themes($db);
 $error_msg = "";
 
 $theme_array = "<script>";
@@ -91,7 +95,7 @@ $theme_add_table = "<form method='post' action='theme_edit.php' name='add_theme'
             <tr >
               <td class='small'><label>Theme Leader </label><br> </td>
               <td class='noborder'>
-                    ".html::dropdown( 'theme_leader_id', $theme_leader_list)."
+                    ".html::dropdown( 'theme_leader_id', $leader_dropdown)."
               </td>
             </tr>
             <tr >
@@ -222,7 +226,7 @@ $theme_edit = "	<form method='post' action='theme_edit.php' name='select_edit' i
             <tr >
               <td class='small'><label>Theme Leader </label><br> </td>
               <td class='noborder'>
-                    ".html::dropdown( 'theme_leader_id', $theme_leader_list)."
+                    ".html::dropdown( 'theme_leader_id', $leader_dropdown)."
               </td>
             </tr>
             <tr >
