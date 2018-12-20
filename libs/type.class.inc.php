@@ -97,8 +97,13 @@ class type{
      * @param db $db Database object
      * @return \type Array of all types in the database
      */
-    public static function get_all_types($db) {
+    public static function get_types($db, $active=null) {
         $select_all_types = "SELECT type_id, name, type_active FROM type "; 
+        if($active == 1) {
+            $select_all_types .= " WHERE type_active = 1";
+        } else if($active === 0) {
+            $select_all_types .= " WHERE type_active = 0";
+        }
         $result = $db->get_query_result($select_all_types);
         $type_list = array();
         foreach($result as $type) {
@@ -107,7 +112,8 @@ class type{
         }
         return $type_list;
     }
-        
+    
+    
     // Private functions
     private function load($type_id) {
         $query = "SELECT type_id, name, type_active from type where type_id=:type_id limit 1";
