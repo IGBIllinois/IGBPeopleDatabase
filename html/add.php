@@ -113,8 +113,8 @@ if (empty($first_name) || empty($last_name) || empty($netid) || empty($email)  |
 
 if (empty($default_address))
 {
-	$error.="* Please select a preferred address<br>";
-	$empty_form=TRUE;
+    $error.="* Please select a preferred address<br>";
+    $empty_form=TRUE;
 }
 
 if (!$empty_form){
@@ -245,28 +245,28 @@ $add_form_html = "";
 		
 		
 $add_form_html .= "<label class='errormsg'>". $error ."</label>
-				  <form method='post' action='add.php' name='add'>";
+    <form method='post' action='add.php' name='add'>";
 
 /* User info */
 $add_form_html .= "<div class='section'>
     <table class='medium'>
-          <tr>
-            <td class='noborder'>
-                    <label class='required'>First Name </label>
-                    <label class='error'>".$aster[empty($first_name)]." </label>
-            </td>
-            <td class='noborder'>    
-                    <label class='required'>Last Name </label> 
-                    <label class='error'>". $aster[empty($last_name)]." </label>
-            </td>
-          </tr>
-          <tr>
-            <td class='noborder'><input type='name' name='first_name' maxlength='30'  
-                    value='";
+        <tr>
+          <td class='noborder'>
+                  <label class='required'>First Name </label>
+                  <label class='error'>".$aster[(isset($_POST['add']) && empty($first_name))]." </label>
+          </td>
+          <td class='noborder'>    
+                  <label class='required'>Last Name </label> 
+                  <label class='error'>". $aster[(isset($_POST['add']) && empty($last_name))]." </label>
+          </td>
+        </tr>
+        <tr>
+          <td class='noborder'><input type='name' name='first_name' maxlength='30'  
+            value='";
 
-if (isset($first_name)){
-        $add_form_html .= $first_name;
-}
+        if (isset($first_name)){
+                $add_form_html .= $first_name;
+        }
 
 $add_form_html .="' >
     </td>
@@ -286,7 +286,7 @@ $add_form_html .="' >
     <tr>
         <td class='noborder'>    
                 <label class='required'>NetID </label> 
-        <label class='error'>".$aster[empty($netid)]." </label>
+        <label class='error'>".$aster[(isset($_POST['add']) && empty($netid))]." </label>
         </td>
         <td class='noborder'>
                 <label class='required'>UIN</label> 
@@ -294,7 +294,7 @@ $add_form_html .="' >
         </td>
         <td class='noborder'>
                 <label class='required'>Email</label> 
-        <label class='error'>". $aster[empty($email)]." </label>
+        <label class='error'>". $aster[(isset($_POST['add']) && empty($email))]." </label>
         </td>
 
 
@@ -393,10 +393,10 @@ $add_form_html .="<div class='section'>
 <table class='small'>
   <tr>
         <td class='noborder'><label class='required'>IGB Office/Lab/Cubicle # </label>
-                <label class='error'>". $aster[empty($igb_room)]." </label>
+                <label class='error'>". $aster[(isset($_POST['add']) && empty($igb_room))]." </label>
         </td>
         <td class='noborder'><label class='required'>IGB Phone</label>
-                <label class='error'>". $aster[empty($igb_phone)]." </label>
+                <label class='error'>". $aster[(isset($_POST['add']) && empty($igb_phone))]." </label>
         </td>
   </tr>
   <tr>
@@ -587,7 +587,7 @@ $add_form_html .="<div class='section'>
     <table class='small'>
       <tr>
         <td class='noborder'><label class='required'>Permanent Home Address</label>
-                <label class='error'>" .$aster[empty($home_address1)]."</label>
+                <label class='error'>" .$aster[(isset($_POST['add']) && empty($home_address1))]."</label>
         </td>
         <td class='noborder'><label>Apt / Room/ Suite</label>
         </td>
@@ -616,13 +616,13 @@ $add_form_html .="' >
   <table class='small'>
         <tr>
             <td class='noborder'><label class='required'>City</label>
-            <label class='error'>". $aster[empty($home_city)]." </label>
+            <label class='error'>". $aster[(isset($_POST['add']) && empty($home_city))]." </label>
             </td>
             <td class='noborder'><label class='required'>State</label>
-            <label class='error'>". $aster[empty($home_state)]."</label>
+            <label class='error'>". $aster[(isset($_POST['add']) && empty($home_state))]."</label>
             </td>
             <td class='noborder'><label class='required'>Zip Code</label>
-            <label class='error'>". $aster[empty($home_zip)]." </label>
+            <label class='error'>". $aster[(isset($_POST['add']) && empty($home_zip))]." </label>
             </td>
         </tr>
           <tr>
@@ -674,7 +674,7 @@ $add_form_html .="<div class = 'left sixty'>
         </tr>
         <tr>
           <td class='xs'><label class='required'>Main Theme </label>
-                <label class='error'>". $aster[empty($theme_drop)]." </label>
+                <label class='error'>". $aster[(isset($_POST['add']) && empty($theme_drop))]." </label>
           </td>          
           <td class='xs'><label class='optional'>Theme 1</label></td>          
           <td class='noborder'><label class='optional'>Theme 2</label> </td>
@@ -692,7 +692,7 @@ $add_form_html .="<div class = 'left sixty'>
         </tr>
         <tr>
           <td class='noborder'><label class='required'>Main Type </label>
-                <label class='error'>". $aster[empty($type_drop)]." </label>
+                <label class='error'>". $aster[(isset($_POST['add']) && empty($type_drop))]." </label>
           </td>  
           <td class='noborder'><label class='optional'>Type 1</label>
           </td>  
@@ -714,10 +714,10 @@ $add_form_html .="<div class = 'left sixty'>
     <table>
         <tr>     
           <td  class='noborder'><label class='required'>Start Date</label> <label class='optional'>(YYYY-MM-DD)</label>
-                <label class='error'>". $aster[empty($start_date)]." </label>
+                <label class='error'>". $aster[(isset($_POST['add']) && empty($start_date))]." </label>
           </td>
           <td class='noborder'><label class='required'>Supervisor (NetID) </label>
-                <label class='error'>". $aster[empty($supervisor)]." </label>
+                <label class='error'>". $aster[(isset($_POST['add']) && empty($supervisor))]." </label>
           </td>   
         </tr>
         <tr>  
@@ -765,7 +765,7 @@ $add_form_html .="' >
 			
 $add_form_html .="<div class = 'right forty'>
         <label class='required'>Gender </label>
-        <label class='error'>". $aster[empty($gender)]." </label> 
+        <label class='error'>". $aster[(isset($_POST['add']) && empty($gender))]." </label> 
 
         <input type='radio' name='gender' value='M' ";
            if ($gender == 'M') {$add_form_html .= $checked;} 
