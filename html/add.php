@@ -75,8 +75,10 @@ $safety_training = $_POST['safety_training'];
 $prox_card = $_POST['prox_card']; 
 $admin = $_POST['admin'];
 $superadmin = $_POST['superadmin'];
-$grad_drop = $_POST['grad_drop']; 
-$year_drop = $_POST['year_drop']; 
+
+//$grad_drop = $_POST['grad_drop']; 
+//$year_drop = $_POST['year_drop']; 
+$grad_date = $_POST['grad_date'];
 
 
 $fields = array("First Name" => &$first_name,
@@ -183,12 +185,16 @@ if (!$empty_form){
 			}
 			
 			$insert_phone = $user->add_phone($user_id, $igb_phone, $dept_phone, $cell_phone, $fax, $other_phone);
-			
+			echo("grad_date = $grad_date<BR>");
+                        if(!empty($grad_date)) {
+                            $result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
+                        }
+                        /*
 			if ($type_drop == '3' || $type_drop == '10'){	//type is grad student or undergrad		
 				$grad_date = $grad_drop ." ".$year_drop;
 			   	$result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
 			}
-			
+			*/
 			
 			
 			$success = TRUE;
@@ -666,7 +672,7 @@ $add_form_html .="> Set Home as preferred address
 THEMES & TYPE
 */
 		
-$add_form_html .="<div class = 'left sixty'>
+$add_form_html .="<div class = 'left '>
     <table>
 
         <tr>
@@ -744,26 +750,27 @@ $add_form_html .="' >
           </td>   
         </tr>
 
-</table>
-<table class='small'>
         <tr> 
           <td class='xs' ><label>Expected Grad Date (if student) </label>
 
           </td> 
         </tr>
         <tr> 
-          <td class='xs'>
-                ". html::drop( "grad_drop", $semester_arr, $grad_drop )."
+                <td class='noborder'><input type='date' name='grad_date'   
+                        value='";
 
-                ".html::drop( "year_drop", $year_arr, $year_drop )."
+if (isset($grad_date)){
+        $add_form_html .= $grad_date;
+}
+
+$add_form_html .="' >
           </td>
         </tr>
 
-</table>
-
-</div>";
+</table></div>";
 			
-$add_form_html .="<div class = 'right forty'>
+$add_form_html .="<div>
+    <BR>
         <label class='required'>Gender </label>
         <label class='error'>". $aster[(isset($_POST['add']) && empty($gender))]." </label> 
 
@@ -773,7 +780,7 @@ $add_form_html .="<div class = 'right forty'>
         <input type='radio' name='gender' value='F' ";
            if ($gender == 'F') {$add_form_html .= $checked;} 
            $add_form_html .=">F
-        <br />
+        <br /><BR>
             <input type='checkbox' name='key_deposit' value='checked' ". $key_deposit .">
             <label class='required'>Key Deposit </label> 
         <br />
@@ -801,8 +808,7 @@ $add_form_html .="<div class = 'right forty'>
 
         </div> 
 </form>";
-
-//echo "<body onLoad=\"document.search.search_value.focus()\">";            
+          
 $search = '
 SEARCH<BR>
 <form method="post" action="search.php" name="search">
@@ -851,7 +857,7 @@ require_once ("includes/footer.inc.php");
 
     echo $search;
     
- ?>
+?>
     
 </div>
 </div>

@@ -53,6 +53,7 @@ class user{
         private $supervisor_name;
 	private $start_date;
 	private $end_date;
+        private $exp_grad_date;
         
         /** Array of theme ids that this user is in, and their associated
          * type ids.
@@ -145,6 +146,7 @@ class user{
 		$this->supervisor = $result[0]['supervisor_id'];
 		$this->supervisor_netid = $supervisor_result[0]['netid'];
 		$this->supervisor_name = $supervisor_result[0]['first_name']." ".$supervisor_result[0]['last_name'];
+                $this->exp_grad_date = $result[0]['expected_grad'];
 		
 		$this->department = $result[0]['dept_name'];
 		$this->dept_id = $result[0]['dept_id'];
@@ -161,6 +163,7 @@ class user{
 		$this->admin = $result[0]['admin'];
                 $this->superadmin = $result[0]['superadmin']; 
                 $this->image = $result[0]['image_location'];
+                
 		
 		if($this->status == 0) {
 			$this->reason_leaving = $result[0]['reason_leaving'];
@@ -220,6 +223,7 @@ returns values of specific user
 			return $this->reason_leaving;
 		}
 	}
+        public function get_exp_grad_date() { return $this->exp_grad_date; }
         
         /** Returns the image uploaded for this user, or a default image if
          *  none exists.
@@ -1136,7 +1140,7 @@ returns number of rows where $field = $value in $table
                 } catch(Exception $e) {
                     echo($e->getTraceAsString());
                 }
-                echo("result = $result<BR>");
+                
 		return $result;
 
 	}

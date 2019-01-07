@@ -63,6 +63,7 @@ $email = $user->get_email();
 $cell_phone = $user->get_cell_phone();
 $other_phone = $user->get_other_phone();
 $gender = $user->get_gender();
+$grad_date = $user->get_exp_grad_date();
 
 //igb
 $igb_address = $user->get_igb_address();
@@ -316,6 +317,7 @@ if (isset($_POST['update_igb'])){
         $key_deposit = $user->is_checked($_POST['key_deposit']);
         $prox_card = $user->is_checked($_POST['prox_card']);
         $admin = $user->is_checked($_POST['admin']);
+        $grad_date = $_POST['grad_date'];
                         
         $add_permission = $_POST['add_permission'];
         $remove_permission = $_POST['remove_permission'];
@@ -435,6 +437,7 @@ if (isset($_POST['update_igb'])){
                 $result = $user->update($user_id, 'users', 'key_deposit', $key_deposit);
                 $result = $user->update($user_id, 'users', 'prox_card', $prox_card);
                 $result = $user->update($user_id, 'users', 'admin', $admin);
+                $result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
 		
 	} else {
             echo("ERROR");
@@ -547,6 +550,12 @@ $igb_info .= "</td>
             <td class='xs'><label>permissions</label></td>
             <td class='noborder'>". (($admin == 1) ? "ALL" : functions::list_permissions($db, $user_id)) . "</td>".
         "</tr>
+            <tr>
+            <td class='xs'><label>Expected grad date</label></td>
+            <td class='noborder'>".(($grad_date == null || $grad_date == "") ? "None" : $grad_date)."</td>".
+        "</tr>
+            <tr>
+            
           <td class='xs'><label>image </label></td>
           <td class='noborder'>". "<img src='".$image."'>"." <a href='".$user->get_large_image_location()."' target='blank'>View larger image</a></td>
         </tr>
@@ -690,6 +699,9 @@ $igb_info_edit  .="<tr>
       <td class='xs'><label>remove permissions</label></td>
       <td class='noborder'>".html::dropdown( 'remove_permission', $theme_dropdown )."</td>
   </tr>
+  <tr>
+      <td class='xs'><label>expected grad date</label></td>
+      <td class='noborder'><input name='grad_date' type='date' value='".$user->get_exp_grad_date()."'></td>
   <tr>
       <td class='xs'><label>thumbnail image</label></td>
       <td colspan=3 class='noborder'><img src='".$user->get_image_location()."'> "

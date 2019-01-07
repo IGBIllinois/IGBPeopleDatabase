@@ -29,11 +29,6 @@ $states_arr = array('AK'=>"AK - Alaska",'AL'=>"AL - Alabama",'AR'=>"AR - Arkansa
 
 
 
-$select_key = "SELECT key_id, key_room, key_name, key_active FROM key_list ORDER BY key_active DESC, key_room ASC";
-$select_active_key = "SELECT key_id, key_room, key_name FROM key_list WHERE key_active = '1' ORDER BY key_room ASC";
-
-$semester_arr = array("FALL", "SPRING", "SUMMER");
-$year_arr = array("2011", "2012", "2013", "2014", "2015", "2016");
 $key_condition_arr = array("Returned", "Lost", "Broken", "Cancelled");
 
 
