@@ -76,8 +76,6 @@ $prox_card = $_POST['prox_card'];
 $admin = $_POST['admin'];
 $superadmin = $_POST['superadmin'];
 
-//$grad_drop = $_POST['grad_drop']; 
-//$year_drop = $_POST['year_drop']; 
 $grad_date = $_POST['grad_date'];
 
 
@@ -185,16 +183,10 @@ if (!$empty_form){
 			}
 			
 			$insert_phone = $user->add_phone($user_id, $igb_phone, $dept_phone, $cell_phone, $fax, $other_phone);
-			echo("grad_date = $grad_date<BR>");
+                        
                         if(!empty($grad_date)) {
                             $result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
                         }
-                        /*
-			if ($type_drop == '3' || $type_drop == '10'){	//type is grad student or undergrad		
-				$grad_date = $grad_drop ." ".$year_drop;
-			   	$result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
-			}
-			*/
 			
 			
 			$success = TRUE;
@@ -203,8 +195,7 @@ if (!$empty_form){
 		}
 		else {
 			$error = "* Error occurred when adding user.  Please try again.";
-		}
-			
+		}	
 	  
 	  }
   }
