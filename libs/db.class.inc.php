@@ -26,7 +26,7 @@ class db {
 	////////////////Public Functions///////////
 
 	public function __construct($host,$database,$username,$password) {
-		$this->open($host,$database,$username,$password);
+		$this->open_new($host,$database,$username,$password);
 
 
 	}
@@ -38,7 +38,7 @@ class db {
         public function open_new($host,$database,$username,$password,$port = 3306) {
 		//Connects to database.
 		try {
-			$this->link = new PDO("mysql:host=$host;dbname=$database",$username,$password,
+			$this->link2 = new PDO("mysql:host=$host;dbname=$database",$username,$password,
 					array(PDO::ATTR_PERSISTENT => true));
                         
 			$this->host = $host;
@@ -59,6 +59,7 @@ class db {
 	//$username - username to connect to the database with
 	//$password - password of the username
 	//opens a connect to the database
+        /*
 	public function open($host,$database,$username,$password) {
 		//Connects to database.
 		//$this->link = mysql_connect($host,$username,$password);
@@ -95,47 +96,14 @@ class db {
                 mysqli_close($this->link);
 	}
 
-	//insert_query()
-	//$sql - sql string to run on the database
-	//returns the id number of the new record, 0 if it fails
-	public function insert_query($sql) {
-		//if (mysql_query($sql,$this->link)) {
-		//	return mysql_insert_id($this->link);
-                //        
-		//}
-                if (mysqli_query($this->link, $sql)) {
-			return mysqli_insert_id($this->link);
-		}
-		else {
-			return 0;
-		}
 
-	}
-
-	//non_select_query()
-	//$sql - sql string to run on the database
-	//For update and delete queries
-	//returns true on success, false otherwise
-	public function non_select_query($sql) {
-		//return mysql_query($sql,$this->link);
-            return mysqli_query($this->link, $sql);
-	}
-
-	//query()
-	//$sql - sql string to run on the database
-	//Used for SELECT queries
-	//returns an associative array of the select query results.
-	public function query($sql) {
-
-                $result = mysqli_query($this->link, $sql);
-		return $this->mysqlToArray($result);
-	}
 
 	//getLink
 	//returns the mysql resource link
 	public function get_link() {
 		return $this->link;
 	}
+        */
         
         // TEMPORARY
         // For transitioning to PDO queries

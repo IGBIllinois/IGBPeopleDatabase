@@ -60,7 +60,7 @@ if (isset($_POST['login'])) {
         	header("Location: " . $location);
 		}
 		else {
-			$message .= html::error_message("Invalid username or password. Please try again.");
+			$message .= "Invalid username or password. Please try again.";
 		}
 	}
 }

@@ -22,7 +22,7 @@ $prox_card = $user->get_prox_card();
 $bool = array(0=>"No", 1=>"Yes");
 $checked_bool = array(0=>"", 1=>"checked");
 
-$key_list = $db->get_query_result($select_active_key);
+
 $key_list = key::get_active_keys($db);
 $key_dropdown = array();
 foreach($key_list as $key) {

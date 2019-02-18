@@ -66,7 +66,7 @@ returns values of specific theme
             $theme_query = "SELECT theme_id, name
                                              FROM themes 
                                              WHERE theme_active = '1' ";
-            $result = $this->db->query($theme_query);	
+            $result = $this->db->get_query_result($theme_query);	
             return $result;
     }
 
@@ -82,7 +82,7 @@ returns values of specific theme
     public function num_rows($field, $value, $table) {
         $exists_query = "SELECT count(*) as count FROM ".$table." WHERE ".$field." = :value"."";
         $params = array("$value"=>$value);
-        $result = $this->db->query($exists_query);
+        $result = $this->db->get_query_result($exists_query, $params);
         return $result[0]['count'];
     }
 	
@@ -161,7 +161,6 @@ returns values of specific theme
                 "theme_active"=>$status);
 
             $result = $this->db->get_insert_result($add_query, $params);       
-            //$result = $this->db->insert_query($add_query);
 
             return $result;
 

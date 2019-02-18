@@ -1340,7 +1340,7 @@ public function is_valid_email($email)
         public function add_permission($user_id, $theme_id) {
             $params = array("user_id"=>$user_id, "theme_id"=>$theme_id);
             $query = "INSERT INTO permissions (user_id, theme_id) VALUES (:user_id, :theme_id)";
-            $result = $this->db->get_insert_result($query);
+            $result = $this->db->get_insert_result($query, $params);
             $update_params = array("user_id"=>$user_id, 
                                     "theme_id"=>$theme_id, 
                                     "lastUpdateUser"=>$_SESSION['username'] );

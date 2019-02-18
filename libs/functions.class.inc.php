@@ -22,7 +22,9 @@ class functions {
         for($i=0; $i<count($permissions); $i++) {
             $theme_id = $permissions[$i]['theme_id'];
 
-            $name = $db->query("SELECT short_name from themes where theme_id='".$theme_id."'");
+            $query = "SELECT short_name from themes where theme_id=:theme_id";
+            $params = array("theme_id"=>$theme_id);
+            $name = $db->get_query_result($query, $params);
 
             $theme_list .= $name[0]['short_name'];
             if($i < count($permissions)-1) {

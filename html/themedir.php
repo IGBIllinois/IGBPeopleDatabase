@@ -34,13 +34,12 @@ foreach( $all_themes as $this_theme ) {
         // Only show themes for which this user has permission
         $theme_id = $this_theme->get_theme_id();
         $short_name = $this_theme->get_short_name();
-        $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id='".$theme_id. "' and active = 1";
-
-        $search_results = $db->query($query);
-
+        $query = "SELECT user_theme.user_id as user_id  FROM  user_theme where theme_id=:theme_id and active = 1";
+        $params = array("theme_id"=>$theme_id);
+        $search_results = $db->get_query_result($query, $params);
         if (count($search_results) == 0) { 
-                $html .= "<input type='button' name='".$theme_id."' id='".$short_name."' value='".$short_name."' 
-                                class='themebutton disabled' > ";
+                //$html .= "<input type='button' name='".$theme_id."' id='".$short_name."' value='".$short_name."' 
+                //               class='themebutton disabled' > ";
 
         } else {	
             $html .= "<a href='themedir.php?theme=".$theme_id."' class='themelink' >".$short_name."</a> ";
@@ -56,8 +55,7 @@ foreach( $all_themes as $this_theme ) {
 
     }
 
-$theme = new theme($db);
-$theme->get_theme($curr_theme);
+$theme = new theme($db, $curr_theme);
 $theme_name = $theme->get_short_name();
 
 

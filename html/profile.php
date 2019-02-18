@@ -424,8 +424,12 @@ if (isset($_POST['update_igb'])){
                 $result = $user->update($user_id, 'users', 'end_date', $end_date);
                 $result = $user->update($user_id, 'users', 'reason_leaving', $reason_leaving);
 		$result = $user->update($user_id, 'users', 'supervisor_id', $supervisor_id);
-                $user->add_permission($user_id, $add_permission);
-                $user->remove_permission($user_id, $remove_permission);
+                if($add_permission != 0) {
+                    $user->add_permission($user_id, $add_permission);
+                }
+                if($remove_permission != 0) {
+                    $user->remove_permission($user_id, $remove_permission);
+                }
 
                 $image = $user->get_image_location();
 
