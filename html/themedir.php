@@ -47,13 +47,15 @@ foreach( $all_themes as $this_theme ) {
     }
 }
 
-
+if($user->get_admin() == 1) {
     $html.="<a href='themedir.php?theme=0' class='themelink' >NO THEME</a> ";
+}
     if($curr_theme != null && $curr_theme != "") {
 
         $theme_html .= html::displayUsersByType($db, $user_tmp, $curr_theme);
 
     }
+
 
 $theme = new theme($db, $curr_theme);
 $theme_name = $theme->get_short_name();

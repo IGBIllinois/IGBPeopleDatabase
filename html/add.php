@@ -4,6 +4,17 @@ $page_title = "IGB Facilities Add New Record";
 
 require_once 'includes/header.inc.php';
 
+$tmp_user = new user($db);
+
+$curr_user_id = $tmp_user->user_exists("netid", $_SESSION['username']);
+
+$curr_user = new user($db, $curr_user_id);
+
+if(!$curr_user->is_admin($_SESSION['username'])) {
+    echo("Only admins may add users. Please contact a database administrator to add a new user, or to add an existing user to your theme.");
+    return;
+}
+
 
 echo "<body onLoad=\"document.add.first_name.focus()\">"; 
 $success = FALSE;
