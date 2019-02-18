@@ -1301,7 +1301,9 @@ public function is_valid_email($email)
          * @return array An array of theme ids this user has permsssions to edit
          */
         public function get_permissions($user_id) {
-            
+            if($user_id == "") {
+                return null;
+            }
             $query = "SELECT theme_id from permissions where user_id=:user_id";
             $params = array("user_id"=>$user_id);
             $result = $this->db->get_query_result($query, $params);
@@ -1492,10 +1494,14 @@ public function is_valid_email($email)
             }
             
             $this_user = new user($db, $user_id);
+            if($user_id == null) {
+                // User not in database, return nothing
+                return array();
+            }
             if($user_id != null && !$this_user->get_admin()) {
                 // only get themes this user has permission for.
                     $themelist = $this_user->get_permissions($user_id);
-                    
+  
                     $theme_query = " RIGHT JOIN user_theme on ((user_theme.user_id = users.user_id) AND (";
                     
                     for($i=0; $i<count($themelist); $i++) {
