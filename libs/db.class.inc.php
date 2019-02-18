@@ -105,6 +105,13 @@ class db {
 	}
         */
         
+        //close()
+	//closes database connection
+	public function close() {
+		//mysql_close($this->link);
+                $this->link2 = null;
+	}
+        
         // TEMPORARY
         // For transitioning to PDO queries
         public function get_link2() {
