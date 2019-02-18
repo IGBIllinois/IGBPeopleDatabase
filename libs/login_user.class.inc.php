@@ -45,8 +45,8 @@ class login_user {
 		$rdn = $this->get_user_rdn();
 		if ($this->ldap->bind($rdn, $password)){
 			if (self::is_ldap_user($this->ldap,$this->username)) {
-				$in_admin_group = $this->ldap->search("(memberuid=".$this->username.")", ldap_admin_group);
-				if ($in_admin_group['count']>0) {
+				$in_igb_group = $this->ldap->search("(memberuid=".$this->username.")", ldap_group_ou);
+				if ($in_igb_group['count']>0) {
 					return 0;
 				} else {
 					return 3;
