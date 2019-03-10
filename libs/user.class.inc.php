@@ -150,11 +150,14 @@ class user{
 		
 		$this->department = $result[0]['dept_name'];
 		$this->dept_id = $result[0]['dept_id'];
-		$this->igb_phone = $phone_list[0]['igb'];
-		$this->cell_phone = $phone_list[0]['cell'];
-		$this->dept_phone = $phone_list[0]['dept'];
-		$this->other_phone = $phone_list[0]['other'];
-		$this->fax = $phone_list[0]['fax'];
+                if(count($phone_list) > 0) {
+                    $this->igb_phone = $phone_list[0]['igb'];
+                    $this->cell_phone = $phone_list[0]['cell'];
+                    $this->dept_phone = $phone_list[0]['dept'];
+                    $this->other_phone = $phone_list[0]['other'];
+                    $this->fax = $phone_list[0]['fax'];
+                }
+                
 		$this->default_address = $result[0]['default_address'];	
 		
 		$this->key_deposit = $result[0]['key_deposit'];
@@ -189,7 +192,7 @@ class user{
 				$this->dept_zip= $address_list[$i]['zip'];
 			}
 			else if ($address_list[$i]['type'] == 'HOME' && $address_list[$i]['forward'] == '0' ){
-				$this->home_address1= $address_list[$i]['address1'];
+				$this->home_address= $address_list[$i]['address1'];
 				$this->home_address2= $address_list[$i]['address2'];
 				$this->home_city= $address_list[$i]['city'];
 				$this->home_state= $address_list[$i]['state'];
@@ -296,7 +299,7 @@ returns values of specific user
 	public function get_igb_room() { return $this->igb_room; }		
 	public function get_igb_phone() { return $this->igb_phone; }	
 	public function get_igb_acsz() { return $this->igb_acsz; }
-	public function get_home_address1() { return $this->home_address1; }
+	public function get_home_address1() { return $this->home_address; }
 	public function get_home_address2() { return $this->home_address2; }
 	public function get_home_city() { return $this->home_city; }
 	public function get_home_state() { return $this->home_state; }
@@ -1456,7 +1459,10 @@ public function is_valid_email($email)
             $search_arr = explode(" ", $value);
             $params = array();
 
+            $search_query = "";
+            
             for($i=0; $i<count($search_arr); $i++) {
+                
                 $var_name = "search_value_".$i;
                 $var = $search_arr[$i];
             
@@ -1552,7 +1558,7 @@ public function is_valid_email($email)
                         continue;
                     }
 
-                if($filters["phone"] != null) {
+                if(array_key_exists("phone", $filters) && $filters["phone"] != null) {
                     
                     $user_phone = $u->get_igb_phone();
 
@@ -1562,7 +1568,7 @@ public function is_valid_email($email)
                     }
                 
                 }
-                if($filters["dept"] != 0) {
+                if(array_key_exists("dept", $filters) && $filters["dept"] != 0) {
                     
                     $user_dept = $u->get_dept_id();
 
@@ -1573,7 +1579,7 @@ public function is_valid_email($email)
                 
                 }
                 
-                if($filters["room"] != null) {
+                if(array_key_exists("room", $filters) && $filters["room"] != null) {
                     
                     $user_room = $u->get_igb_room();
 

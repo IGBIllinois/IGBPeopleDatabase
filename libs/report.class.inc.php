@@ -84,9 +84,7 @@ class report {
 	public static function create_csv_report($data,$filename) {
 		$delimiter = ",";
 		$file_handle = fopen('php://output','w');
-		$headings = array_keys($data[0]);
 		ob_start();
-		fputcsv($file_handle,$headings,$delimiter);
 		foreach ($data as $row) {
 			fputcsv($file_handle,$row,$delimiter);
 		}

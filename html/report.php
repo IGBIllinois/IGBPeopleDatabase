@@ -1,5 +1,6 @@
 <?php
-require_once 'includes/header.inc.php';
+require_once 'includes/main.inc.php';
+        require_once 'includes/session.inc.php';
 
 // writing large files may take a little longer
 set_time_limit(300);
@@ -29,6 +30,7 @@ if(isset($_POST['create_excel'])) {
     $filters["phone.igb"] = array($_POST['igb_phone'], "AND");
 
     $data = array(array("Name","Email","Theme","Type","Room Number","Address"));
+    $current_user_id = $user->get_current_user_id();
     $all_data = user::search($db, $user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
     foreach($all_data as $user) {
         $data[] = array($user->get_first_name(). " ". $user->get_last_name(),
@@ -67,7 +69,7 @@ if (isset($_POST['create_detailed_excel'])) {
 
      $data = array(array("Last Name","First Name","Theme","Status","Room Number","Phone Number",
                 "Email","UIN","Supervisor","Home Department"));   
-
+     $current_user_id = $user->get_current_user_id();
      $all_data = user::search($db, $user_enabled, $search_value, $current_user_id, $filters, $theme_drop, $type_drop, $start_date, $end_date, $supervisor);
      foreach($all_data as $user) {
          $data[] = array($user->get_last_name(),
