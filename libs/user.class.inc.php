@@ -562,30 +562,19 @@ returns number of rows where $field = $value in $table
             // if theme_id == 0, get users who have no theme.
             $type_id = $types[0];
 
-            $search_query = "SELECT distinct (users.user_id) as user_id, "
-                    . "first_name, "
-                    . "last_name, "
-                    . "netid, "
-                    . "uin, "
-                    . "email, "
-                    . "default_address, "
-                    . "address.address2 as igb_room "
-                    . "from user_theme "
-                    . "LEFT JOIN address ON "
-                    . "user_theme.user_id=address.user_id "
-                    . "AND address.type='IGB' "
-                    . "LEFT JOIN phone ON "
-                    . "user_theme.user_id=phone.user_id "
-                    . "LEFT JOIN users on "
-                    . "users.user_id=user_theme.user_id "
-                    . "right join (select * from "
-                        . "(select * from user_theme where "
-                        . "((end_date is not null and end_date != 0) or theme_id = 0) "
-                        . "and active=1) ut1 where user_id not in "
-                        . "(select user_id from user_theme where "
-                        . "((end_date is null or end_date = 0) and theme_id != 0) and active=1) "
-                    . "order by user_id) ut2 on ut2.user_id=user_theme.user_id "
-                    . "where user_enabled = $status order by users.last_name";
+            $search_query = "SELECT distinct (users.user_id) as user_id
+                    from user_theme 
+                    LEFT JOIN users on users.user_id=user_theme.user_id 
+                    right join (select * from 
+                    (select * from user_theme where 
+                    ((end_date is not null and end_date != 0) 
+                    or theme_id = 0) and active=1) ut1 
+                    where user_id not in 
+                    (select user_id from user_theme where 
+                    ((end_date is null or end_date = 0) and theme_id != 0) and active=:status) 
+                    order by user_id) ut2 
+                    on ut2.user_id=user_theme.user_id where user_enabled = 1 order by users.last_name";
+            $params['status'] = $status;
 
         } else {
          if($theme_id > 0) {
@@ -639,31 +628,13 @@ returns number of rows where $field = $value in $table
             $type_query = " RIGHT JOIN type on user_theme.type_id=type.type_id and user_theme.active=1 ";
         }
         
-        
-        $search_query = "SELECT DISTINCT (users.user_id) as user_id, "
-                . "first_name, "
-                . "last_name, "
-                . "netid, "
-                . "uin, "
-                . "email, "
-                . "default_address, ".
-                " type.name as type_name, ".
-                " (SELECT GROUP_CONCAT(t.short_name) as theme_list from "
-                . "themes t, "
-                . "users u, "
-                . "user_theme ut "
-                . "where ut.user_id = u.user_id "
-                . "and ut.theme_id= t.theme_id "
-                . "and ut.active=1 "
-                . "and users.user_id=u.user_id "
-                . "group by users.user_id) as theme_name, ".
-                " address.address2 as igb_room from user_theme 
-                LEFT JOIN address ON user_theme.user_id=address.user_id 
-                AND address.type='IGB' 
-                LEFT JOIN phone ON user_theme.user_id=phone.user_id
-                LEFT JOIN users on users.user_id=user_theme.user_id " .
-                $theme_query . " ". $type_query;
-        
+        $search_query = "SELECT DISTINCT (users.user_id) as user_id from user_theme 
+
+            LEFT JOIN users on users.user_id=user_theme.user_id ".
+            $theme_query . " ". $type_query;
+            
+
+               
         if($status) {
             $search_query .=  " WHERE (users.user_enabled = :status) ";
         } else {
@@ -691,45 +662,9 @@ returns number of rows where $field = $value in $table
 	public function alpha_search($letter, $user_id=null, $isSupervisor=0) {
 
             $params = array("letter"=>$letter);
-            
-            $alpha_query = "SELECT (users.user_id) as user_id, "
-                    . "first_name, "
-                    . "last_name, "
-                    . "netid, "
-                    . "uin, "
-                    . "email,"
-                    . " default_address, ".
-		      " themes.short_name as theme_name, "
-                    . "type.name as type_name, ".
-                      " address.address2 as igb_room, 
-                          t.theme_list as theme_list, 
-                          t2.type_list as type_list 
-                          from user_theme 
-                            
-                        LEFT JOIN address ON user_theme.user_id=address.user_id AND address.type='IGB' 
-			LEFT JOIN phone ON user_theme.user_id=phone.user_id
-                        LEFT JOIN users on users.user_id=user_theme.user_id " .
-                        " left join (select group_concat(themes.short_name) as theme_list, "
-                    . "user_theme.* from user_theme "
-                    . "left join themes on themes.theme_id=user_theme.theme_id "
-                    . "left join users on users.user_id = user_theme.user_id "
-                    . "where user_theme.active=1 "
-                    . "group by user_id "
-                    . "order by users.last_name) as t "
-                    . "on t.user_id=users.user_id ".
-                        " left join (select group_concat(type.name) as type_list, "
-                    . "user_theme.* from user_theme "
-                    . "left join type on type.type_id=user_theme.type_id "
-                    . "left join users on users.user_id = user_theme.user_id "
-                    . "where user_theme.active=1 group by user_id "
-                    . "order by users.last_name) as t2 "
-                    . "on t2.user_id=users.user_id ".
-                        " RIGHT JOIN themes on "
-                    . "((user_theme.theme_id=themes.theme_id )) "
-                    . "RIGHT JOIN type on ((user_theme.type_id=type.type_id) or user_theme.type_id = '') " .
-                        " WHERE SUBSTR(last_name,1,1) = :letter  and users.user_enabled=1 ";
-            
-            
+
+                $alpha_query = "SELECT * from users ".
+                " WHERE SUBSTR(last_name,1,1) = :letter  and users.user_enabled=1 ";
                 
                 if($user_id != null && !$this->is_admin($_SESSION['username'])) {
                     $themelist = $this->get_permissions($user_id);
