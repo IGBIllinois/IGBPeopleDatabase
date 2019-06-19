@@ -14,15 +14,6 @@ CREATE TABLE `address` (
   PRIMARY KEY (`address_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1
 
-CREATE TABLE `admin` (
-  `admin_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `active` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`admin_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
 CREATE TABLE `department` (
   `dept_id` int(11) NOT NULL AUTO_INCREMENT,
   `dept_code` varchar(4) DEFAULT NULL,
