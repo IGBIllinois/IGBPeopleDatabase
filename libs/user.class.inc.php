@@ -488,7 +488,7 @@ returns number of rows where $field = $value in $table
      * @return array of database data for users who have left IGB
      */
     public function get_forwarding_addresses() {
-
+/*
         $query = "select users.first_name, 
             users.last_name, 
             users.email, 
@@ -513,6 +513,32 @@ returns number of rows where $field = $value in $table
                 group by user_id order by users.last_name) as t 
             on t.user_id=users.user_id 
             where address.forward=1 and users.first_name != '' order by users.last_name";
+ * 
+ */
+        $query = "select users.first_name, 
+            users.last_name, 
+            users.email, 
+            address.address1, 
+            address.address2, 
+            address.city, 
+            address.state, 
+            address.zip, 
+            tlist.t, 
+            users.end_date, 
+            users.reason_leaving 
+            from users 
+            join address on 
+            address.user_id = users.user_id 
+            left join
+
+            (select user_theme.user_id as u_id, group_concat(themes.short_name) as t 
+            from user_theme, themes  where 
+            user_theme.theme_id=themes.theme_id group by user_theme.user_id) as tlist
+
+            on tlist.u_id = users.user_id
+
+            where address.forward=1 and users.first_name != '' order by users.last_name";
+        
         $result = $this->db->get_query_result_assoc($query, null);
         $header = array(array("Firat Name",
             "Last Name",
