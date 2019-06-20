@@ -1,22 +1,6 @@
 <?php
 class report {
 
-	//create_excel_2003_report()
-	//$data - double array - data values
-	//$filename - string - name of the file to create
-	//prompts to save an excel 2003 report.
-	public static function create_excel_2003_report($data,$filename) {
-           
-		$excel_file = self::create_generic_excel($data);
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment;filename=' . $filename);
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-		header('Pragma: public');
-		$writer = PHPExcel_IOFactory::createWriter($excel_file,'Excel5');
-                ob_end_clean();
-		$writer->save('php://output');
-
-	}
 
 	//create_excel_2007_report()
 	//$data - double array - data values

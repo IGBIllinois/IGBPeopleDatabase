@@ -93,6 +93,8 @@ if(isset($_POST['forwarding'])) {
     $filename = "forwarding_addresses";
     $user = new user($db);
     $data = $user->get_forwarding_addresses();
+
+    
 }
 
 if(isset($_POST['peopledbusers'])) {
@@ -108,9 +110,6 @@ switch ($type) {
 	case 'csv':
 		report::create_csv_report($data,$filename);
 		break;
-	case 'xls':
-	      	report::create_excel_2003_report($data,$filename);
-                break;
 	case 'xlsx':
 		report::create_excel_2007_report($data,$filename);
 		break;

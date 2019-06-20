@@ -15,7 +15,6 @@ echo("<h1> Reports </h1>");
  <input  type='submit'  name='forwarding' value='Forwarding Addresses for Alumni' style='width:250px'/>
   <select
                 name='report_type' class='input-medium'>
-                <option value='xls'>Excel 2003</option>
                 <option value='xlsx'>Excel 2007</option>
                 <option value='csv'>CSV</option>
         </select>
@@ -27,7 +26,6 @@ echo("<h1> Reports </h1>");
     <input  type='submit' name='peopledbusers' value='IGB People Database users' style='width:250px'/>
   <select
                 name='report_type' class='input-medium'>
-                <option value='xls'>Excel 2003</option>
                 <option value='xlsx'>Excel 2007</option>
                 <option value='csv'>CSV</option>
         </select>

@@ -228,7 +228,6 @@ if($table_html != null) {
                 name='create_excel' value='Create Excel'>
   <select
                 name='report_type' class='input-medium'>
-                <option value='xls'>Excel 2003</option>
                 <option value='xlsx'>Excel 2007</option>
                 <option value='csv'>CSV</option>
         </select>
@@ -256,7 +255,6 @@ if($table_html != null) {
                 name='create_detailed_excel' value='Create Detailed Excel'>
   <select
                 name='report_type' class='input-medium'>
-                <option value='xls'>Excel 2003</option>
                 <option value='xlsx'>Excel 2007</option>
                 <option value='csv'>CSV</option>
         </select>
