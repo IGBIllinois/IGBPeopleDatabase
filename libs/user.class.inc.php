@@ -65,7 +65,6 @@ class user{
         private $superadmin;
 	private $reason_leaving;
         private $image;
-        private $pager;
         
 	//////////////// Variables//////////
 
@@ -144,8 +143,13 @@ class user{
 		$this->start_date = $result[0]['start_date'];
 		$this->end_date = $result[0]['end_date'];
 		$this->supervisor = $result[0]['supervisor_id'];
-		$this->supervisor_netid = $supervisor_result[0]['netid'];
-		$this->supervisor_name = $supervisor_result[0]['first_name']." ".$supervisor_result[0]['last_name'];
+                if(count($supervisor_result) == 0) {
+                    $this->supervisor_netid = "None";
+                    $this->supervisor_name = "No supervisor listed";
+                } else {
+                    $this->supervisor_netid = $supervisor_result[0]['netid'];
+                    $this->supervisor_name = $supervisor_result[0]['first_name']." ".$supervisor_result[0]['last_name'];
+                }
                 $this->exp_grad_date = $result[0]['expected_grad'];
 		
 		$this->department = $result[0]['dept_name'];
@@ -222,9 +226,9 @@ returns values of specific user
 	public function get_start_date() { return $this->start_date; }
 	public function get_end_date() { return $this->end_date; }
 	public function get_reason_leaving() {
-		if(!$this->get_status()) {
+		//if(!$this->get_status()) {
 			return $this->reason_leaving;
-		}
+		//}
 	}
         public function get_exp_grad_date() { return $this->exp_grad_date; }
         
@@ -484,6 +488,7 @@ returns number of rows where $field = $value in $table
      * @return array of database data for users who have left IGB
      */
     public function get_forwarding_addresses() {
+
         $query = "select users.first_name, 
             users.last_name, 
             users.email, 
@@ -496,7 +501,7 @@ returns number of rows where $field = $value in $table
             users.end_date, 
             users.reason_leaving 
             from users 
-            left join address on 
+            join address on 
             address.user_id = users.user_id 
             left join 
             (select users.first_name, 
@@ -507,8 +512,21 @@ returns number of rows where $field = $value in $table
                 left join users on users.user_id = user_theme.user_id  
                 group by user_id order by users.last_name) as t 
             on t.user_id=users.user_id 
-            where address.forward=1 order by users.last_name";
-        $result = $this->db->get_query_result($query, null);
+            where address.forward=1 and users.first_name != '' order by users.last_name";
+        $result = $this->db->get_query_result_assoc($query, null);
+        $header = array(array("Firat Name",
+            "Last Name",
+            "Email",
+            "Address 1",
+            "Address 2",
+            "City",
+            "State",
+            "Zip",
+            "Themes",
+            "End Date",
+            "Reason Leaving"));
+        $result = array_merge($header, $result);
+
         return $result;
     }
     

@@ -125,6 +125,18 @@ class db {
             return $result;
 
         }
+        
+        public function get_query_result_assoc($query_string, $query_array=null) {
+            try{
+            $statement = $this->get_link2()->prepare($query_string, array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $statement->execute($query_array);
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+            } catch(Exception $e) {
+                echo($e->getTraceAsString());
+            }
+
+        }
 
         public function get_update_result($query_string, $query_params=null) {
             // Update queries should probably only update one record. This will ensure 
