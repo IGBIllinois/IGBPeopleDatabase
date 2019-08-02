@@ -34,4 +34,7 @@ define("IMAGE_DIR", $_SERVER['DOCUMENT_ROOT'] . dirname($_SERVER['PHP_SELF']) ."
 define("IMAGE_DIR_URL", "https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) .  "/images/users/" );
 define("LOCAL_IMAGE_DIR", "./images/users/");
 
+// change password link
+define("FORGOT_PASS_LINK", 'https://illinoisauth.igb.illinois.edu/password/');
+
 ?>

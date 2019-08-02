@@ -144,6 +144,7 @@ $login_html .= "' >
 	  
 	  <div class='alignright'>
 				  <input type='submit' name='login' value='Log In' class='btn'>
+                                  <BR><a  href=".FORGOT_PASS_LINK." target='_blank'>Forgot password?</a>
 			  </div>
 	  </div>	</form>";
 
