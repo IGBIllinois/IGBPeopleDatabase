@@ -193,7 +193,7 @@ if (!$empty_form){
 			   $result = $user->add_address($user_id, $home_array);	
 			}
 			
-			$insert_phone = $user->add_phone($user_id, $igb_phone, $dept_phone, $cell_phone, $fax, $other_phone);
+			$insert_phone = $curr_user->add_phone($user_id, $igb_phone, $dept_phone, $cell_phone, $fax, $other_phone);
                         
                         if(!empty($grad_date)) {
                             $result = $user->update($user_id, 'users', 'expected_grad', $grad_date);

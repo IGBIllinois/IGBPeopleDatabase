@@ -101,9 +101,8 @@ class user{
          * @return type
          */
 	public function get_user($user_id) { 
-		$profile_query = "SELECT users.*, themes.short_name as theme_name, type.name as type_name, department.name as dept_name
-						 FROM (((users LEFT JOIN themes ON users.theme_id=themes.theme_id)
-						 LEFT JOIN type ON users.type_id=type.type_id) 
+		$profile_query = "SELECT users.*, department.name as dept_name
+						 FROM (users
 						 LEFT JOIN department ON users.dept_id=department.dept_id)
 						 WHERE user_id = :user_id";
                 $params = array("user_id"=>$user_id);
@@ -488,33 +487,7 @@ returns number of rows where $field = $value in $table
      * @return array of database data for users who have left IGB
      */
     public function get_forwarding_addresses() {
-/*
-        $query = "select users.first_name, 
-            users.last_name, 
-            users.email, 
-            address.address1, 
-            address.address2, 
-            address.city, 
-            address.state, 
-            address.zip, 
-            t.theme_list, 
-            users.end_date, 
-            users.reason_leaving 
-            from users 
-            join address on 
-            address.user_id = users.user_id 
-            left join 
-            (select users.first_name, 
-                users.last_name, 
-                group_concat(themes.short_name) as theme_list, 
-                user_theme.* from user_theme 
-                left join themes on themes.theme_id=user_theme.theme_id 
-                left join users on users.user_id = user_theme.user_id  
-                group by user_id order by users.last_name) as t 
-            on t.user_id=users.user_id 
-            where address.forward=1 and users.first_name != '' order by users.last_name";
- * 
- */
+
         $query = "select users.first_name, 
             users.last_name, 
             users.email, 
@@ -1100,7 +1073,8 @@ returns number of rows where $field = $value in $table
                     "dept_phone"=>$dept_phone,
                     "cell_phone"=>$cell_phone,
                     "fax"=>$fax,
-                    "other_phone"=>$other_phone);
+                    "other_phone"=>$other_phone,
+                    "update_user"=>$this->get_netid());
 
 		$add_phone_query = "INSERT INTO phone 
                     (user_id, 
@@ -1108,17 +1082,23 @@ returns number of rows where $field = $value in $table
                     dept, 
                     cell, 
                     fax, 
-                    other)				
+                    other,
+                    phone_lastUpdateUser,
+                    phone_lastUpdateTime)				
                         VALUES (
                         :user_id,
                         :igb_phone,
                         :dept_phone,
                         :cell_phone,
                         :fax,
-                        :other_phone)";
+                        :other_phone,
+                        :update_user,
+                        NOW())";
 
                 try {
 		$result = $this->db->get_insert_result($add_phone_query, $params);
+                
+
                 } catch(Exception $e) {
                     echo($e->getTraceAsString());
                 }
