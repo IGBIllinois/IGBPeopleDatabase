@@ -835,7 +835,8 @@ returns number of rows where $field = $value in $table
                     "safety"=>$safety,
                     "gender"=>$gender,
                     "supervisor_id"=>$supervisor_id,
-                    "admin"=>$isAdmin);
+                    "admin"=>$isAdmin,
+                    "updateUser"=>$this->get_netid());
                 
                 
             	$add_user_query = "INSERT INTO users 
@@ -852,8 +853,10 @@ returns number of rows where $field = $value in $table
                     safety_training, 
                     gender, 
                     supervisor_id, 
-                    admin, 
-                    user_time_created)
+                    admin,
+                    user_time_created,
+                    users_lastUpdateUser,
+                    users_lastUpdateTime)
                     VALUES (
                         :first_name,
                         :last_name,
@@ -869,6 +872,8 @@ returns number of rows where $field = $value in $table
                         :gender,
                         :supervisor_id,
                         :admin,
+                        NOW(),
+                        :updateUser,
                         NOW())";
    
 		$result = $this->db->get_insert_result($add_user_query, $params);
