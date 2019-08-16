@@ -311,7 +311,6 @@ if (isset($_POST['update_igb'])){
 	$fax = $_POST['fax'];
 	$start_date = $_POST['start_date']; 
         $end_date = $_POST['end_date'];
-        $reason_leaving = $_POST['reason_leaving'];
 	$supervisor = $_POST['supervisor'];
         $safety_training = $user->is_checked($_POST['safety_training']);
         $key_deposit = $user->is_checked($_POST['key_deposit']);
@@ -422,7 +421,6 @@ if (isset($_POST['update_igb'])){
 		$result = $user->update($user_id, 'phone', 'fax', $fax);
 		$result = $user->update($user_id, 'users', 'start_date', $start_date);
                 $result = $user->update($user_id, 'users', 'end_date', $end_date);
-                $result = $user->update($user_id, 'users', 'reason_leaving', $reason_leaving);
 		$result = $user->update($user_id, 'users', 'supervisor_id', $supervisor_id);
                 if($add_permission != 0) {
                     $user->add_permission($user_id, $add_permission);
@@ -441,7 +439,9 @@ if (isset($_POST['update_igb'])){
                 $result = $user->update($user_id, 'users', 'key_deposit', $key_deposit);
                 $result = $user->update($user_id, 'users', 'prox_card', $prox_card);
                 $result = $user->update($user_id, 'users', 'admin', $admin);
-                $result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
+                if($grad_date != null && $grad_date != "") {
+                    $result = $user->update($user_id, 'users', 'expected_grad', $grad_date);
+                }
 		
 	} else {
             echo("ERROR");
@@ -689,11 +689,6 @@ $igb_info_edit  .="<tr>
     <td class='xs'><label>departure date </label></td>
     <td class='noborder'><input type='date' name='end_date' maxlength='12'  
   value=". $user->get_end_date()."></td>
-  </tr>
-  <tr >
-    <td class='xs'><label>reason leaving </label></td>
-    <td class='noborder'><input type='date' name='reason_leaving'  
-  value='". $user->get_reason_leaving()."'></td>
   </tr>
   <tr>
       <td class='xs'><label>add permissions</label></td>
