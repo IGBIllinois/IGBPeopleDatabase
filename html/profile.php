@@ -1015,7 +1015,7 @@ if (isset($_POST['remove_member'])){
 	$fwd_array["state"]=$fwd_state;
 	$fwd_array["zip"]=$fwd_zip;
 	
-	$address_result = $user->add_address($user_id, $fwd_array, $fwd_country, '1');	
+	$address_result = $current_user->add_address($user_id, $fwd_array, $fwd_country, '1');	
 	$date_result = $user->update($user_id, 'users', 'end_date', $end_date);
 	$phone_result = $user->update($user_id, 'phone', 'fwd', $fwd_phone);
 	$phone_type_result = $user->update($user_id, 'phone', 'fwd_type', $fwd_phone_type);

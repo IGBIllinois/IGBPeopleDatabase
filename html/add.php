@@ -165,7 +165,7 @@ if (!$empty_form){
                     $safety_training, $gender, $supervisor_id, $admin, $superadmin);
 		if ($user_id != 0){
 			
-                    $result = $user->add_igb_address($user_id, $igb_room);	
+                    $result = $curr_user->add_igb_address($user_id, $igb_room);	
                     $result = $user->update($user_id, 'address', 'address1', $igb_address, " AND type = 'IGB'");
                     $result = $user->update($user_id, 'address', 'city', $igb_city, " AND type = 'IGB'");
                     $result = $user->update($user_id, 'address', 'state', $igb_state, " AND type = 'IGB'");
@@ -179,7 +179,7 @@ if (!$empty_form){
 			   $dept_array["city"]=$dept_city;
 			   $dept_array["state"]=$dept_state;
 			   $dept_array["zip"]=$dept_zip;
-			   $result = $user->add_address($user_id, $dept_array);	
+			   $result = $curr_user->add_address($user_id, $dept_array);	
 			}
 			
 			if (!empty($home_address1)){			
@@ -190,7 +190,7 @@ if (!$empty_form){
 			   $home_array["city"]=$home_city;
 			   $home_array["state"]=$home_state;
 			   $home_array["zip"]=$home_zip;
-			   $result = $user->add_address($user_id, $home_array);	
+			   $result = $curr_user->add_address($user_id, $home_array);	
 			}
 			
 			$insert_phone = $curr_user->add_phone($user_id, $igb_phone, $dept_phone, $cell_phone, $fax, $other_phone);

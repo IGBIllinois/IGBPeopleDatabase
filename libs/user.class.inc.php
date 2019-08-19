@@ -991,7 +991,7 @@ returns number of rows where $field = $value in $table
          */
 	public function add_igb_address($user_id, $igb_room) 
 	{
-		$params = array("user_id"=>$user_id, "igb_room"=>$igb_room);
+		$params = array("user_id"=>$user_id, "igb_room"=>$igb_room, "lastUpdateUser"=>$this->get_netid());
 		$igb_address_query = "INSERT INTO address 
                     (user_id,
                     type, 
@@ -999,8 +999,9 @@ returns number of rows where $field = $value in $table
                     address2, 
                     city, 
                     state, 
-                    zip)				
-                    VALUES (:user_id,'IGB','1206 W. Gregory Dr.',:igb_room,'Urbana','IL','61801'
+                    zip,
+                    address_lastUpdateUser)				
+                    VALUES (:user_id,'IGB','1206 W. Gregory Dr.',:igb_room,'Urbana','IL','61801',:lastUpdateUser
                     )";
 		$result = $this->db->get_insert_result($igb_address_query, $params);
 		return $result;
@@ -1030,7 +1031,8 @@ returns number of rows where $field = $value in $table
                 "state"=>$address['state'],
                 "zip"=>$address['zip'],
                 "country"=>$country, 
-                "fwd"=>$fwd);
+                "fwd"=>$fwd,
+                "lastUpdateUser"=>$this->get_netid());
             
 		$add_address_query = 
                         "INSERT INTO address 
@@ -1042,7 +1044,9 @@ returns number of rows where $field = $value in $table
                             state, 
                             zip, 
                             country, 
-                            forward)
+                            forward,
+                            address_lastUpdateUser,
+                            address_lastUpdateTime)
 				VALUES 
                                 (:user_id,
                                 :address_type,
@@ -1052,7 +1056,9 @@ returns number of rows where $field = $value in $table
                                 :state,
                                 :zip,
                                 :country,
-                                :fwd)";
+                                :fwd,
+                                :lastUpdateUser,
+                                NOW())";
 		$result = $this->db->get_insert_result($add_address_query, $params);
 		return $result;
 
