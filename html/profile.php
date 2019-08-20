@@ -993,6 +993,7 @@ REMOVE MEMBER
 if (isset($_POST['remove_member'])){
 	
 	$fwd_address_type = $_POST['fwd_address_type'];
+
 	$fwd_address1 = $_POST['fwd_address1'];
 	$fwd_city = $_POST['fwd_city'];
 	$fwd_state = $_POST['fwd_state'];
@@ -1006,7 +1007,10 @@ if (isset($_POST['remove_member'])){
 	$fwd_phone_type = $_POST['fwd_phone_type'];	
         $fwd_email = $_POST['fwd_email'];
 	
-	
+        if($fwd_address_type == null) {
+            $fwd_address_type = "HOME";
+        }	
+
 	$fwd_array = array ();
 	$fwd_array["type"]=$fwd_address_type;
 	$fwd_array["address1"]=$fwd_address1;
@@ -1015,7 +1019,7 @@ if (isset($_POST['remove_member'])){
 	$fwd_array["state"]=$fwd_state;
 	$fwd_array["zip"]=$fwd_zip;
 	
-	$address_result = $current_user->add_address($user_id, $fwd_array, $fwd_country, '1');	
+        $address_result = $current_user->add_address($user_id, $fwd_array, $fwd_country, '1');
 	$date_result = $user->update($user_id, 'users', 'end_date', $end_date);
 	$phone_result = $user->update($user_id, 'phone', 'fwd', $fwd_phone);
 	$phone_type_result = $user->update($user_id, 'phone', 'fwd_type', $fwd_phone_type);
@@ -1032,9 +1036,6 @@ if (isset($_POST['remove_member'])){
 	
 
 	$result = $user->update($user_id, 'users', 'user_enabled', '0');	
-        $alum_result = $db->get_query_result("select type_id from type where name='Alumnus'");
-        $alum_id = $alum_result[0]['type_id'];
-        $result = $user->update($user_id, 'users', 'type_id', $alum_id);
 	$result = $user->update($user_id, 'users', 'default_address', 'FWD');
 	unset($_POST['remove_member']);
 
@@ -1058,6 +1059,7 @@ if(isset($_POST['reactivate'])) {
 EXIT HTML
 
 */			
+$curr_date = date("Y-m-d");
 $remove_html = " <div id='remove_member'>
     <form method='post' action='profile.php?user_id=".$user_id."' name='remove_member'>
 
@@ -1068,7 +1070,7 @@ $remove_html = " <div id='remove_member'>
             <table class = 'profile'>
                     <tr >
                       <td class='small'><label>IGB Departure Date </label><br> </td>
-                      <td class='noborder'><input type='date' name='end_date' maxlength='12'  ></td>
+                      <td class='noborder'><input type='date' value='$curr_date' name='end_date' maxlength='12'  ></td>
                     </tr>
                     <tr >
                       <td class='small'><label>Reason For Leaving</label><br> </td>
