@@ -74,7 +74,7 @@ class html {
 
            $user_results = $user->get_users_by_type($theme, array($type['type_id']));
 
-           if(count($user_results[0]) > 0) {
+           if(is_array($user_results) && count($user_results) > 0 && count($user_results[0]) > 0) {
                $html .= "<table><th colspan='5'>".$type['name'] ."</th></tr><tr>";
                foreach($user_results as $userRecord) {
                    if($i >= $max) {
