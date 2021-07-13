@@ -29,7 +29,7 @@
 <?php
 
 date_default_timezone_set('America/Chicago');
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+error_reporting(0);
 
 $header_html = "<div id='container'>
 				<div id='header'>

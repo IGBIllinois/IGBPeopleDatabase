@@ -4,8 +4,6 @@ $page_title = "IGB People Database Search";
 
 require_once 'includes/header.inc.php';
 
-error_reporting(E_ERROR | E_PARSE);
-
 $igb_edit = FALSE;
 $personal_edit = FALSE;
 $dept_edit = FALSE;
