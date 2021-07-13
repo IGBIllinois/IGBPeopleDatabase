@@ -599,7 +599,7 @@ returns number of rows where $field = $value in $table
             $params["theme_id"] = $theme_id;
         } else {
             // Only search themes the user has permissions for.
-            if(supervisor_id > 0 || ($user_id != null && !$this->is_admin($_SESSION['username']))) {
+            if($supervisor_id > 0 || ($user_id != null && !$this->is_admin($_SESSION['username']))) {
                         $themelist = $this->get_permissions($user_id);
                         $theme_query = " RIGHT JOIN themes on user_theme.theme_id=themes.theme_id and user_theme.active=1 and (";
                         for($i=0; $i<count($themelist); $i++) {
