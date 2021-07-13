@@ -116,7 +116,7 @@ class html {
             $i=0;
             $user_results = $user->get_users_for_supervisor($supervisor_id, array($type['type_id']));
             //print_r($user_results);
-            if(count($user_results[0]) > 0) {
+            if(is_array($user_results[0]) && count($user_results[0]) > 0) {
                 $html .= "<table><th colspan='5'>".$type['name'] ."</th></tr><tr>";
                 foreach($user_results as $userRecord) {
                     if($i >= $max) {
