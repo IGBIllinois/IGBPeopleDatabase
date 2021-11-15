@@ -4,6 +4,7 @@ $page_title = "IGB People Database Search";
 
 require_once 'includes/header.inc.php';
 
+
 $igb_edit = FALSE;
 $personal_edit = FALSE;
 $dept_edit = FALSE;
@@ -60,7 +61,6 @@ $uin = $user->get_uin();
 $email = $user->get_email();
 $cell_phone = $user->get_cell_phone();
 $other_phone = $user->get_other_phone();
-$gender = $user->get_gender();
 $grad_date = $user->get_exp_grad_date();
 
 //igb
@@ -139,7 +139,6 @@ if (isset($_POST['update_personal'])){
 	$email = $_POST['email'];
 	$uin = $_POST['uin'];
 	$cell_phone = $_POST['cell_phone'];	
-	$gender = $_POST['gender'];
 	$error_count = 0;
 	$netid_error= "";
 	$uin_error= "";
@@ -173,7 +172,6 @@ if (isset($_POST['update_personal'])){
 		$result = $user->update($user_id, 'users', 'uin', $uin);
 		$result = $user->update($user_id, 'users', 'email', $email);
 		$result = $user->update($user_id, 'phone', 'cell', $cell_phone);
-		$result = $user->update($user_id, 'users', 'gender', $gender);			
 	}
 
 }
@@ -185,9 +183,10 @@ if (isset($_POST['cancel_personal'])){
 /*
 PERSONAL INFO TABLE HTML
 */
+
 $personal_info = "<div class='profile_header'>
 			
-    <p class='alignleft'>[ personal ]</p>
+<p class='alignleft'>[ personal ]</p>
     <p class='alignright'><a class='edit' href='profile.php?user_id=".$user_id."&personal_edit=TRUE'> edit </a></p>
     </div>
     <div class='profile'>
@@ -204,10 +203,6 @@ $personal_info = "<div class='profile_header'>
 <tr >
       <td class='xs'><label>uin </label></td>
       <td class='noborder'>". $uin ."</td>
-    </tr>
-<tr >
-      <td class='xs'><label>gender </label></td>
-      <td class='noborder'>". $gender."</td>
     </tr>
 <tr >
       <td class='xs'><label>cell phone </label></td>
@@ -256,18 +251,6 @@ $personal_info_edit = "<div class='profile_header' >
       <td class='xs'><label>uin </label></td>
       <td class='noborder'><input type='small' id='uin' name='uin' maxlength='9'  
     value=". $uin ."><label class='errormsg'>".$uin_error."</label></td>
-    </tr>
-<tr >
-      <td class='xs'><label>gender </label></td>
-      <td class='noborder'>
-
-            <input type='radio' name='gender' value='M'" ;
-                    if ($gender == 'M') {$personal_info_edit .=  $checked;} 
-$personal_info_edit .= ">M
-            <input type='radio' name='gender' value='F' ";
-               if ($gender == 'F') {$personal_info_edit .=  $checked;} 
-$personal_info_edit .= ">F
-      </td>
     </tr>
 <tr >
       <td class='xs'><label>cell phone </label></td>
@@ -552,7 +535,7 @@ $igb_info .= "</td>
             <td class='xs'><label>permissions</label></td>
             <td class='noborder'>". (($admin == 1) ? "ALL" : functions::list_permissions($db, $user_id)) . "</td>".
         "</tr>
-            <tr>
+        <tr>
             <td class='xs'><label>Expected grad date</label></td>
             <td class='noborder'>".(($grad_date == null || $grad_date == "") ? "None" : $grad_date)."</td>".
         "</tr>
@@ -678,7 +661,7 @@ $igb_info_edit  .="<tr>
           <input type='checkbox' name='admin' value='checked' ".  $checked_bool[$admin] .">
     </td>
   </tr>
-  <tr >
+    <tr >
     <td class='xs'><label>start date </label></td>
     <td class='noborder'><input type='date' name='start_date' maxlength='12'  
   value=". $user->get_start_date()."></td>

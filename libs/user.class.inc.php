@@ -44,7 +44,6 @@ class user{
 	private $home_state;
 	private $home_zip;
 	private $default_address;
-	private $gender;
 	private $key_deposit;
 	private $prox_card;
 	private $training;
@@ -138,7 +137,6 @@ class user{
 		$this->email = $result[0]['email'];
 		$this->uin = $result[0]['uin']; 
 		$this->netid = $result[0]['netid']; 
-		$this->gender = $result[0]['gender'];
 		$this->start_date = $result[0]['start_date'];
 		$this->end_date = $result[0]['end_date'];
 		$this->supervisor = $result[0]['supervisor_id'];
@@ -221,14 +219,9 @@ returns values of specific user
 	public function get_first_name() { return $this->first_name; }
 	public function get_last_name() { return $this->last_name; }
 	public function get_uin() { return $this->uin; }
-	public function get_gender() { return $this->gender; }
 	public function get_start_date() { return $this->start_date; }
 	public function get_end_date() { return $this->end_date; }
-	public function get_reason_leaving() {
-		//if(!$this->get_status()) {
-			return $this->reason_leaving;
-		//}
-	}
+	public function get_reason_leaving() {return $this->reason_leaving;}
         public function get_exp_grad_date() { return $this->exp_grad_date; }
         
         /** Returns the image uploaded for this user, or a default image if
@@ -439,12 +432,17 @@ returns values of specific user
             return key_info::key_exists($this->db, $this->id, $key_id);
         }
 	
-	
-	
-/*
-num_rows
-returns number of rows where $field = $value in $table
-*/		
+
+/**
+ * Returns number of rows where $field = $value in $table
+ * 
+ * @param type $field Field name to check
+ * @param type $value Value of field to check
+ * @param type $table Table name to check
+ * @param type $conditional Additional conditions
+ * @param type $new_params Array of additional parameters
+ * @return type
+ */	
 	public function num_rows($field, $value, $table, $conditional, $new_params = null) {
 		$exists_query = "SELECT count(*) as count FROM ".$table." WHERE ".$field." = :$field ";
                 $params = array($field=>$value);
@@ -790,7 +788,6 @@ returns number of rows where $field = $value in $table
      * @param boolean $key_deposit True if the User has given a key deposit
      * @param boolean $prox_card True if the User has a prox card
      * @param boolean $safety_training True if the User has taken saftey training
-     * @param string $gender "M" or "F"
      * @param int $supervisor_id ID of the user's supervisor
      * @param type $admin True if the user is a database admin
      * @return type ID of the newly created user
@@ -812,7 +809,6 @@ returns number of rows where $field = $value in $table
                                     $key_deposit, 
                                     $prox_card, 
                                     $safety_training, 
-                                    $gender, 
                                     $supervisor_id, 
                                     $admin) {
             
@@ -833,7 +829,6 @@ returns number of rows where $field = $value in $table
                     "key"=>$key,
                     "prox"=>$prox,
                     "safety"=>$safety,
-                    "gender"=>$gender,
                     "supervisor_id"=>$supervisor_id,
                     "admin"=>$isAdmin,
                     "updateUser"=>$this->get_netid());
@@ -851,7 +846,6 @@ returns number of rows where $field = $value in $table
                     key_deposit, 
                     prox_card, 
                     safety_training, 
-                    gender, 
                     supervisor_id, 
                     admin,
                     user_time_created,
@@ -869,7 +863,6 @@ returns number of rows where $field = $value in $table
                         :key,
                         :prox,
                         :safety,
-                        :gender,
                         :supervisor_id,
                         :admin,
                         NOW(),
@@ -1346,6 +1339,18 @@ public function is_valid_email($email)
 
             $id = $result[0]['user_id'];
             return $id;
+        }
+        
+        /** Gets the currently logged in user
+         * 
+         * @return \user The currently logged in user
+         */
+        public function get_current_user() {
+            $curr_user = new user($this->db);
+            $curr_user_id = $curr_user->get_current_user_id();
+            $curr_user->load($curr_user_id);
+            
+            return $curr_user;
         }
 
         /** Deletes a user's image file

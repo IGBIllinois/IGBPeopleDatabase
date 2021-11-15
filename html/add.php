@@ -79,7 +79,6 @@ $dept_drop = $_POST['dept_drop'];
 $supervisor = $_POST['supervisor'];
 
 $start_date = $_POST['start_date']; 
-$gender = $_POST['gender']; 
 $key_deposit = $_POST['key_deposit']; 
 $key_room = $_POST['key_room']; 
 $safety_training = $_POST['safety_training']; 
@@ -99,7 +98,6 @@ $fields = array("First Name" => &$first_name,
                 "Start Date" => &$start_date,
                 "Theme" => &$theme_drop,
                 "Type" => &$type_drop,
-                "Gender" => &$gender,
                 "Supervisor" => &$supervisor);
 
 	
@@ -107,7 +105,7 @@ $fields = array("First Name" => &$first_name,
 
 if (empty($first_name) || empty($last_name) || empty($netid) || empty($email)  || 
 	empty($igb_room) || empty($igb_phone) || empty($start_date) || 
-	empty($theme_drop) || empty($type_drop) || empty($gender) || empty($supervisor) 
+	empty($theme_drop) || empty($type_drop) || empty($supervisor) 
 	)
 {
 	$error.="* Please enter missing values<br>";
@@ -162,7 +160,7 @@ if (!$empty_form){
                     $email, $theme_drop, $theme_1_drop, $theme_2_drop,
                     $type_drop, $type_1_drop, $type_2_drop, $dept_drop, $default_address, 
                     $start_date, $key_deposit, $prox_card, 
-                    $safety_training, $gender, $supervisor_id, $admin, $superadmin);
+                    $safety_training, $supervisor_id, $admin, $superadmin);
 		if ($user_id != 0){
 			
                     $result = $curr_user->add_igb_address($user_id, $igb_room);	
@@ -773,16 +771,7 @@ $add_form_html .="' >
 			
 $add_form_html .="<div>
     <BR>
-        <label class='required'>Gender </label>
-        <label class='error'>". $aster[(isset($_POST['add']) && empty($gender))]." </label> 
 
-        <input type='radio' name='gender' value='M' ";
-           if ($gender == 'M') {$add_form_html .= $checked;} 
-           $add_form_html .=">M
-        <input type='radio' name='gender' value='F' ";
-           if ($gender == 'F') {$add_form_html .= $checked;} 
-           $add_form_html .=">F
-        <br /><BR>
             <input type='checkbox' name='key_deposit' value='checked' ". $key_deposit .">
             <label class='required'>Key Deposit </label> 
         <br />
